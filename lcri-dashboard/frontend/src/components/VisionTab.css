@@ -1,0 +1,230 @@
+/* VisionTab.css */
+.vision-container {
+  width: 100%;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  background: var(--bg-page);
+}
+
+/* Sections */
+.vision-section {
+  min-height: 90vh;
+  padding: 80px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.vision-section:nth-child(even) {
+  background: linear-gradient(180deg, var(--bg-page) 0%, var(--bg-card) 50%, var(--bg-page) 100%);
+}
+
+.vision-content {
+  max-width: 1100px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* Typography */
+.vision-title {
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.vision-subtitle {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 500;
+  color: var(--text-sec);
+  margin-bottom: 32px;
+  line-height: 1.4;
+}
+
+.vision-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+
+/* Glassmorphism Cards */
+.vision-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  background: var(--bg-card);
+  border-color: var(--accent);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.glass-card h3 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.glass-card p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Call to Action */
+.vision-cta-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.vision-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--bg-page);
+  background: var(--accent);
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.vision-cta:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-glow);
+}
+
+.vision-cta-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  box-shadow: none;
+}
+
+.vision-cta-secondary:hover {
+  background: var(--bg-card);
+  box-shadow: none;
+}
+
+/* Animations */
+.fade-in-up {
+  animation: fadeInUp 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle glowing background orb */
+.ambient-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent) 0%, rgba(0,0,0,0) 70%);
+  opacity: 0.1;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.glow-right {
+  left: 80%;
+  background: radial-gradient(circle, rgba(52,152,219,0.08) 0%, rgba(0,0,0,0) 70%);
+}
+
+.glow-left {
+  left: 20%;
+}
+
+/* Data Tickers */
+.ticker-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.ticker-box:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+}
+
+.ticker-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.ticker-label {
+  font-size: 1rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* Map Tooltip styling */
+.vision-map-tooltip {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid #e74c3c;
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.vision-map-tooltip::before {
+  border-right-color: rgba(0, 0, 0, 0.8);
+}

@@ -1,0 +1,70 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "site_01",
+        "name": "Gishwati-Mukura Buffer Zone",
+        "district": "Rutsiro",
+        "description": "Highly degraded buffer zone around Gishwati-Mukura National Park. Target for restoration."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.27, -1.68], [29.32, -1.68], [29.32, -1.73], [29.27, -1.73], [29.27, -1.68]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "site_02",
+        "name": "Nyungwe Core Zone",
+        "district": "Nyamasheke",
+        "description": "Mature montane rainforest. High AGB but low carbon headroom — expect low LCRI despite high biomass."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.08, -2.48], [29.14, -2.48], [29.14, -2.54], [29.08, -2.54], [29.08, -2.48]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "site_03",
+        "name": "Akagera Eastern Degraded Edge",
+        "district": "Kayonza",
+        "description": "Savanna/woodland transition zone on Akagera eastern boundary. Moderate degradation trend."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[30.74, -1.88], [30.80, -1.88], [30.80, -1.94], [30.74, -1.94], [30.74, -1.88]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "site_04",
+        "name": "Volcanoes NP Buffer",
+        "district": "Musanze",
+        "description": "Sub-montane forest buffer around Volcanoes National Park. Steep slopes limit planting feasibility."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.49, -1.44], [29.55, -1.44], [29.55, -1.50], [29.49, -1.50], [29.49, -1.44]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "site_05",
+        "name": "Bugesera Agroforestry Corridor",
+        "district": "Bugesera",
+        "description": "Low-lying agricultural zone with scattered woodlots. High seed proximity to isolated forest patches."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[30.18, -2.20], [30.24, -2.20], [30.24, -2.26], [30.18, -2.26], [30.18, -2.20]]]
+      }
+    }
+  ]
+}

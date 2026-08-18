@@ -1,0 +1,20 @@
+# Secrets
+ee-*.json
+.env
+.streamlit/secrets.toml
+
+# Large files
+*.zip
+*.tif
+*.tiff
+dataset vector/
+gaul_prot_unprot_2020/
+Mangrove_carbon_stored1/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Node
+node_modules/
