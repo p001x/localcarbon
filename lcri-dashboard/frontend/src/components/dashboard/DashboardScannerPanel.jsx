@@ -36,7 +36,11 @@ export default function DashboardScannerPanel({ ctx }) {
             ) : monitoringImgs?.true_color_url ? (
               <img src={monitoringImgs.true_color_url} alt="True Color Satellite" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
-              <span style={{ color: 'var(--accent-red)', fontSize: '0.8rem' }}>{monitoringImgs ? 'Image unavailable (too cloudy or large area)' : 'Select a district on the map to load image'}</span>
+              <span style={{ color: 'var(--accent-red)', fontSize: '0.8rem', textAlign: 'center' }}>
+                {monitoringImgs 
+                  ? (monitoringImgs.offline ? 'Image unavailable (Earth Engine Offline Mode)' : 'Image unavailable (too cloudy or large area)') 
+                  : 'Select a district on the map to load image'}
+              </span>
             )}
           </div>
         </div>
@@ -76,7 +80,9 @@ export default function DashboardScannerPanel({ ctx }) {
             ) : monitoringImgs?.[`${selectedIndex}_url`] ? (
               <img src={monitoringImgs[`${selectedIndex}_url`]} alt={`${selectedIndex.toUpperCase()} Scanner`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
-              <span style={{ color: 'var(--accent-red)', fontSize: '0.8rem' }}>Image unavailable</span>
+              <span style={{ color: 'var(--accent-red)', fontSize: '0.8rem', textAlign: 'center' }}>
+                {monitoringImgs?.offline ? 'Image unavailable (Earth Engine Offline Mode)' : 'Image unavailable'}
+              </span>
             )}
           </div>
           

@@ -68,6 +68,17 @@ def get_config():
 
 
 # ────────────────────────────────────────────────────────────────────────────
+# /api/health  — system health and feature flags
+# ────────────────────────────────────────────────────────────────────────────
+@app.route("/api/health", methods=["GET"])
+def health_check():
+    from src.data_sources import _ee_initialized
+    return jsonify({
+        "status": "ok",
+        "gee_available": _ee_initialized
+    })
+
+# ────────────────────────────────────────────────────────────────────────────
 # /api/districts/<country>  — dynamic list of level-2 admin divisions
 # ────────────────────────────────────────────────────────────────────────────
 @app.route("/api/districts/<country>", methods=["GET"])
@@ -104,6 +115,9 @@ def district_boundary(name):
 # ────────────────────────────────────────────────────────────────────────────
 @app.route("/api/gee-tile-url", methods=["GET"])
 def gee_tile_url():
+    from src.data_sources import _ee_initialized
+    if not _ee_initialized:
+        return jsonify({"url": None, "offline": True})
     try:
         import ee as _ee
         agb_img = _ee.ImageCollection('NASA/ORNL/biomass_carbon_density/v1').first().select('agb')
@@ -111,7 +125,7 @@ def gee_tile_url():
         map_id = agb_img.getMapId(vis)
         return jsonify({"url": map_id['tile_fetcher'].url_format})
     except Exception as e:
-        return jsonify({"error": str(e)}), 503
+        return jsonify({"url": None, "offline": True, "error": str(e)})
 
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -427,6 +441,9 @@ def upload_area():
 # ────────────────────────────────────────────────────────────────────────────
 @app.route("/api/true-color-tile", methods=["GET"])
 def true_color_tile():
+    from src.data_sources import _ee_initialized
+    if not _ee_initialized:
+        return jsonify({"url": None, "offline": True})
     try:
         import ee as _ee
         import datetime
@@ -455,7 +472,7 @@ def true_color_tile():
         map_id = img.getMapId(vis)
         return jsonify({"url": map_id['tile_fetcher'].url_format})
     except Exception as e:
-        return jsonify({"error": str(e)}), 503
+        return jsonify({"url": None, "offline": True, "error": str(e)})
 
 
 

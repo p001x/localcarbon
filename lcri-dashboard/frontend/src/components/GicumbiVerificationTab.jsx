@@ -107,6 +107,12 @@ export default function GicumbiVerificationTab() {
         <p style={{ color: 'var(--text-sec)', fontSize: '0.95rem', maxWidth: 800 }}>
           {stats?.overall?.message || "Green Gicumbi shows local agroforestry action can be independently verified from space — a model for scaling Rwanda's carbon credit pipeline."}
         </p>
+        
+        {layers && !layers.ndvi_2019 && (
+          <div style={{ marginTop: 10, padding: 10, background: 'rgba(211, 84, 0, 0.2)', border: '1px solid #d35400', borderRadius: 4, color: '#e67e22', fontSize: '0.9rem' }}>
+            <strong>Note:</strong> Earth Engine is currently offline or unreachable. Map layers (NDVI, Hansen) cannot be displayed, but verification statistics are available below.
+          </div>
+        )}
       </div>
 
       <div className="col2-23" style={{ alignItems: 'stretch' }}>

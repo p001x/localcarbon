@@ -48,6 +48,7 @@ import { useNavigate } from 'react-router-dom'
 export default function App() {
   const navigate = useNavigate()
   // Navigation state is now handled by react-router-dom
+  const [isOffline, setIsOffline]         = useState(false)
   const [appConfig, setAppConfig]         = useState(null)
   const [country, setCountry]             = useState('Rwanda')
   const [district, setDistrict]           = useState('All Rwanda')
@@ -80,6 +81,10 @@ export default function App() {
 
   // Load config + custom areas on mount
   useEffect(() => {
+    import('./api').then(({ fetchHealth }) => {
+      fetchHealth().then(h => setIsOffline(!h.gee_available)).catch(() => setIsOffline(true))
+    })
+    
     fetchConfig().then(cfg => {
       setAppConfig(cfg)
       setDistrictsList(cfg.districts)
@@ -134,10 +139,15 @@ export default function App() {
   const meta = TAB_META[currentTabId] || TAB_META['home']
   const districtOptions = [...Object.keys(customAreas), ...districtsList]
 
-  const tabProps = { appConfig, country, district, setDistrict, customAreas, refreshAreas, districtOptions }
+  const tabProps = { appConfig, country, district, setDistrict, customAreas, refreshAreas, districtOptions, isOffline }
 
   return (
     <div className="app-shell">
+      {isOffline && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, background: '#d35400', color: 'white', textAlign: 'center', padding: '6px', fontSize: '0.85rem', zIndex: 9999, fontWeight: 'bold' }}>
+          ⚠️ Earth Engine Offline Mode — Using Mock Data for Previews
+        </div>
+      )}
       {/* ── Sidebar ─────────────────────────────────────────────── */}
       <aside className="sidebar">
         <div className="sidebar-logo">

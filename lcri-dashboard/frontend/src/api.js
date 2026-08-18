@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' })
 
+export const fetchHealth        = ()           => api.get('/health').then(r => r.data)
 export const fetchConfig      = ()           => api.get('/config').then(r => r.data)
 export const fetchShapefiles  = ()           => api.get('/shapefiles').then(r => r.data)
 export const fetchDistricts   = (country)    => api.get(`/districts/${encodeURIComponent(country)}`).then(r => r.data)

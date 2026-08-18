@@ -9,6 +9,28 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
     geom = shape(geojson_geom)
     if geom.geom_type not in ('Polygon', 'MultiPolygon'):
         raise ValueError("Only polygons are supported for image monitoring")
+
+    from src.data_sources import _ee_initialized
+    if not _ee_initialized:
+        return {
+            "true_color_url": None,
+            "ndvi_url": None,
+            "ndwi_url": None,
+            "nbr_url": None,
+            "evi_url": None,
+            "dw_url": None,
+            "hansen_url": None,
+            "offline": True,
+            "metadata": {
+                "acquisition_date": "Mock Mode (Offline)",
+                "cloud_cover_pct": 0,
+                "resolution": "N/A",
+                "satellite": "Mock Data",
+                "mean_ndvi": 0.5,
+                "mean_evi": 0.5,
+                "image_size": [512, 512]
+            }
+        }
         
     ee_geom = ee.Geometry(geojson_geom)
     

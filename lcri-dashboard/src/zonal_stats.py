@@ -51,7 +51,11 @@ def compute_zonal_stats(polygon_geojson, years=[2010, 2015, 2016, 2017, 2018, 20
     area_ha = gdf_utm.area[0] / 10000.0
     
     # 5. GEE ReduceRegion for Canopy Height
+    from src.data_sources import _ee_initialized
     try:
+        if not _ee_initialized:
+            raise Exception("Earth Engine is offline (mock mode).")
+            
         # Convert shapely geom to EE Geometry
         coords = list(geom.exterior.coords)
         ee_geom = ee.Geometry.Polygon([coords])
