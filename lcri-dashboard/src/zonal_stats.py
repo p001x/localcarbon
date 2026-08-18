@@ -48,7 +48,7 @@ def compute_zonal_stats(polygon_geojson, years=[2010, 2015, 2016, 2017, 2018, 20
     # 4. Compute area in hectares (approx)
     gdf = gpd.GeoDataFrame(index=[0], crs="EPSG:4326", geometry=[geom])
     gdf_utm = gdf.to_crs(config.CRS_PROJECTED)
-    area_ha = gdf_utm.area[0] / 10000.0
+    area_ha = float(gdf_utm.area.iloc[0]) / 10000.0
     
     # 5. GEE ReduceRegion for Canopy Height
     from src.data_sources import _ee_initialized
@@ -56,9 +56,8 @@ def compute_zonal_stats(polygon_geojson, years=[2010, 2015, 2016, 2017, 2018, 20
         if not _ee_initialized:
             raise Exception("Earth Engine is offline (mock mode).")
             
-        # Convert shapely geom to EE Geometry
-        coords = list(geom.exterior.coords)
-        ee_geom = ee.Geometry.Polygon([coords])
+        # Convert geojson to EE Geometry (supports MultiPolygon)
+        ee_geom = ee.Geometry(polygon_geojson)
         
         # NASA/ORNL Aboveground Biomass Carbon Density v1
         # It's an ImageCollection, so we get the first image

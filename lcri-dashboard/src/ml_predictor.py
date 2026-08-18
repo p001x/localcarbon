@@ -67,8 +67,7 @@ def extract_ml_features_for_polygon(geojson_geom):
     if geom.geom_type not in ('Polygon', 'MultiPolygon'):
         raise ValueError("Only polygons are supported for ML prediction")
         
-    coords = list(geom.exterior.coords)
-    ee_geom = ee.Geometry.Polygon([coords])
+    ee_geom = ee.Geometry(geojson_geom)
     
     try:
         # 1. Baseline Biomass (ESA CCI AGB 2020)
@@ -152,7 +151,7 @@ def extract_ml_features_for_polygon(geojson_geom):
         area_ha = 1000 # default if conversion fails
         try:
             gdf_utm = gdf.to_crs(epsg=3857)
-            area_ha = gdf_utm.area[0] / 10000.0
+            area_ha = float(gdf_utm.area.iloc[0]) / 10000.0
         except:
             pass
             
