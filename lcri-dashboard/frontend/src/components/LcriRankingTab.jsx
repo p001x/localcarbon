@@ -79,9 +79,11 @@ export default function LcriRankingTab({ country, district, appConfig }) {
         alignItems: 'flex-start',
         gap: '14px'
       }}>
-        <span style={{ fontSize: '1.8rem', flexShrink: 0, marginTop: '2px' }}>🛡️</span>
+        <div style={{ background: 'rgba(46,204,113,0.15)', border: '1px solid rgba(46,204,113,0.4)', borderRadius: 6, padding: '4px 8px', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent)', flexShrink: 0 }}>
+          POLICY
+        </div>
         <div>
-          <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent)', fontWeight: 800 }}>
+          <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent)', fontWeight: 800 }}>
             Ecological Integrity &amp; Biodiversity Safeguards
           </div>
           <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', margin: '3px 0 5px' }}>
@@ -98,41 +100,40 @@ export default function LcriRankingTab({ country, district, appConfig }) {
         <div className="card">
           <h3 style={{ color:'var(--accent)', fontWeight:700, marginBottom:14 }}>Ecological &amp; Terrain Weights</h3>
           <p style={{ fontSize:'0.78rem', color:'var(--text-muted)', marginBottom:14 }}>Target District: <strong style={{ color:'var(--text-primary)' }}>{district}</strong></p>
-          {W('carbon_potential',    '🌳 Biomass Recovery Potential'  )}
-          {W('degradation_urgency', '⚠️ Canopy Loss & Threat Urgency')}
-          {W('slope_feasibility',   '⛰️ Slope Stability & Erosion Risk'  )}
-          {W('seed_proximity',      '🌱 Native Forest Patch Proximity'     )}
+          {W('carbon_potential',    'Biomass Recovery Potential'  )}
+          {W('degradation_urgency', 'Canopy Loss & Threat Urgency')}
+          {W('slope_feasibility',   'Slope Stability & Erosion Risk'  )}
+          {W('seed_proximity',      'Native Forest Patch Proximity'     )}
           {Math.abs(total - 1) > 0.01 && <div className="alert alert-warn" style={{ marginTop:8 }}>Weights sum to {total.toFixed(2)} — ideal is 1.0</div>}
           <button id="run-ranking-btn" className="btn btn-primary" style={{ width:'100%', marginTop:14 }}
             onClick={run} disabled={loading}>
-            {loading ? '⏳ Running Ecological Triage…' : '▶ Run Conservation Triage'}
+            {loading ? 'Running Ecological Triage…' : 'Run Conservation Triage'}
           </button>
         
           {/* Cadastral Simulation Transparency Note */}
           <div style={{ background: 'rgba(52,152,219,0.08)', border: '1px solid rgba(52,152,219,0.25)', borderRadius: '8px', padding: '10px 12px', marginTop: '14px', fontSize: '0.74rem', color: 'var(--text-sec)', lineHeight: 1.4 }}>
-            ℹ️ <strong>Cadastral Triage Simulation:</strong> Candidate plots are simulated from {district || 'district'} bioclimatic envelopes to rank priority zones for community Umuganda planting and slope terracing.
+            <strong>[DATA NOTE] Cadastral Triage Simulation:</strong> Candidate plots are simulated from {district || 'district'} bioclimatic envelopes to rank priority zones for community planting and slope terracing.
           </div>
         </div>
 
         {/* Recommended Native Tree Species (Restor.eco standard) */}
         <div className="card" style={{ border: '1px solid rgba(46,204,113,0.3)', background: 'rgba(46,204,113,0.03)' }}>
           <h3 style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '0.95rem', marginBottom: 10 }}>
-            🌱 Restor.eco Native Species Selection — {district || 'Rwanda'}
+            Restor.eco Native Species Selection — {district || 'Rwanda'}
           </h3>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-sec)', marginBottom: 12, lineHeight: 1.4 }}>
             Ecologically matched native species that maximize soil nitrogen fixation, watershed stability, and Albertine Rift biodiversity:
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 8 }}>
             {[
-              { local: 'Umusave', species: 'Markhamia lutea', trait: 'Agroforestry & Soil Fertility', icon: '🍃' },
-              { local: 'Umurava', species: 'Polyscias fulva', trait: 'Montane Canopy Recovery', icon: '🌳' },
-              { local: 'Umugondo', species: 'Acacia polyacantha', trait: 'Nitrogen-Fixing Pioneer', icon: '🌿' },
-              { local: 'Umurinzi', species: 'Erythrina abyssinica', trait: 'Erosion & Drought Buffer', icon: '🛡️' },
-              { local: 'Umuseke', species: 'Podocarpus latifolius', trait: 'Climax Wildlife Habitat', icon: '🦜' }
+              { local: 'Umusave', species: 'Markhamia lutea', trait: 'Agroforestry & Soil Fertility' },
+              { local: 'Umurava', species: 'Polyscias fulva', trait: 'Montane Canopy Recovery' },
+              { local: 'Umugondo', species: 'Acacia polyacantha', trait: 'Nitrogen-Fixing Pioneer' },
+              { local: 'Umurinzi', species: 'Erythrina abyssinica', trait: 'Erosion & Drought Buffer' },
+              { local: 'Umuseke', species: 'Podocarpus latifolius', trait: 'Climax Wildlife Habitat' }
             ].map(s => (
               <div key={s.species} style={{ background: '#0a1a0d', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 10px' }}>
                 <div style={{ display:'flex', alignItems:'center', gap: 5 }}>
-                  <span>{s.icon}</span>
                   <strong style={{ color: 'var(--text-primary)', fontSize: '0.82rem' }}>{s.local}</strong>
                 </div>
                 <div style={{ fontStyle: 'italic', fontSize: '0.74rem', color: 'var(--accent)' }}>{s.species}</div>
@@ -173,7 +174,7 @@ export default function LcriRankingTab({ country, district, appConfig }) {
               Parcels ranked by composite conservation index (Biomass Recovery + Canopy Urgency + Erosion Risk + Native Connectivity).
             </span>
             <button className="btn btn-secondary btn-sm" id="download-csv-btn" onClick={downloadCsv}>
-              ⬇️ Download Priority CSV
+              Export Priority CSV
             </button>
           </div>
 
@@ -192,11 +193,11 @@ export default function LcriRankingTab({ country, district, appConfig }) {
                     <tr key={r.parcel_id}>
                       <td className="mono" style={{ fontWeight: isTop ? 700 : 400 }}>
                         {r.parcel_id}
-                        {isTop && <span title="Top Conservation Priority" style={{ marginLeft: 4 }}>⭐</span>}
+                        {isTop && <span style={{ marginLeft: 6, fontSize: '0.65rem', background: 'rgba(46,204,113,0.2)', color: 'var(--accent)', padding: '1px 5px', borderRadius: 4 }}>TOP</span>}
                       </td>
                       <td>
                         <span className={`badge ${isSlope ? 'badge-yellow' : 'badge-green'}`} style={{ fontSize:'0.7rem' }}>
-                          {isSlope ? '⛰️ Steep Catchment' : r.land_cover_class}
+                          {isSlope ? 'Steep Catchment' : r.land_cover_class}
                         </span>
                       </td>
                       <td>{r.area_ha?.toFixed(1)}</td>
@@ -224,7 +225,5 @@ export default function LcriRankingTab({ country, district, appConfig }) {
       )}
     </div>
   )
-
-
-
 }
+

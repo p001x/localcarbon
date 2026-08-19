@@ -20,33 +20,33 @@ const TAB_GROUPS = [
   {
     title: 'Overview & Vision',
     tabs: [
-      { id: 'home',         path: '/',            icon: '🏠', label: 'Home Page'             },
-      { id: 'vision',       path: '/vision',      icon: '📖', label: 'The LCRI Story Map'  },
+      { id: 'home',         path: '/',            code: 'HOME',  label: 'Home' },
+      { id: 'vision',       path: '/vision',      code: 'STORY', label: 'LCRI Story Map' },
     ]
   },
   {
     title: 'Ecological Triage & Modeling',
     tabs: [
-      { id: 'dashboard',    path: '/dashboard',   icon: '📍', label: 'Dashboard & Satellite Map' },
-      { id: 'lcri',         path: '/lcri',        icon: '📊', label: 'Ecological Ranking Engine' },
-      { id: 'simulator',    path: '/simulator',   icon: '🌱', label: 'Restoration Simulator'      },
-      { id: 'registry',    path: '/registry',    icon: '🗂️', label: 'Conservation Registry'     },
+      { id: 'dashboard',    path: '/dashboard',   code: 'MAP',    label: 'Satellite Dashboard' },
+      { id: 'lcri',         path: '/lcri',        code: 'TRIAGE', label: 'Ecological Ranking' },
+      { id: 'simulator',    path: '/simulator',   code: 'SIM',    label: 'Restoration Simulator' },
+      { id: 'registry',    path: '/registry',    code: 'REG',    label: 'Project Registry' },
     ]
   },
   {
     title: 'Grassroots Validation & Auditing',
     tabs: [
-      { id: 'gicumbi',     path: '/gicumbi',     icon: '🛰️', label: 'Green Gicumbi Audit' },
-      { id: 'ledger',      path: '/ledger',      icon: '📝', label: 'Community Ledger'      },
+      { id: 'gicumbi',     path: '/gicumbi',     code: 'AUDIT',  label: 'Green Gicumbi Audit' },
+      { id: 'ledger',      path: '/ledger',      code: 'DATA',   label: 'Community Ledger' },
     ]
   },
   {
     title: 'Science & Reference',
     tabs: [
-      { id: 'lens',        path: '/lens',        icon: '🌐', label: 'Interactive Lens'       },
-      { id: 'atlas',        path: '/atlas',       icon: '🗺️', label: 'Visual Atlas'          },
-      { id: 'methodology',  path: '/methodology', icon: '📚', label: 'Methodology'            },
-      { id: 'datasources',  path: '/datasources', icon: '📑', label: 'Data Sources'          },
+      { id: 'lens',        path: '/lens',        code: 'LENS',   label: 'Interactive Lens' },
+      { id: 'atlas',        path: '/atlas',       code: 'ATLAS',  label: 'Visual Atlas' },
+      { id: 'methodology',  path: '/methodology', code: 'METH',   label: 'Methodology' },
+      { id: 'datasources',  path: '/datasources', code: 'SRC',    label: 'Data Sources' },
     ]
   }
 ]
@@ -54,18 +54,18 @@ const TAB_GROUPS = [
 const TABS = TAB_GROUPS.flatMap(g => g.tabs)
 
 const TAB_META = {
-  home:        { title: 'LCRI Dashboard',           sub: 'Local Carbon Return Index · Forest Conservation & Climate Finance' },
-  vision:      { title: 'The LCRI Story Map',       sub: 'Protecting Rwanda’s Forest Corridors with Earth Observation' },
-  dashboard:   { title: 'Dashboard & Satellite Map',sub: 'Live Canopy KPIs · Sentinel-2 & ESA CCI Analysis' },
-  lcri:        { title: 'LCRI Ecological Ranking Engine', sub: 'Candidate Parcel Triage: Erosion Risk, Wildlife Buffers & Biomass' },
-  simulator:   { title: 'Restoration Simulator',    sub: '20-Year Canopy Trajectory & Community Finance Forecasting' },
-  registry:    { title: 'Conservation Project Registry', sub: 'Regional Forest Projects & Satellite Verification' },
-  gicumbi:     { title: 'Green Gicumbi Audit',      sub: 'Independent Satellite Verification of Agroforestry' },
-  ledger:      { title: 'Community Ledger',         sub: 'Grassroots Agroforestry Submissions' },
-  lens:        { title: 'Interactive Carbon Lens',  sub: 'Hover-to-explore Global Forest Biomass' },
-  atlas:       { title: 'Visual Atlas',             sub: "Africa's Carbon Landscape · 2026" },
-  methodology: { title: 'Methodology',              sub: 'Validation Approach · Limitations' },
-  datasources: { title: 'Data Sources',             sub: 'Dataset Provenance & Citations' },
+  home:        { title: 'LCRI Environmental Intelligence', sub: 'Local Carbon Return Index · Forest Conservation & Climate Finance' },
+  vision:      { title: 'The LCRI Story Map',              sub: 'Protecting Rwanda’s Forest Corridors with Earth Observation' },
+  dashboard:   { title: 'Satellite Dashboard & Analytics', sub: 'Live Canopy KPIs · Sentinel-2 & ESA CCI Biomass' },
+  lcri:        { title: 'Ecological Ranking Engine',       sub: 'Candidate Parcel Triage: Erosion Risk, Wildlife Buffers & Biomass' },
+  simulator:   { title: 'Restoration Simulator',           sub: '20-Year Canopy Trajectory & Community Finance Forecasting' },
+  registry:    { title: 'Conservation Project Registry',   sub: 'Regional Forest Projects & Satellite Verification' },
+  gicumbi:     { title: 'Green Gicumbi Audit',             sub: 'Independent Satellite Verification of Agroforestry Claims' },
+  ledger:      { title: 'Community Ledger',                sub: 'Grassroots Agroforestry Submissions & Allometry' },
+  lens:        { title: 'Interactive Biomass Lens',        sub: 'Global Forest Biomass Sequestration Explorer' },
+  atlas:       { title: 'Visual Atlas',                    sub: "Rwanda & Regional Carbon Landscapes (2026)" },
+  methodology: { title: 'Scientific Methodology',          sub: 'Validation Approach, Allometric Models & Limitations' },
+  datasources: { title: 'Data Sources & Provenance',       sub: 'Dataset Provenance, Open-Access Licenses & Citations' },
 }
 
 import { useNavigate } from 'react-router-dom'
@@ -186,9 +186,9 @@ export default function App() {
                 key={t.id} 
                 to={t.path}
                 className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 12px' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 12px' }}
               >
-                <span style={{ fontSize: '1rem' }}>{t.icon}</span> 
+                <span style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.04em', minWidth: 38 }}>[{t.code}]</span> 
                 <span style={{ fontSize: '0.85rem' }}>{t.label}</span>
               </NavLink>
             ))}

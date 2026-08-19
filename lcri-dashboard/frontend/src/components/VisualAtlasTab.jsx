@@ -109,7 +109,9 @@ export default function VisualAtlasTab({ country, districtOptions }) {
 
       {/* Illustrative Data Disclaimer */}
       <div style={{ background: 'rgba(241,196,15,0.07)', border: '1px solid rgba(241,196,15,0.35)', borderRadius: 10, padding: '12px 18px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <span style={{ fontSize: '1.2rem', flexShrink: 0, marginTop: 2 }}>📊</span>
+        <div style={{ background: 'rgba(241,196,15,0.2)', color: '#f1c40f', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', fontWeight: 800, padding: '2px 6px', borderRadius: 4, flexShrink: 0 }}>
+          MODEL
+        </div>
         <div>
           <strong style={{ color: '#f1c40f', fontSize: '0.82rem' }}>Illustrative Data Model</strong>
           <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>

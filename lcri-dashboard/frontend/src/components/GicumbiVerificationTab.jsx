@@ -231,7 +231,7 @@ export default function GicumbiVerificationTab() {
                </label>
                <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', color:'var(--text-sec)', fontSize:'0.85rem' }}>
                  <input type="radio" name="layer" checked={activeLayer === 'hansen_loss'} onChange={() => setActiveLayer('hansen_loss')} disabled={loading} />
-                 🚨 Hansen Forest Change (High Risk Alerts)
+                 Hansen Global Forest Change (Loss Alerts)
                </label>
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 14 }}>

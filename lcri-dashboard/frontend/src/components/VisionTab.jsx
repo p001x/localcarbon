@@ -867,13 +867,13 @@ export default function VisionTab() {
             
             <div className="vision-cta-group" style={{ justifyContent: 'center' }}>
               <button onClick={() => navigate('/dashboard')} className="vision-cta">
-                📍 Explore Dashboard & Map
+                Explore Satellite Dashboard →
               </button>
               <button onClick={() => navigate('/simulator')} className="vision-cta vision-cta-secondary">
-                🌱 Run Investment Simulator
+                Run Restoration Simulator
               </button>
               <button onClick={() => navigate('/registry')} className="vision-cta vision-cta-secondary">
-                🗂️ View Project Registry
+                View Project Registry
               </button>
             </div>
           </div>

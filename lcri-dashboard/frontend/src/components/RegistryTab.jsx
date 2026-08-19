@@ -132,14 +132,16 @@ export default function RegistryTab() {
         </div>
         
         <div className="card" style={{ flex: '1', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-          <h3>🏛️ Certified Carbon Projects</h3>
+          <h3>Certified Conservation &amp; Carbon Projects</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-sec)', marginBottom: '10px' }}>
             Select a verified REDD+ or ARR project from the registry to view its boundaries and run live satellite analysis.
           </p>
 
           {/* Illustrative Registry Disclaimer */}
           <div style={{ background: 'rgba(241,196,15,0.07)', border: '1px solid rgba(241,196,15,0.3)', borderRadius: 8, padding: '10px 12px', marginBottom: '15px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <span style={{ fontSize: '1rem', flexShrink: 0, marginTop: 2 }}>ℹ️</span>
+            <div style={{ background: 'rgba(241,196,15,0.2)', color: '#f1c40f', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', fontWeight: 800, padding: '2px 6px', borderRadius: 4, flexShrink: 0 }}>
+              DEMO
+            </div>
             <div>
               <strong style={{ color: '#f1c40f', fontSize: '0.78rem' }}>Illustrative Registry</strong>
               <p style={{ margin: '2px 0 0', fontSize: '0.72rem', color: 'var(--text-sec)', lineHeight: 1.4 }}>
@@ -168,8 +170,8 @@ export default function RegistryTab() {
                   <span className="badge badge-gray">{p.id}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-sec)' }}>
-                  <span>🌍 {p.country}</span>
-                  <span>📖 {p.methodology}</span>
+                  <span>Country: {p.country}</span>
+                  <span>Method: {p.methodology}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-sec)', marginTop: '4px' }}>
                   <span style={{ color: p.status === 'Issuing' ? '#2ecc71' : '#f39c12' }}>● {p.status}</span>
@@ -186,7 +188,7 @@ export default function RegistryTab() {
         <div className="card" style={{ flex: '0 0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
             <div>
-              <h3>🛰️ ESA CCI Satellite Verification: {selectedProject.name}</h3>
+              <h3>ESA CCI Satellite Verification: {selectedProject.name}</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-sec)', margin: 0 }}>
                 Query the live ESA CCI Biomass v7.0 dataset for this project's exact geometry to verify carbon stock claims.
               </p>

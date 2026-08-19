@@ -75,9 +75,11 @@ export default function SimulatorTab({ country, district, appConfig }) {
         alignItems: 'flex-start',
         gap: '14px'
       }}>
-        <span style={{ fontSize: '1.8rem', flexShrink: 0, marginTop: '2px' }}>🌱</span>
+        <div style={{ background: 'rgba(46,204,113,0.15)', border: '1px solid rgba(46,204,113,0.4)', borderRadius: 6, padding: '4px 8px', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent)', flexShrink: 0 }}>
+          SIMULATOR
+        </div>
         <div>
-          <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent)', fontWeight: 800 }}>
+          <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent)', fontWeight: 800 }}>
             Triple-Benefit Conservation Simulation
           </div>
           <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', margin: '3px 0 5px' }}>
@@ -90,7 +92,7 @@ export default function SimulatorTab({ country, district, appConfig }) {
       </div>
 
       <div className="alert alert-info" style={{ marginBottom:16, borderLeft: '4px solid #3498db', background: 'rgba(52, 152, 219, 0.05)' }}>
-        <strong>Data Note:</strong> Candidate plots are Monte Carlo simulated scenarios based on district-level averages to demonstrate ecological growth trajectories (Chave 2014) and terrain-adjusted planting costs.
+        <strong>[DATA NOTE]</strong> Candidate plots are Monte Carlo simulated scenarios based on district-level averages to demonstrate ecological growth trajectories (Chave 2014) and terrain-adjusted planting costs.
       </div>
       {result && result.is_extrapolated_zone && (
         <div className="alert alert-error" style={{ marginBottom:16 }}>
@@ -145,11 +147,11 @@ export default function SimulatorTab({ country, district, appConfig }) {
             <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
               <label style={{ fontSize: '0.8rem', color: 'var(--text-sec)', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <input type="checkbox" checked={coBenefits.biodiversity} onChange={e=>setCoBenefits(c => ({...c, biodiversity: e.target.checked}))} />
-                🦜 Wildlife Corridor Protection (+20%)
+                Wildlife Corridor &amp; Biodiversity Protection (+20%)
               </label>
               <label style={{ fontSize: '0.8rem', color: 'var(--text-sec)', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <input type="checkbox" checked={coBenefits.gender} onChange={e=>setCoBenefits(c => ({...c, gender: e.target.checked}))} />
-                👩🏽 Community &amp; Gender Inclusivity (+10%)
+                Community Livelihoods &amp; Gender Inclusivity (+10%)
               </label>
             </div>
           </div>
@@ -164,14 +166,14 @@ export default function SimulatorTab({ country, district, appConfig }) {
 
         <button id="run-simulator-btn" className="btn btn-primary" style={{ width:'100%', marginTop:8 }}
           onClick={handleRun} disabled={loading}>
-          {loading ? '⏳ Projecting Ecological Growth Trajectory…' : '▶ Simulate 20-Year Conservation Trajectory'}
+          {loading ? 'Projecting Ecological Growth Trajectory…' : 'Simulate 20-Year Conservation Trajectory'}
         </button>
       </div>
 
       {/* Recommended Native Tree Species (Restor.eco standard) */}
       <div className="card" style={{ marginBottom: 20, border: '1px solid rgba(46,204,113,0.3)', background: 'rgba(46,204,113,0.03)' }}>
         <h3 style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '0.95rem', marginBottom: 10 }}>
-          🌱 Restor.eco Native Species Suite — {district || 'Rwanda'}
+          Restor.eco Native Species Suite — {district || 'Rwanda'}
         </h3>
         <p style={{ fontSize: '0.8rem', color: 'var(--text-sec)', marginBottom: 12, lineHeight: 1.4 }}>
           Recommended indigenous tree species designed for soil stabilization on steep Rwandan terrain and long-term carbon accumulation:
@@ -200,22 +202,22 @@ export default function SimulatorTab({ country, district, appConfig }) {
           {/* Triple-Benefit KPI Dashboard */}
           <div className="kpi-grid" style={{ marginBottom:16 }}>
             <div className="kpi-card">
-              <div className="kpi-label">🌿 Area Restored</div>
+              <div className="kpi-label">Area Restored</div>
               <div className="kpi-value">{result.summary.total_area_ha?.toFixed(0)}</div>
               <div className="kpi-delta">hectares canopy</div>
             </div>
             <div className="kpi-card">
-              <div className="kpi-label">🌳 Carbon Rebuilt @Yr20</div>
+              <div className="kpi-label">Carbon Rebuilt @Yr20</div>
               <div className="kpi-value">{(result.summary.co2e_gain_y20_mg/1000).toFixed(1)}k</div>
               <div className="kpi-delta">Mg CO₂e Sequestered</div>
             </div>
             <div className="kpi-card">
-              <div className="kpi-label">👥 Community Planting Cost</div>
+              <div className="kpi-label">Community Implementation Cost</div>
               <div className="kpi-value">${(result.summary.total_cost_usd/1000).toFixed(0)}k</div>
               <div className="kpi-delta">Local stewardship &amp; nurseries</div>
             </div>
             <div className="kpi-card">
-              <div className="kpi-label">💰 Sustainable Stewardship Fund</div>
+              <div className="kpi-label">Sustainable Stewardship Yield</div>
               <div className="kpi-value">${(result.summary.revenue_high_usd/1000).toFixed(0)}k</div>
               <div className="kpi-delta">20-yr climate finance ceiling</div>
             </div>
@@ -259,5 +261,5 @@ export default function SimulatorTab({ country, district, appConfig }) {
       )}
     </div>
   )
-
 }
+

@@ -159,7 +159,9 @@ export default function InteractiveLensTab() {
 
       {/* Gaussian Model Disclaimer */}
       <div style={{ background: 'rgba(52,152,219,0.07)', border: '1px solid rgba(52,152,219,0.3)', borderRadius: 10, padding: '12px 18px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <span style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: 2 }}>🌐</span>
+        <div style={{ background: 'rgba(52,152,219,0.2)', color: '#4fc3f7', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', fontWeight: 800, padding: '2px 6px', borderRadius: 4, flexShrink: 0 }}>
+          GLOBAL
+        </div>
         <div>
           <strong style={{ color: '#4fc3f7', fontSize: '0.82rem' }}>Illustrative Global Biomass Model</strong>
           <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>
