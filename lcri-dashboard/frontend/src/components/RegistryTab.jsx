@@ -133,10 +133,22 @@ export default function RegistryTab() {
         
         <div className="card" style={{ flex: '1', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           <h3>🏛️ Certified Carbon Projects</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-sec)', marginBottom: '15px' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-sec)', marginBottom: '10px' }}>
             Select a verified REDD+ or ARR project from the registry to view its boundaries and run live satellite analysis.
           </p>
+
+          {/* Illustrative Registry Disclaimer */}
+          <div style={{ background: 'rgba(241,196,15,0.07)', border: '1px solid rgba(241,196,15,0.3)', borderRadius: 8, padding: '10px 12px', marginBottom: '15px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <span style={{ fontSize: '1rem', flexShrink: 0, marginTop: 2 }}>ℹ️</span>
+            <div>
+              <strong style={{ color: '#f1c40f', fontSize: '0.78rem' }}>Illustrative Registry</strong>
+              <p style={{ margin: '2px 0 0', fontSize: '0.72rem', color: 'var(--text-sec)', lineHeight: 1.4 }}>
+                The projects listed below are <strong>illustrative examples</strong> with mock issuance numbers designed for the competition demo.
+              </p>
+            </div>
+          </div>
           
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {projects.map(p => (
               <div 

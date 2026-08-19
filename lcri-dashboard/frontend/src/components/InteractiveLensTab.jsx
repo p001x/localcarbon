@@ -155,7 +155,20 @@ export default function InteractiveLensTab() {
     <div>
       <div className="hero-label">GEOSPATIAL EXPLORATOR</div>
       <h2 className="hero-title">Interactive Carbon Lens</h2>
-      <p className="hero-sub" style={{ marginBottom:16 }}>Hover over the map to explore the world's monthly carbon sequestration cycles and Aboveground Biomass (AGB) density across major global forest basins (Amazon, Congo, Southeast Asia) and temperate/boreal regions via the interactive lens.</p>
+      <p className="hero-sub" style={{ marginBottom:12 }}>Hover over the map to explore the world's monthly carbon sequestration cycles and Aboveground Biomass (AGB) density across major global forest basins (Amazon, Congo, Southeast Asia) and temperate/boreal regions via the interactive lens.</p>
+
+      {/* Gaussian Model Disclaimer */}
+      <div style={{ background: 'rgba(52,152,219,0.07)', border: '1px solid rgba(52,152,219,0.3)', borderRadius: 10, padding: '12px 18px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <span style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: 2 }}>🌐</span>
+        <div>
+          <strong style={{ color: '#4fc3f7', fontSize: '0.82rem' }}>Illustrative Global Biomass Model</strong>
+          <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>
+            The hover-to-explore readout uses a <strong>Gaussian approximation model</strong> of global AGB density \u2014 calibrated to match known forest basin peaks (Amazon ≈230, Congo ≈220, SE Asia ≈240 Mg C/ha) from published literature.
+            It is <strong>not</strong> a live pixel query from the NASA/ORNL satellite tile. The tile layer behind the lens <em>is</em> real NASA/ORNL AGB data; only the on-hover numeric readout is estimated.
+          </p>
+        </div>
+      </div>
+
       <hr className="divider" />
 
       <div className="map-container" style={{ height: 560, position:'relative' }}>

@@ -686,6 +686,91 @@ def report_preview():
         return jsonify({"error": str(e)}), 500
 
 
+# ---------------------------------------------------------------------------
+# Community Ledger
+# ---------------------------------------------------------------------------
+from src.ledger import get_all_submissions, get_submissions_by_sector, submit_community_site, export_ledger_csv
+
+@app.route('/api/ledger', methods=['GET', 'POST'])
+def api_ledger():
+    print("HITTING API LEDGER:", request.method)
+    try:
+        if request.method == 'POST':
+            data = request.json or {}
+            geom = data.get("geometry")
+            group = data.get("submitterGroup", "")
+            sector = data.get("sector", "")
+            notes = data.get("notes", "")
+            date = data.get("submissionDate")
+            gps = data.get("gpsVerified", False)
+            ts = data.get("timestampVerified", False)
+            
+            result = submit_community_site(
+                geojson_geometry=geom,
+                submitter_group=group,
+                sector=sector,
+                notes=notes,
+                submission_date=date,
+                gps_verified=gps,
+                timestamp_verified=ts
+            )
+            return jsonify(result)
+        else:
+            sector = request.args.get('sector')
+            if sector and sector.lower() != 'all':
+                gdf = get_submissions_by_sector(sector)
+            else:
+                gdf = get_all_submissions()
+                
+            if gdf.empty:
+                return jsonify({"type": "FeatureCollection", "features": []})
+            
+            import pandas as pd
+            for col in gdf.columns:
+                if pd.api.types.is_datetime64_any_dtype(gdf[col]):
+                    gdf[col] = gdf[col].astype(str)
+                    
+            import json
+            return jsonify(json.loads(gdf.to_json()))
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/ledger/export-csv', methods=['GET'])
+def api_ledger_export_csv():
+    csv_bytes = export_ledger_csv()
+    from io import BytesIO
+    return send_file(
+        BytesIO(csv_bytes),
+        mimetype="text/csv",
+        as_attachment=True,
+        download_name="community_ledger.csv"
+    )
+
+# ---------------------------------------------------------------------------
+# Individual Tree Carbon Estimator
+# ---------------------------------------------------------------------------
+from src.allometry import estimate_tree_agb, WOOD_DENSITY_DB
+
+@app.route('/api/tree/analyse', methods=['POST'])
+def api_tree_analyse():
+    data = request.json or {}
+    dbh = data.get('dbh')
+    species = data.get('species')
+    # Default height to something reasonable if not provided by frontend
+    result = estimate_tree_agb(species=species, dbh_cm=float(dbh) if dbh else 20.0)
+    if not result.get("success", True):
+        return jsonify({"error": result.get("message", "Unknown error")}), 400
+    return jsonify(result)
+
+@app.route('/api/tree/species', methods=['GET'])
+def api_tree_species():
+    species_list = list(WOOD_DENSITY_DB.keys())
+    species_list.sort()
+    return jsonify({"species": species_list})
+
+
 if __name__ == "__main__":
     # Open the front‑end UI automatically in the default browser.
     def open_browser():
@@ -696,5 +781,5 @@ if __name__ == "__main__":
     import threading
     import os
     # threading.Thread(target=open_browser, daemon=True).start()
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    port = 5001
+    app.run(host="0.0.0.0", port=port, debug=True)

@@ -4,12 +4,139 @@
   color: var(--text-primary);
   font-family: var(--font-sans);
   background: var(--bg-page);
+  position: relative;
 }
+
+/* ── Sticky Chapter Navigation Bar ── */
+.vision-chapter-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 20, 15, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.vision-chapter-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.vision-chapter-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scrollbar-width: none;
+}
+.vision-chapter-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.chapter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-sec);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.chapter-pill:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent);
+}
+
+.chapter-pill.active {
+  color: #050b08;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(46, 204, 113, 0.35);
+  font-weight: 700;
+}
+
+.chapter-pill .pill-number {
+  font-size: 0.75rem;
+  opacity: 0.85;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* ── Hero & Executive Banner ── */
+.vision-hero-banner {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(52, 152, 219, 0.05) 50%, rgba(0, 0, 0, 0.4) 100%);
+  border: 1px solid rgba(46, 204, 113, 0.25);
+  border-radius: 20px;
+  padding: 36px 40px;
+  margin-bottom: 50px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.hero-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ── Act Badges & Dividers ── */
+.act-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.act-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.act-badge-1 { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
+.act-badge-2 { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
+.act-badge-3 { background: rgba(155, 89, 182, 0.15); color: #9b59b6; border: 1px solid rgba(155, 89, 182, 0.3); }
+.act-badge-4 { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
 
 /* Sections */
 .vision-section {
-  min-height: 90vh;
-  padding: 80px 40px;
+  min-height: 85vh;
+  padding: 70px 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,36 +156,36 @@
 
 /* Typography */
 .vision-title {
-  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
   font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 24px;
+  line-height: 1.15;
+  margin-bottom: 20px;
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
 .vision-subtitle {
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-size: clamp(1.15rem, 2.5vw, 1.6rem);
   font-weight: 500;
   color: var(--text-sec);
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   line-height: 1.4;
 }
 
 .vision-text {
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   line-height: 1.8;
   color: var(--text-muted);
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   max-width: 800px;
 }
 
 /* Glassmorphism Cards */
 .vision-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
-  margin-top: 48px;
+  margin-top: 40px;
 }
 
 .glass-card {
@@ -67,7 +194,7 @@
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 32px;
+  padding: 30px;
   transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
 }
 
@@ -78,22 +205,22 @@
 }
 
 .card-icon {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 2.2rem;
+  margin-bottom: 16px;
   display: block;
 }
 
 .glass-card h3 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: var(--text-primary);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-weight: 600;
 }
 
 .glass-card p {
   color: var(--text-muted);
   line-height: 1.6;
-  font-size: 1rem;
+  font-size: 0.98rem;
 }
 
 /* Call to Action */
@@ -108,10 +235,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 32px;
-  font-size: 1.1rem;
+  gap: 8px;
+  padding: 14px 30px;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--bg-page);
+  color: #050b08;
   background: var(--accent);
   border-radius: 50px;
   text-decoration: none;
@@ -121,8 +249,8 @@
 }
 
 .vision-cta:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(46, 204, 113, 0.4);
 }
 
 .vision-cta-secondary {
@@ -133,25 +261,25 @@
 }
 
 .vision-cta-secondary:hover {
-  background: var(--bg-card);
+  background: rgba(46, 204, 113, 0.1);
   box-shadow: none;
 }
 
 /* Animations */
 .fade-in-up {
-  animation: fadeInUp 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fadeInUp 0.8s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(24px);
 }
 
-.delay-1 { animation-delay: 0.2s; }
-.delay-2 { animation-delay: 0.4s; }
-.delay-3 { animation-delay: 0.6s; }
+.delay-1 { animation-delay: 0.15s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.45s; }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -188,7 +316,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 32px 20px;
+  padding: 28px 20px;
   text-align: center;
   transition: transform 0.3s ease;
   box-shadow: var(--shadow);
@@ -200,7 +328,7 @@
 }
 
 .ticker-number {
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   font-weight: 800;
   color: var(--accent);
   margin-bottom: 8px;
@@ -208,7 +336,7 @@
 }
 
 .ticker-label {
-  font-size: 1rem;
+  font-size: 0.92rem;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -217,7 +345,7 @@
 
 /* Map Tooltip styling */
 .vision-map-tooltip {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.85);
   border: 1px solid #e74c3c;
   color: #fff;
   border-radius: 4px;
@@ -226,5 +354,18 @@
 }
 
 .vision-map-tooltip::before {
-  border-right-color: rgba(0, 0, 0, 0.8);
+  border-right-color: rgba(0, 0, 0, 0.85);
 }
+
+@media (max-width: 768px) {
+  .vision-section {
+    padding: 50px 20px;
+  }
+  .vision-chapter-nav {
+    padding: 10px 16px;
+  }
+  .vision-chapter-title {
+    display: none;
+  }
+}
+

@@ -94,22 +94,35 @@ export default function VisualAtlasTab({ country, districtOptions }) {
   }
 
   const CARDS = [
-    [fig1,'Where Carbon Lives',`Above-ground biomass density across ${country}'s regions — revealing where its carbon wealth is concentrated.`],
-    [fig2,'The Vanishing Canopy','Two futures: a reforestation pathway vs. business-as-usual trajectory from 2010 to 2022.'],
-    [fig3,'The Opportunity Map','80 candidate parcels plotted by degradation urgency against carbon potential — find where to plant first.'],
-    [fig4,'Green Return','Revenue surface showing how CO₂e income scales with planted area across market price scenarios.'],
-    [fig5,'Community Footprints','A heatmap of community-reported planting activity — region by region, month by month.'],
-    [fig6,'Carbon Debt Clock','Cumulative CO₂e loss under the business-as-usual scenario. Every year of inaction compounds the debt.'],
-    [fig6,'Carbon Debt Clock','Cumulative CO2e loss under the business-as-usual scenario. Every year of inaction compounds the debt.'],
+    [fig1,'Where Carbon Lives',`Above-ground biomass density across ${country}'s regions — illustrative model seeded from country name.`],
+    [fig2,'The Vanishing Canopy','Two futures: a reforestation pathway vs. business-as-usual trajectory from 2010 to 2022. Based on Rwanda national trend estimates.'],
+    [fig3,'The Opportunity Map','80 candidate parcels plotted by degradation urgency vs carbon potential — algorithmic illustration of LCRI scoring logic.'],
+    [fig4,'Green Return','Revenue surface showing how CO₂e income scales with planted area across carbon market price scenarios (USD 5–25/tCO₂e).'],
+    [fig5,'Community Footprints','Illustrative heatmap of planting activity — region by region, month by month. Seeded from district names.'],
+    [fig6,'Carbon Debt Clock','Cumulative CO₂e loss under business-as-usual. Every year of inaction compounds the climate debt.'],
   ]
 
   return (
     <div>
       <div className="hero-label">LCRI · {country} · 2026</div>
       <h2 className="hero-title">Visual Atlas of {country}'s Carbon Landscape</h2>
+
+      {/* Illustrative Data Disclaimer */}
+      <div style={{ background: 'rgba(241,196,15,0.07)', border: '1px solid rgba(241,196,15,0.35)', borderRadius: 10, padding: '12px 18px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <span style={{ fontSize: '1.2rem', flexShrink: 0, marginTop: 2 }}>📊</span>
+        <div>
+          <strong style={{ color: '#f1c40f', fontSize: '0.82rem' }}>Illustrative Data Model</strong>
+          <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>
+            Charts in this Atlas are <strong>algorithmically generated</strong> from bioclimatic parameters and district names to demonstrate the LCRI visualisation engine.
+            They are <strong>not</strong> live satellite extracts. For verified satellite data, use the <strong>Dashboard & Map</strong> or <strong>Green Gicumbi Audit</strong> tabs.
+            Revenue projections use published IPCC carbon fraction (0.47) and actual VCM price ranges (USD 5–25/tCO₂e).
+          </p>
+        </div>
+      </div>
+
       <div className="card" style={{ marginBottom: 20 }}>
         <h2 style={{ color: 'var(--accent)', fontSize: '1.4rem', marginBottom: 10 }}>Visual Atlas: Carbon & Biodiversity Overlays</h2>
-        <p className="hero-sub">Six data-driven stories drawn from satellite biomass data, field-validated sites, and reforestation investment models.</p>
+        <p className="hero-sub">Six illustrative stories drawn from bioclimatic models and reforestation investment formulas — designed to convey LCRI concepts visually.</p>
       </div>
       <hr className="divider" />
 

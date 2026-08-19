@@ -12,32 +12,57 @@ import MethodologyTab     from './components/MethodologyTab'
 import DataSourcesTab     from './components/DataSourcesTab'
 import HomeTab            from './components/HomeTab'
 import GicumbiVerificationTab from './components/GicumbiVerificationTab'
+import LedgerTab            from './components/LedgerTab'
 import VisionTab          from './components/VisionTab'
 import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
 
-const TABS = [
-  { id: 'home',         path: '/',            icon: '', label: 'Home Page'             },
-  { id: 'vision',       path: '/vision',      icon: '📖', label: 'The LCRI Story Map'  },
-  { id: 'dashboard',    path: '/dashboard',   icon: '', label: 'Dashboard & Map'       },
-  { id: 'lcri',         path: '/lcri',        icon: '', label: 'LCRI Ranking'          },
-  { id: 'simulator',    path: '/simulator',   icon: '', label: 'Reforestation Simulator'},
-  { id: 'registry',     path: '/registry',    icon: '', label: 'Project Registry'       },
-  { id: 'gicumbi',      path: '/gicumbi',     icon: '', label: 'Green Gicumbi'         },
-  { id: 'lens',         path: '/lens',        icon: '', label: 'Interactive Lens'       },
-  { id: 'atlas',        path: '/atlas',       icon: '', label: 'Visual Atlas'          },
-  { id: 'methodology',  path: '/methodology', icon: '', label: 'Methodology'            },
-  { id: 'datasources',  path: '/datasources', icon: '', label: 'Data Sources'          },
+const TAB_GROUPS = [
+  {
+    title: 'Overview & Vision',
+    tabs: [
+      { id: 'home',         path: '/',            icon: '🏠', label: 'Home Page'             },
+      { id: 'vision',       path: '/vision',      icon: '📖', label: 'The LCRI Story Map'  },
+    ]
+  },
+  {
+    title: 'Ecological Triage & Modeling',
+    tabs: [
+      { id: 'dashboard',    path: '/dashboard',   icon: '📍', label: 'Dashboard & Satellite Map' },
+      { id: 'lcri',         path: '/lcri',        icon: '📊', label: 'Ecological Ranking Engine' },
+      { id: 'simulator',    path: '/simulator',   icon: '🌱', label: 'Restoration Simulator'      },
+      { id: 'registry',    path: '/registry',    icon: '🗂️', label: 'Conservation Registry'     },
+    ]
+  },
+  {
+    title: 'Grassroots Validation & Auditing',
+    tabs: [
+      { id: 'gicumbi',     path: '/gicumbi',     icon: '🛰️', label: 'Green Gicumbi Audit' },
+      { id: 'ledger',      path: '/ledger',      icon: '📝', label: 'Community Ledger'      },
+    ]
+  },
+  {
+    title: 'Science & Reference',
+    tabs: [
+      { id: 'lens',        path: '/lens',        icon: '🌐', label: 'Interactive Lens'       },
+      { id: 'atlas',        path: '/atlas',       icon: '🗺️', label: 'Visual Atlas'          },
+      { id: 'methodology',  path: '/methodology', icon: '📚', label: 'Methodology'            },
+      { id: 'datasources',  path: '/datasources', icon: '📑', label: 'Data Sources'          },
+    ]
+  }
 ]
 
+const TABS = TAB_GROUPS.flatMap(g => g.tabs)
+
 const TAB_META = {
-  home:        { title: 'LCRI Dashboard',           sub: 'Local Carbon Return Index · RCMRD 2026' },
-  vision:      { title: 'The LCRI Story Map',       sub: 'Investment-Grade Ecological Intelligence' },
-  dashboard:   { title: 'Dashboard & Map',         sub: 'Carbon KPIs · Geospatial Analysis' },
-  lcri:        { title: 'LCRI Ranking Engine',      sub: 'Candidate Parcel Scoring' },
-  simulator:   { title: 'Reforestation Simulator',  sub: 'Logistic Growth · Investment Projection' },
-  registry:    { title: 'Carbon Project Registry',  sub: 'Verified REDD+ & ARR Projects' },
-  gicumbi:     { title: 'Green Gicumbi Verification',sub: 'Independent Satellite Verification of Agroforestry' },
-  lens:        { title: 'Interactive Carbon Lens',  sub: 'Hover-to-explore Geospatial Layer' },
+  home:        { title: 'LCRI Dashboard',           sub: 'Local Carbon Return Index · Forest Conservation & Climate Finance' },
+  vision:      { title: 'The LCRI Story Map',       sub: 'Protecting Rwanda’s Forest Corridors with Earth Observation' },
+  dashboard:   { title: 'Dashboard & Satellite Map',sub: 'Live Canopy KPIs · Sentinel-2 & ESA CCI Analysis' },
+  lcri:        { title: 'LCRI Ecological Ranking Engine', sub: 'Candidate Parcel Triage: Erosion Risk, Wildlife Buffers & Biomass' },
+  simulator:   { title: 'Restoration Simulator',    sub: '20-Year Canopy Trajectory & Community Finance Forecasting' },
+  registry:    { title: 'Conservation Project Registry', sub: 'Regional Forest Projects & Satellite Verification' },
+  gicumbi:     { title: 'Green Gicumbi Audit',      sub: 'Independent Satellite Verification of Agroforestry' },
+  ledger:      { title: 'Community Ledger',         sub: 'Grassroots Agroforestry Submissions' },
+  lens:        { title: 'Interactive Carbon Lens',  sub: 'Hover-to-explore Global Forest Biomass' },
   atlas:       { title: 'Visual Atlas',             sub: "Africa's Carbon Landscape · 2026" },
   methodology: { title: 'Methodology',              sub: 'Validation Approach · Limitations' },
   datasources: { title: 'Data Sources',             sub: 'Dataset Provenance & Citations' },
@@ -96,32 +121,29 @@ export default function App() {
   useEffect(() => {
     if (!appConfig) return
     if (country === 'Rwanda') {
-      setDistrictsList(appConfig.districts)
-      setDistrict('All Rwanda')
-      return
+      setDistrictsList(appConfig.districts || [])
+    } else {
+      fetchDistricts(country)
+        .then(d => {
+          setDistrictsList(d.districts || [])
+          setDistrict(d.districts && d.districts.length > 0 ? d.districts[0] : 'All')
+        })
+        .catch(() => setDistrictsList([]))
     }
-    fetchDistricts(country).then(list => {
-      setDistrictsList(list)
-      if (list.length > 0) {
-        setDistrict(list[0])
-      } else {
-        setDistrict(`All ${country}`)
-      }
-    }).catch(err => {
-      console.error(err)
-      setDistrictsList([`All ${country}`])
-      setDistrict(`All ${country}`)
-    })
   }, [country, appConfig])
 
-  const refreshAreas = () => {
-    fetchCustomAreas().then(setCustomAreas).catch(console.error)
+  function refreshAreas() {
+    fetchCustomAreas().then(data => {
+      setCustomAreas(data.areas || {})
+    }).catch(console.error)
   }
 
-  const handleDeleteArea = async (name) => {
-    await deleteCustomArea(name)
-    if (district === name) setDistrict(`All ${country}`)
-    refreshAreas()
+  function handleDeleteArea(name) {
+    if (!window.confirm(`Delete custom area "${name}"?`)) return
+    deleteCustomArea(name).then(() => {
+      refreshAreas()
+      if (district === name) setDistrict('All Rwanda')
+    }).catch(console.error)
   }
 
   if (!appConfig) {
@@ -155,19 +177,23 @@ export default function App() {
           <p>Local Carbon Return Index · Africa 2026</p>
         </div>
 
-        {/* Navigation */}
-        <div className="sidebar-section">
-          <div className="sidebar-section-title">Navigation</div>
-          {TABS.map(t => (
-            <NavLink 
-              key={t.id} 
-              to={t.path}
-              className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-            >
-              <span>{t.icon}</span> {t.label}
-            </NavLink>
-          ))}
-        </div>
+        {/* Categorized Navigation */}
+        {TAB_GROUPS.map((group) => (
+          <div className="sidebar-section" key={group.title} style={{ paddingBottom: 4 }}>
+            <div className="sidebar-section-title">{group.title}</div>
+            {group.tabs.map(t => (
+              <NavLink 
+                key={t.id} 
+                to={t.path}
+                className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 12px' }}
+              >
+                <span style={{ fontSize: '1rem' }}>{t.icon}</span> 
+                <span style={{ fontSize: '0.85rem' }}>{t.label}</span>
+              </NavLink>
+            ))}
+          </div>
+        ))}
 
         <hr className="sidebar-divider" />
 
@@ -287,6 +313,7 @@ export default function App() {
             <Route path="/simulator"   element={<SimulatorTab       {...tabProps} />} />
             <Route path="/registry"    element={<RegistryTab        {...tabProps} />} />
             <Route path="/gicumbi"     element={<GicumbiVerificationTab {...tabProps} />} />
+            <Route path="/ledger"      element={<LedgerTab          {...tabProps} />} />
             <Route path="/lens"        element={<InteractiveLensTab {...tabProps} />} />
             <Route path="/atlas"       element={<VisualAtlasTab     {...tabProps} />} />
             <Route path="/methodology" element={<MethodologyTab />} />

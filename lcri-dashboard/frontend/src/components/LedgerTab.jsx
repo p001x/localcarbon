@@ -195,7 +195,9 @@ export default function LedgerTab({ country }) {
           `Sector: ${rec.sector||'—'}<br/>` +
           `Date: ${rec.submission_date||'—'}<br/>` +
           `${rec.notes ? `Notes: ${rec.notes}<br/>` : ''}` +
-          `${rec.verified ? '✅ Verified' : '⏳ Pending verification'}`,
+          (rec.gps_verified ? '<span style="color:#2ecc71">📍 <strong>GPS Verified</strong></span><br/>' : '') +
+          (rec.timestamp_verified ? '<span style="color:#2ecc71">⏱️ <strong>Timestamp Verified</strong></span><br/>' : '') +
+          `${rec.verified ? '✅ Phase 10 Verified' : '⏳ Pending Phase 10'}`,
           { sticky: true }
         )
         submissionsLayerRef.current.addLayer(layer)
@@ -744,7 +746,7 @@ export default function LedgerTab({ country }) {
                     alert('PDF generation failed: ' + e.message)
                   }
                 }}>
-                📄 Download PDF Carbon Credit Report
+                📄 Download dMRV Audit Certificate
               </button>
             </div>
           )}
@@ -911,7 +913,10 @@ export default function LedgerTab({ country }) {
                           <td><span className="badge badge-yellow">{r.sector}</span></td>
                           <td className="mono">{r.submission_date}</td>
                           <td style={{ color:'var(--text-muted)', fontSize:'0.78rem' }}>{r.notes||'—'}</td>
-                          <td><span className={`badge ${r.verified ? 'badge-green':'badge-red'}`}>{r.verified ? '✓':'✗'}</span></td>
+                          <td>
+                            {r.gps_verified && <span title="GPS Verified" style={{marginRight: 4, cursor: 'help'}}>📍</span>}
+                            <span className={`badge ${r.verified ? 'badge-green':'badge-red'}`}>{r.verified ? '✓':'✗'}</span>
+                          </td>
                         </tr>
                       );
                     })}

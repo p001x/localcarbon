@@ -1,8 +1,9 @@
 # Local Carbon Return Index (LCRI) Dashboard
 
-> **RCMRD Arts & Maps Competition 2026 — Professional Category, Data Dashboard, Forestry Sub-Category**
+> **Theme: "Acting Locally for Global Impact"**
+> RCMRD Arts & Maps Competition 2026 — Professional Category, Data Dashboard, Forestry Sub-Category
 
-A reforestation investment simulator and community planting ledger for Rwanda, built with Streamlit, Folium, GeoPandas, and the ESRI Living Atlas biomass image service.
+A hybrid reforestation investment simulator (National scale) and community planting ledger (Green Gicumbi Pilot) for Rwanda, built with Streamlit, React, Folium, GeoPandas, and the ESRI Living Atlas biomass image service.
 
 ---
 
