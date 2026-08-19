@@ -27,7 +27,19 @@ export const fetchProvenance  = ()           => api.get('/provenance').then(r =>
 export const uploadAreaFile   = (formData)   => api.post('/upload-area', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(r => r.data)
 export const fetchTrueColorTile = ()         => api.get('/true-color-tile').then(r => r.data)
 
-export const fetchLedger      = (sector)     => api.get('/ledger', { params: sector ? { sector } : {} }).then(r => r.data)
+export const fetchLedger      = (sector)     => api.get('/ledger', { params: sector ? { sector } : {} }).then(r => {
+  if (r.data && r.data.type === 'FeatureCollection') {
+    return (r.data.features || []).map(f => ({ ...(f.properties || {}), geometry: f.geometry }))
+  }
+  return Array.isArray(r.data) ? r.data : []
+})
 export const submitLedger     = (payload)    => api.post('/ledger', payload).then(r => r.data)
+export const deleteLedgerEntry = (payload)   => api.delete('/ledger', { data: payload }).then(r => r.data)
+export const toggleLedgerEntry = (payload)   => api.patch('/ledger', payload).then(r => r.data)
 export const analyseTree      = (payload)    => api.post('/tree/analyse', payload).then(r => r.data)
-export const fetchKnownSpecies = ()          => api.get('/tree/species').then(r => r.data)
+export const fetchKnownSpecies = ()          => api.get('/tree/species').then(r => r.data.species || [])
+
+export const fetchLiveCarbonPrice = () => {
+  return fetch('https://api.coingecko.com/api/v3/simple/price?ids=toucan-protocol-nature-carbon-tonne&vs_currencies=usd&include_24hr_change=true')
+    .then(r => r.json())
+}

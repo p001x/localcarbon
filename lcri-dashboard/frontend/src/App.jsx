@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './index.css'
 import 'leaflet/dist/leaflet.css'
+import { Routes, Route, NavLink, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { fetchConfig, fetchCustomAreas, deleteCustomArea, fetchDistricts } from './api'
 import DashboardTab       from './components/DashboardTab'
 import LcriRankingTab     from './components/LcriRankingTab'
@@ -14,7 +15,17 @@ import HomeTab            from './components/HomeTab'
 import GicumbiVerificationTab from './components/GicumbiVerificationTab'
 import LedgerTab            from './components/LedgerTab'
 import VisionTab          from './components/VisionTab'
-import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
+
+const DEFAULT_CONFIG = {
+  countries: ['Rwanda'],
+  districts: [
+    'All Rwanda', 'Bugesera', 'Burera', 'Gakenke', 'Gasabo', 'Gatsibo', 'Gicumbi', 'Gisagara',
+    'Huye', 'Kamonyi', 'Karongi', 'Kayonza', 'Kicukiro', 'Kirehe', 'Muhanga', 'Musanze',
+    'Ngoma', 'Ngororero', 'Nyabihu', 'Nyagatare', 'Nyamagabe', 'Nyamasheke', 'Nyanza',
+    'Nyarugenge', 'Nyaruguru', 'Rubavu', 'Ruhango', 'Rulindo', 'Rusizi', 'Rutsiro', 'Rwamagana'
+  ],
+  growthRates: ['agroforestry', 'native_montane', 'bamboo_riparian', 'commercial_timber']
+}
 
 const TAB_GROUPS = [
   {
@@ -68,16 +79,13 @@ const TAB_META = {
   datasources: { title: 'Data Sources & Provenance',       sub: 'Dataset Provenance, Open-Access Licenses & Citations' },
 }
 
-import { useNavigate } from 'react-router-dom'
-
 export default function App() {
   const navigate = useNavigate()
-  // Navigation state is now handled by react-router-dom
   const [isOffline, setIsOffline]         = useState(false)
-  const [appConfig, setAppConfig]         = useState(null)
+  const [appConfig, setAppConfig]         = useState(DEFAULT_CONFIG)
   const [country, setCountry]             = useState('Rwanda')
   const [district, setDistrict]           = useState('All Rwanda')
-  const [districtsList, setDistrictsList] = useState([])
+  const [districtsList, setDistrictsList] = useState(DEFAULT_CONFIG.districts)
   const [customAreas, setCustomAreas]     = useState({})
   
   // Theme Configuration
@@ -108,11 +116,13 @@ export default function App() {
   useEffect(() => {
     import('./api').then(({ fetchHealth }) => {
       fetchHealth().then(h => setIsOffline(!h.gee_available)).catch(() => setIsOffline(true))
-    })
+    }).catch(() => setIsOffline(true))
     
     fetchConfig().then(cfg => {
-      setAppConfig(cfg)
-      setDistrictsList(cfg.districts)
+      if (cfg && cfg.districts) {
+        setAppConfig(cfg)
+        setDistrictsList(cfg.districts)
+      }
     }).catch(console.error)
     refreshAreas()
   }, [])
@@ -121,7 +131,7 @@ export default function App() {
   useEffect(() => {
     if (!appConfig) return
     if (country === 'Rwanda') {
-      setDistrictsList(appConfig.districts || [])
+      setDistrictsList(appConfig.districts || DEFAULT_CONFIG.districts)
     } else {
       fetchDistricts(country)
         .then(d => {
@@ -134,7 +144,7 @@ export default function App() {
 
   function refreshAreas() {
     fetchCustomAreas().then(data => {
-      setCustomAreas(data.areas || {})
+      setCustomAreas(data.areas || data || {})
     }).catch(console.error)
   }
 

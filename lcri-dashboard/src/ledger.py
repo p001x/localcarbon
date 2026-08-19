@@ -38,6 +38,9 @@ def get_submissions_by_sector(sector):
     return gdf[gdf["sector"].str.lower() == sector.lower()]
 
 
+import threading
+_ledger_lock = threading.Lock()
+
 def submit_community_site(geojson_geometry, submitter_group, sector, notes="", submission_date=None, gps_verified=False, timestamp_verified=False):
     """
     Appends a new community-reported planting site to the ledger.
@@ -56,10 +59,14 @@ def submit_community_site(geojson_geometry, submitter_group, sector, notes="", s
     -------
     dict with 'success' (bool) and 'message' (str)
     """
+    submitter_group = (submitter_group or "").strip()
+    sector = (sector or "").strip()
+    notes = (notes or "").strip()
+
     # Validation
-    if not submitter_group.strip():
+    if not submitter_group:
         return {"success": False, "message": "Submitter group name is required."}
-    if not sector.strip():
+    if not sector:
         return {"success": False, "message": "Sector is required."}
 
     try:
@@ -73,10 +80,10 @@ def submit_community_site(geojson_geometry, submitter_group, sector, notes="", s
     new_row = gpd.GeoDataFrame(
         [{
             "geometry": geom,
-            "submitter_group": submitter_group.strip(),
-            "sector": sector.strip(),
+            "submitter_group": submitter_group,
+            "sector": sector,
             "submission_date": submission_date,
-            "notes": notes.strip(),
+            "notes": notes,
             "verified": False,   # always False on submission — Phase 10 labels this
             "gps_verified": gps_verified,
             "timestamp_verified": timestamp_verified,
@@ -85,16 +92,54 @@ def submit_community_site(geojson_geometry, submitter_group, sector, notes="", s
         crs="EPSG:4326"
     )
 
-    existing = _load_ledger()
+    with _ledger_lock:
+        existing = _load_ledger()
 
-    if existing.empty:
-        combined = new_row
-    else:
-        combined = pd.concat([existing, new_row], ignore_index=True)
-        combined = gpd.GeoDataFrame(combined, geometry="geometry", crs="EPSG:4326")
+        if existing.empty:
+            combined = new_row
+        else:
+            combined = pd.concat([existing, new_row], ignore_index=True)
+            combined = gpd.GeoDataFrame(combined, geometry="geometry", crs="EPSG:4326")
 
-    combined.to_file(LEDGER_PATH, driver="GeoJSON")
+        combined.to_file(LEDGER_PATH, driver="GeoJSON")
+        
     return {"success": True, "message": f"Site submitted by '{submitter_group}' in sector '{sector}'."}
+
+
+
+def delete_submission(submitter_group, submission_date):
+    """Deletes matching rows from the ledger."""
+    with _ledger_lock:
+        gdf = _load_ledger()
+        if gdf.empty:
+            return {"success": False, "message": "Ledger is empty."}
+            
+        initial_len = len(gdf)
+        mask = (gdf['submitter_group'] == submitter_group) & (gdf['submission_date'] == submission_date)
+        gdf = gdf[~mask]
+        
+        if len(gdf) == initial_len:
+            return {"success": False, "message": "Entry not found."}
+            
+        gdf.to_file(LEDGER_PATH, driver="GeoJSON")
+        return {"success": True, "message": "Entry deleted."}
+
+def toggle_verification(submitter_group, submission_date):
+    """Toggles the verified status of matching rows."""
+    with _ledger_lock:
+        gdf = _load_ledger()
+        if gdf.empty:
+            return {"success": False, "message": "Ledger is empty."}
+            
+        mask = (gdf['submitter_group'] == submitter_group) & (gdf['submission_date'] == submission_date)
+        if not mask.any():
+            return {"success": False, "message": "Entry not found."}
+            
+        # Toggle boolean value (handling possible missing/NaN with fillna)
+        gdf.loc[mask, 'verified'] = ~gdf.loc[mask, 'verified'].fillna(False).astype(bool)
+        
+        gdf.to_file(LEDGER_PATH, driver="GeoJSON")
+        return {"success": True, "message": "Verification status toggled."}
 
 
 def export_ledger_csv():

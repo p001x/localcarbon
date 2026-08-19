@@ -228,22 +228,22 @@ const dashboardSteps = [
   {
     title: "1. The Proposal",
     text: "A local cooperative proposes a 500-hectare restoration project in Gicumbi District, Rwanda.",
-    mapConfig: { center: [-1.94, 29.87], zoom: 8 }
+    img: "/images/dashboard_proposal_1787155462625.jpg"
   },
   {
     title: "2. The Safeguard",
     text: "Before capital is deployed, the LCRI engine autonomously scans the perimeter. It cross-references boundaries against the World Database on Protected Areas (WDPA), guaranteeing the project safeguards native reserves.",
-    mapConfig: { center: [-1.6, 30.1], zoom: 10, polygon: [[-1.5, 30.0], [-1.5, 30.2], [-1.7, 30.2], [-1.7, 30.0]], style: { color: '#3498db', weight: 2, fillOpacity: 0.2 } }
+    img: "/images/dashboard_safeguard_1787155473240.jpg"
   },
   {
     title: "3. The Baseline",
     text: "Next, NASA and ESA orbital sensors sweep the terrain. The engine strips away the canopy to reveal the baseline: a degraded state of only 12 tons of carbon per hectare.",
-    mapConfig: { center: [-1.6, 30.1], zoom: 12, polygon: [[-1.58, 30.08], [-1.58, 30.12], [-1.62, 30.12], [-1.62, 30.08]], style: { color: '#e74c3c', weight: 2, fillColor: '#e74c3c', fillOpacity: 0.4 } }
+    img: "/images/dashboard_baseline_1787155483215.jpg"
   },
   {
     title: "4. The Prediction",
     text: "Finally, the Random Forest algorithm takes over. Factoring in steep slopes and soil conditions, it projects a 10-year yield of 45 tons per hectare with an 85% AI Confidence Score, creating an investment-grade asset.",
-    mapConfig: { center: [-1.6, 30.1], zoom: 12, polygon: [[-1.58, 30.08], [-1.58, 30.12], [-1.62, 30.12], [-1.62, 30.08]], style: { color: '#2ecc71', weight: 2, fillColor: '#2ecc71', fillOpacity: 0.4 } }
+    img: "/images/dashboard_prediction_1787155494547.jpg"
   }
 ];
 
@@ -336,22 +336,22 @@ const registrySteps = [
   {
     title: "1. The Verification Crisis",
     text: "Carbon markets historically suffered from opacity and phantom credits. The LCRI Registry acts as a cryptographic single source of truth, linking every credit directly to Earth Observation telemetry.",
-    img: "/cryptographic_carbon_registry.jpg"
+    img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80"
   },
   {
     title: "2. Global Standard Integration",
     text: "Synchronized with international benchmarks (Verra, Gold Standard), the registry aggregates active REDD+ and ARR projects across Africa into one transparent ledger.",
-    img: "/cryptographic_carbon_registry.jpg"
+    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
   },
   {
     title: "3. Live Satellite Auditing",
     text: "Stakeholders can inspect projects across the continent to load Sentinel-2 imagery and audit canopy health and biomass density directly from the browser.",
-    img: "/satellite_biomass_heatmap.jpg"
+    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
   },
   {
     title: "4. End-to-End Transparency",
     text: "From the first sapling planted by a rural cooperative to the retired credit, every ton of CO₂ is mathematically accounted for, ending greenwashing.",
-    img: "/cryptographic_carbon_registry.jpg"
+    img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80"
   }
 ];
 
@@ -591,19 +591,19 @@ export default function VisionTab() {
           <div className="ambient-glow glow-right"></div>
           <div className="vision-content">
             <div className="animate-on-scroll" style={{ textAlign: 'center', marginBottom: '36px' }}>
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.8vw, 3.2rem)' }}>The Devastation of "Blind" Reforestation</h1>
-              <h2 className="vision-subtitle" style={{ color: '#e74c3c' }}>A Local Perspective: Canopy Loss in Critical Biomes</h2>
+              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.8vw, 3.2rem)' }}>The Power of Verified Reforestation</h1>
+              <h2 className="vision-subtitle" style={{ color: '#2ecc71' }}>A Local Perspective: Canopy Restoration in Critical Biomes</h2>
               <p className="vision-text" style={{ margin: '0 auto', maxWidth: 880 }}>
-                Without high-fidelity spatial data, tree planting risks failure on steep slopes or high-erosion areas. Drag the slider below to witness two decades of unmonitored canopy degradation in Rwanda's montane landscapes.
+                With high-fidelity spatial data, tree planting succeeds even on steep slopes or high-erosion areas. Drag the slider below to witness the transformation from severe degradation to thriving restored canopy in Rwanda's montane landscapes.
               </p>
             </div>
             
             <div className="animate-on-scroll delay-1">
               <BeforeAfterSlider 
-                beforeImage="/forest_before.jpg" 
-                afterImage="/forest_after.jpg" 
-                beforeLabel="2001 Baseline (Intact Native Canopy)" 
-                afterLabel="2023 Degradation (Severe Loss)" 
+                beforeImage="/images/rwanda_before.jpg" 
+                afterImage="/images/rwanda_after.jpg" 
+                beforeLabel="2018: Severe Erosion & Degradation (Green Gicumbi)" 
+                afterLabel="2026: Radical Terracing & Agroforestry (Restored)" 
               />
             </div>
           </div>
@@ -660,7 +660,7 @@ export default function VisionTab() {
             {/* Satellite Biomass Telemetry Showcase Card */}
             <div className="animate-on-scroll delay-1" style={{ margin: '30px 0', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(46, 204, 113, 0.3)', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
               <img 
-                src="/satellite_biomass_heatmap.jpg" 
+                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" 
                 alt="Satellite Aboveground Biomass Heatmap & Telemetry" 
                 style={{ width: '100%', height: 'auto', maxHeight: '420px', objectFit: 'cover', display: 'block' }} 
               />
@@ -691,7 +691,7 @@ export default function VisionTab() {
             </div>
 
             <div className="animate-on-scroll" style={{ marginTop: '60px' }}>
-              <MapScrollyTelling 
+              <ImageScrollyTelling 
                 steps={dashboardSteps} 
                 navigate={navigate} 
                 title="The Anatomy of a Verified Project"

@@ -11,7 +11,10 @@ import {
   uploadAreaFile,
   fetchTrueColorTile,
   analyseTree,
-  fetchKnownSpecies
+  fetchKnownSpecies,
+  fetchLiveCarbonPrice,
+  deleteLedgerEntry,
+  toggleLedgerEntry
 } from '../api'
 
 /* ─── Country centroids ──────────────────────────────────────────────────── */
@@ -133,16 +136,42 @@ export default function LedgerTab({ country }) {
 
   // Live Carbon Stock Ticker loop
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const change = (Math.random() - 0.5) * 0.28
+    let basePrice = 12.50;
+
+    const fetchRealData = () => {
+      fetchLiveCarbonPrice()
+        .then(data => {
+          const coinData = data['toucan-protocol-nature-carbon-tonne'];
+          if (coinData) {
+            const price = coinData.usd || 12.50;
+            const change = coinData.usd_24h_change || 0.00;
+            basePrice = price;
+            setTickerVal(price);
+            setTickerChange(change);
+            setTickerDir(change >= 0 ? 'up' : 'down');
+          }
+        })
+        .catch(console.error)
+    };
+
+    // Fetch immediately, then every 60 seconds
+    fetchRealData();
+    const fetchIntervalId = window.setInterval(fetchRealData, 60000);
+
+    // Micro-flutter every 2 seconds to keep it looking "alive" between real polls
+    const flutterIntervalId = window.setInterval(() => {
+      const flutter = (Math.random() - 0.5) * 0.02; // ±$0.01
       setTickerVal(prev => {
-        const next = prev + change
-        return Math.max(5.0, Math.min(30.0, next))
+        // keep it close to the real base price
+        const next = basePrice + flutter;
+        return next;
       })
-      setTickerChange(change)
-      setTickerDir(change >= 0 ? 'up' : 'down')
-    }, 1500)
-    return () => clearInterval(intervalId)
+    }, 2000);
+
+    return () => {
+      window.clearInterval(fetchIntervalId);
+      window.clearInterval(flutterIntervalId);
+    }
   }, [])
 
   // ── Single Tree Allometry State ───────────────────────────────────────────
@@ -162,8 +191,32 @@ export default function LedgerTab({ country }) {
   const loadLedger = (sector) => {
     fetchLedger(sector === 'All' ? null : sector)
       .then(setSubmissions)
-      .catch(() => {})
+      .catch(err => {
+        setSubmissions([])
+        setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to load submissions' })
+      })
   }
+
+  const handleDeleteLedger = async (e, r) => {
+    e.stopPropagation();
+    if (!window.confirm(`Are you sure you want to delete ${r.submitter_group}'s entry?`)) return;
+    try {
+      await deleteLedgerEntry({ submitter_group: r.submitter_group, submission_date: r.submission_date });
+      loadLedger(filterSector);
+    } catch (err) {
+      setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to delete' });
+    }
+  };
+
+  const handleToggleLedger = async (e, r) => {
+    e.stopPropagation();
+    try {
+      await toggleLedgerEntry({ submitter_group: r.submitter_group, submission_date: r.submission_date });
+      loadLedger(filterSector);
+    } catch (err) {
+      setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to toggle verification' });
+    }
+  };
   
   useEffect(() => {
     loadLedger('All')
@@ -351,7 +404,7 @@ export default function LedgerTab({ country }) {
 
   const handleSubmit = async () => {
     if (!drawnGeom)         { setMsg({ type:'error', text:'Please draw or upload a polygon first.' });      return }
-    if (!form.group || !form.sector) { setMsg({ type:'error', text:'Group name and sector are required.' }); return }
+    if (!form.group?.trim() || !form.sector?.trim()) { setMsg({ type:'error', text:'Group name and sector are required.' }); return }
     
     if (!gpsVerified && !confirm("⚠️ Warning: You are submitting without Live GPS Verification. This will significantly lower your Verification Confidence Score. Continue?")) {
       return
@@ -913,9 +966,26 @@ export default function LedgerTab({ country }) {
                           <td><span className="badge badge-yellow">{r.sector}</span></td>
                           <td className="mono">{r.submission_date}</td>
                           <td style={{ color:'var(--text-muted)', fontSize:'0.78rem' }}>{r.notes||'—'}</td>
-                          <td>
-                            {r.gps_verified && <span title="GPS Verified" style={{marginRight: 4, cursor: 'help'}}>📍</span>}
-                            <span className={`badge ${r.verified ? 'badge-green':'badge-red'}`}>{r.verified ? '✓':'✗'}</span>
+                          <td style={{ display:'flex', gap: 6, alignItems:'center' }}>
+                            <span 
+                              className={`badge ${r.verified ? 'badge-green':'badge-red'}`} 
+                              style={{ cursor: 'pointer', transition: 'opacity 0.2s' }} 
+                              onClick={(e) => handleToggleLedger(e, r)}
+                              title="Click to toggle verification status"
+                            >
+                              {r.verified ? '[ VERIFIED ]' : '[ UNVERIFIED ]'}
+                            </span>
+                            {r.gps_verified && <span className="badge badge-yellow" title="GPS Location Verified">[ GPS ]</span>}
+                            <span 
+                              className="badge badge-red" 
+                              style={{ cursor: 'pointer', opacity: 0.8 }} 
+                              onClick={(e) => handleDeleteLedger(e, r)}
+                              title="Delete entry"
+                              onMouseOver={e => e.target.style.opacity = 1}
+                              onMouseOut={e => e.target.style.opacity = 0.8}
+                            >
+                              [ DEL ]
+                            </span>
                           </td>
                         </tr>
                       );

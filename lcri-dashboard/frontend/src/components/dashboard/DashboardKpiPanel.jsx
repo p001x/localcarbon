@@ -25,40 +25,64 @@ export default function DashboardKpiPanel({ ctx }) {
         </div>
       </div>
 
-      {/* Dynamic Conservation Status Banner */}
+      {/* Dynamic Conservation & Ecological Banners */}
       {hasDistrict && (
-        <div style={{
-          background: 'rgba(241, 196, 15, 0.08)',
-          border: '1px solid rgba(241, 196, 15, 0.3)',
-          borderRadius: '10px',
-          padding: '12px 18px',
-          marginBottom: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '12px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '1.5rem' }}></span>
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexDirection: 'column' }}>
+          
+          {/* Ecological Restoration Guide Banner */}
+          <div style={{
+            background: 'rgba(46, 204, 113, 0.08)',
+            border: '1px solid rgba(46, 204, 113, 0.3)',
+            borderRadius: '10px',
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '16px'
+          }}>
+            <div style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ecc71', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', fontWeight: 800, padding: '4px 8px', borderRadius: 6, flexShrink: 0, marginTop: 2 }}>
+              BIODIVERSITY
+            </div>
             <div>
-              <div style={{ fontWeight: 700, color: '#f1c40f', fontSize: '0.85rem' }}>
-                Conservation &amp; Protected Area Proximity — {district}
+              <div style={{ fontWeight: 700, color: '#2ecc71', fontSize: '0.9rem', marginBottom: 4 }}>
+                Ecological Restoration Guide: Native Species Targeting — {district}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-sec)', marginTop: 2 }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>
                 {district.includes('Musanze') || district.includes('Nyabihu') || district.includes('Rubavu') || district.includes('Burera')
-                  ? 'Located in Volcanoes / Gishwati-Mukura National Park Buffer Zone. High biodiversity priority.'
+                  ? 'Volcanoes / Gishwati-Mukura Buffer Zone. Recommend planting native Afro-montane species (Hagenia abyssinica, Hypericum revolutum) to restore primate corridors and buffer critical habitat.'
                   : (district === 'Nyamagabe' || district === 'Rusizi' || district === 'Nyaruguru')
-                  ? 'Located in Nyungwe Rainforest Protected Corridor. Critical primate & catchment habitat.'
-                  : (district === 'Kayonza' || district === 'Gatsibo')
-                  ? 'Located in Akagera Savanna & Wetland Conservation Ecosystem.'
-                  : 'Integrated in Rwanda National Forest & Landscape Restoration Catchment Area.'}
+                  ? 'Nyungwe Rainforest Corridor. High priority for Polyscias fulva and Symphonia globulifera to rebuild structural canopy and support endemic avian/primate populations.'
+                  : (district === 'Kayonza' || district === 'Gatsibo' || district === 'Nyagatare')
+                  ? 'Akagera Savanna Ecosystem. Prioritize drought-resilient native species (Acacia senegal, Combretum spp.) for savanna woodland restoration and wetland buffering.'
+                  : 'Central/Eastern Catchment Area. Avoid exotic monocultures (Eucalyptus). Mandate indigenous agroforestry (Markhamia lutea, Grevillea robusta) to support soil nutrient cycling and smallholder livelihoods.'}
               </div>
             </div>
           </div>
-          <span className="badge badge-green" style={{ whiteSpace: 'nowrap' }}>
-            WDPA Verified Zone
-          </span>
+
+          {/* Soil Erosion & Slope Risk Banner */}
+          <div style={{
+            background: 'rgba(230, 126, 34, 0.08)',
+            border: '1px solid rgba(230, 126, 34, 0.3)',
+            borderRadius: '10px',
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '16px'
+          }}>
+            <div style={{ background: 'rgba(230, 126, 34, 0.15)', color: '#e67e22', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', fontWeight: 800, padding: '4px 8px', borderRadius: 6, flexShrink: 0, marginTop: 2 }}>
+              TERRAIN RISK
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, color: '#e67e22', fontSize: '0.9rem', marginBottom: 4 }}>
+                Terrain Vulnerability: Soil Erosion &amp; Slope Risk
+              </div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>
+                {district.includes('Musanze') || district.includes('Nyabihu') || district.includes('Gakenke') || district.includes('Rulindo') || district.includes('Gicumbi') || district.includes('Burera') || district.includes('Ngororero') || district.includes('Rutsiro')
+                  ? 'Severe Erosion Risk (Slopes >25°). Immediate climate adaptation required. Combine radical terracing with deep-rooted native agroforestry to stabilize hillsides, prevent landslide fatalities, and protect downstream watersheds.'
+                  : 'Moderate-to-High Erosion Risk. Contour planting and vegetative buffer strips recommended to mitigate topsoil runoff and enhance agricultural resilience.'}
+              </div>
+            </div>
+          </div>
+
         </div>
       )}
 

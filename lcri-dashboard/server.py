@@ -689,13 +689,31 @@ def report_preview():
 # ---------------------------------------------------------------------------
 # Community Ledger
 # ---------------------------------------------------------------------------
-from src.ledger import get_all_submissions, get_submissions_by_sector, submit_community_site, export_ledger_csv
+from src.ledger import get_all_submissions, get_submissions_by_sector, submit_community_site, export_ledger_csv, delete_submission, toggle_verification
 
-@app.route('/api/ledger', methods=['GET', 'POST'])
+@app.route('/api/ledger', methods=['GET', 'POST', 'DELETE', 'PATCH'])
 def api_ledger():
     print("HITTING API LEDGER:", request.method)
     try:
-        if request.method == 'POST':
+        if request.method == 'DELETE':
+            data = request.json or {}
+            group = data.get("submitter_group", "")
+            date = data.get("submission_date", "")
+            if not group or not date:
+                return jsonify({"error": "Missing parameters"}), 400
+            result = delete_submission(group, date)
+            return jsonify(result), (200 if result["success"] else 400)
+            
+        elif request.method == 'PATCH':
+            data = request.json or {}
+            group = data.get("submitter_group", "")
+            date = data.get("submission_date", "")
+            if not group or not date:
+                return jsonify({"error": "Missing parameters"}), 400
+            result = toggle_verification(group, date)
+            return jsonify(result), (200 if result["success"] else 400)
+
+        elif request.method == 'POST':
             data = request.json or {}
             geom = data.get("geometry")
             group = data.get("submitterGroup", "")
