@@ -83,6 +83,7 @@ export default function App() {
   const navigate = useNavigate()
   const [isOffline, setIsOffline]         = useState(false)
   const [appConfig, setAppConfig]         = useState(DEFAULT_CONFIG)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [country, setCountry]             = useState('Rwanda')
   const [district, setDistrict]           = useState('All Rwanda')
   const [districtsList, setDistrictsList] = useState(DEFAULT_CONFIG.districts)
@@ -181,7 +182,7 @@ export default function App() {
         </div>
       )}
       {/* ── Sidebar ─────────────────────────────────────────────── */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-logo">
           <h1>LCRI</h1>
           <p>Local Carbon Return Index · Africa 2026</p>
@@ -195,6 +196,7 @@ export default function App() {
               <NavLink 
                 key={t.id} 
                 to={t.path}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
                 style={{ display: 'block', padding: '8px 12px', fontSize: '0.85rem' }}
               >
@@ -306,11 +308,16 @@ export default function App() {
         )}
 
         <div className="main-header">
-          <div>
-            <h2>{meta.title}</h2>
-            <p>{meta.sub}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
+            <div>
+              <h2>{meta.title}</h2>
+              <p className="header-subtitle">{meta.sub}</p>
+            </div>
           </div>
-          <span className="badge badge-green">{country}</span>
+          <span className="badge badge-green hide-on-mobile">{country}</span>
         </div>
 
         <div className="tab-content">
