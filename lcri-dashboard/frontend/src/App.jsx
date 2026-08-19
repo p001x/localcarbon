@@ -20,33 +20,33 @@ const TAB_GROUPS = [
   {
     title: 'Overview & Vision',
     tabs: [
-      { id: 'home',         path: '/',            code: 'HOME',  label: 'Home' },
-      { id: 'vision',       path: '/vision',      code: 'STORY', label: 'LCRI Story Map' },
+      { id: 'home',         path: '/',            label: 'Home' },
+      { id: 'vision',       path: '/vision',      label: 'Story Map' },
     ]
   },
   {
     title: 'Ecological Triage & Modeling',
     tabs: [
-      { id: 'dashboard',    path: '/dashboard',   code: 'MAP',    label: 'Satellite Dashboard' },
-      { id: 'lcri',         path: '/lcri',        code: 'TRIAGE', label: 'Ecological Ranking' },
-      { id: 'simulator',    path: '/simulator',   code: 'SIM',    label: 'Restoration Simulator' },
-      { id: 'registry',    path: '/registry',    code: 'REG',    label: 'Project Registry' },
+      { id: 'dashboard',    path: '/dashboard',   label: 'Satellite Dashboard' },
+      { id: 'lcri',         path: '/lcri',        label: 'Ecological Ranking' },
+      { id: 'simulator',    path: '/simulator',   label: 'Restoration Simulator' },
+      { id: 'registry',    path: '/registry',    label: 'Project Registry' },
     ]
   },
   {
     title: 'Grassroots Validation & Auditing',
     tabs: [
-      { id: 'gicumbi',     path: '/gicumbi',     code: 'AUDIT',  label: 'Green Gicumbi Audit' },
-      { id: 'ledger',      path: '/ledger',      code: 'DATA',   label: 'Community Ledger' },
+      { id: 'gicumbi',     path: '/gicumbi',     label: 'Green Gicumbi Audit' },
+      { id: 'ledger',      path: '/ledger',      label: 'Community Ledger' },
     ]
   },
   {
     title: 'Science & Reference',
     tabs: [
-      { id: 'lens',        path: '/lens',        code: 'LENS',   label: 'Interactive Lens' },
-      { id: 'atlas',        path: '/atlas',       code: 'ATLAS',  label: 'Visual Atlas' },
-      { id: 'methodology',  path: '/methodology', code: 'METH',   label: 'Methodology' },
-      { id: 'datasources',  path: '/datasources', code: 'SRC',    label: 'Data Sources' },
+      { id: 'lens',        path: '/lens',        label: 'Interactive Lens' },
+      { id: 'atlas',        path: '/atlas',       label: 'Visual Atlas' },
+      { id: 'methodology',  path: '/methodology', label: 'Methodology' },
+      { id: 'datasources',  path: '/datasources', label: 'Data Sources' },
     ]
   }
 ]
@@ -186,10 +186,9 @@ export default function App() {
                 key={t.id} 
                 to={t.path}
                 className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 12px' }}
+                style={{ display: 'block', padding: '8px 12px', fontSize: '0.85rem' }}
               >
-                <span style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.04em', minWidth: 38 }}>[{t.code}]</span> 
-                <span style={{ fontSize: '0.85rem' }}>{t.label}</span>
+                {t.label}
               </NavLink>
             ))}
           </div>

@@ -52,7 +52,7 @@ function StatTile({ end, suffix, label, sub, color = 'var(--accent)', decimals =
 }
 
 /* ── Tool card ───────────────────────────────────────────────────────────── */
-function ToolCard({ code, title, desc, path, accent, navigate }) {
+function ToolCard({ title, desc, path, accent, navigate }) {
   const col = accent || 'var(--accent)'
   return (
     <div
@@ -61,17 +61,16 @@ function ToolCard({ code, title, desc, path, accent, navigate }) {
         background: 'rgba(0,0,0,0.25)',
         border: '1px solid var(--border)',
         borderRadius: 12,
-        padding: '18px 16px',
+        padding: '20px 18px',
         cursor: 'pointer',
         transition: 'border-color 0.2s, transform 0.15s',
-        display: 'flex', flexDirection: 'column', gap: 8,
+        display: 'flex', flexDirection: 'column', gap: 6,
       }}
       onMouseEnter={e => { e.currentTarget.style.borderColor = col; e.currentTarget.style.transform = 'translateY(-2px)' }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)' }}
     >
-      <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: col, fontWeight: 700, letterSpacing: '0.06em' }}>[{code}]</span>
-      <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{title}</div>
-      <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{desc}</div>
+      <div style={{ fontWeight: 700, fontSize: '0.95rem', color: col }}>{title}</div>
+      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{desc}</div>
     </div>
   )
 }
@@ -180,10 +179,10 @@ export default function HomeTab() {
         Ecological Triage &amp; Modeling Tools
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:12, marginBottom:24 }}>
-        <ToolCard navigate={navigate} path="/dashboard"  code="GEOSPATIAL" title="Satellite Dashboard"  desc="Live ESA CCI zonal statistics, KPI telemetry, and Sentinel-2 change detection." />
-        <ToolCard navigate={navigate} path="/lcri"       code="TRIAGE"     title="Ecological Ranking"    desc="Multi-criteria parcel triage: erosion risk, canopy loss, slope, and seed proximity." />
-        <ToolCard navigate={navigate} path="/simulator"  code="SIMULATION" title="Restoration Simulator" desc="20-year logistic canopy growth model with Monte Carlo risk buffer corridors." accent="#27ae60" />
-        <ToolCard navigate={navigate} path="/registry"   code="REGISTRY"   title="Project Registry"      desc="Regional forest project index with live satellite biomass verification." accent="#3498db" />
+        <ToolCard navigate={navigate} path="/dashboard"  title="Satellite Dashboard"  desc="Live ESA CCI zonal statistics, KPI telemetry, and Sentinel-2 change detection." />
+        <ToolCard navigate={navigate} path="/lcri"       title="Ecological Ranking"    desc="Multi-criteria parcel triage: erosion risk, canopy loss, slope, and seed proximity." />
+        <ToolCard navigate={navigate} path="/simulator"  title="Restoration Simulator" desc="20-year logistic canopy growth model with Monte Carlo risk buffer corridors." accent="#27ae60" />
+        <ToolCard navigate={navigate} path="/registry"   title="Project Registry"      desc="Regional forest project index with live satellite biomass verification." accent="#3498db" />
       </div>
 
       {/* ── Grassroots Validation ─────────────────────────────────────── */}
@@ -191,8 +190,8 @@ export default function HomeTab() {
         Grassroots Validation &amp; Ground Truth
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:12, marginBottom:36 }}>
-        <ToolCard navigate={navigate} path="/gicumbi"    code="AUDIT"  title="Green Gicumbi Audit" desc="Independent Sentinel-2 orbital cross-check of the 4,801 ha Northern Rwanda claim." accent="#f1c40f" />
-        <ToolCard navigate={navigate} path="/ledger"     code="LEDGER" title="Community Ledger"    desc="Geo-tagged field submissions with per-tree allometric scoring and satellite cross-check." accent="#9b59b6" />
+        <ToolCard navigate={navigate} path="/gicumbi"    title="Green Gicumbi Audit" desc="Independent Sentinel-2 orbital cross-check of the 4,801 ha Northern Rwanda claim." accent="#f1c40f" />
+        <ToolCard navigate={navigate} path="/ledger"     title="Community Ledger"    desc="Geo-tagged field submissions with per-tree allometric scoring and satellite cross-check." accent="#9b59b6" />
       </div>
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
