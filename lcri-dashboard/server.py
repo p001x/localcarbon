@@ -5,7 +5,7 @@ Replaces Streamlit as the application server to support concurrent users.
 import os
 import json
 import tempfile
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 
 import config
@@ -769,6 +769,28 @@ def api_tree_species():
     species_list = list(WOOD_DENSITY_DB.keys())
     species_list.sort()
     return jsonify({"species": species_list})
+
+
+# ---------------------------------------------------------------------------
+# Frontend Static Files / Root Status Route
+# ---------------------------------------------------------------------------
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend_root(path):
+    dist_dir = os.path.join(os.path.dirname(__file__), 'frontend', 'dist')
+    if path and os.path.exists(os.path.join(dist_dir, path)):
+        return send_from_directory(dist_dir, path)
+    elif os.path.exists(os.path.join(dist_dir, 'index.html')):
+        return send_from_directory(dist_dir, 'index.html')
+    else:
+        return jsonify({
+            "service": "LCRI Carbon Intelligence API Server",
+            "version": "2.0.0",
+            "status": "online",
+            "national_focus": "Rwanda",
+            "competition": "RCMRD 2026 Arts & Maps",
+            "endpoints": ["/api/config", "/api/districts", "/api/kpis", "/api/lcri-ranking", "/api/simulate", "/api/gicumbi/stats", "/api/ledger/submissions"]
+        }), 200
 
 
 if __name__ == "__main__":
