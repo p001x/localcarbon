@@ -62,7 +62,7 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
   return (
     <div className="scrollytelling-container" style={{ display: 'flex', gap: '40px', marginTop: '60px', position: 'relative' }}>
       {/* Left Column (Text) */}
-      <div style={{ flex: '1', paddingBottom: '25vh' }}>
+      <div className="scrollytelling-text" style={{ flex: '1', paddingBottom: '25vh' }}>
         {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
         {steps.map((step, idx) => (
           <div 
@@ -94,7 +94,7 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
       </div>
       
       {/* Right Column (Sticky Visuals) */}
-      <div style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}>
+      <div className="scrollytelling-visual" style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}>
         {steps.map((step, idx) => (
           <img 
             key={idx}
@@ -166,7 +166,7 @@ function MapScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
 
   return (
     <div className="scrollytelling-container" style={{ display: 'flex', gap: '40px', marginTop: '60px', position: 'relative' }}>
-      <div style={{ flex: '1', paddingBottom: '25vh' }}>
+      <div className="scrollytelling-text" style={{ flex: '1', paddingBottom: '25vh' }}>
         {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
         {steps.map((step, idx) => (
           <div key={idx} ref={el => stepRefs.current[idx] = el}
@@ -177,7 +177,7 @@ function MapScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
         ))}
         {ctaText && <div style={{ textAlign: 'left', marginTop: '30px', paddingLeft: '32px' }}><button onClick={() => navigate(ctaLink)} className="vision-cta">{ctaText} →</button></div>}
       </div>
-      <div style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)' }}>
+      <div className="scrollytelling-visual" style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)' }}>
         <div ref={mapRef} style={{ width: '100%', height: '100%' }}></div>
       </div>
     </div>
@@ -206,7 +206,7 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
 
   return (
     <div className="scrollytelling-container" style={{ display: 'flex', gap: '40px', marginTop: '60px', position: 'relative' }}>
-      <div style={{ flex: '1', paddingBottom: '25vh' }}>
+      <div className="scrollytelling-text" style={{ flex: '1', paddingBottom: '25vh' }}>
         {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
         {steps.map((step, idx) => (
           <div key={idx} ref={el => stepRefs.current[idx] = el}
@@ -217,7 +217,7 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
         ))}
         {ctaText && <div style={{ textAlign: 'left', marginTop: '30px', paddingLeft: '32px' }}><button onClick={() => navigate(ctaLink)} className="vision-cta">{ctaText} →</button></div>}
       </div>
-      <div style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}>
+      <div className="scrollytelling-visual" style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}>
         <ReactECharts option={currentOption} style={{ height: '100%', width: '100%' }} />
       </div>
     </div>

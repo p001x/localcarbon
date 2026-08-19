@@ -367,5 +367,27 @@
   .vision-chapter-title {
     display: none;
   }
+  
+  /* Mobile Scrollytelling Layout Fix */
+  .scrollytelling-container {
+    flex-direction: column-reverse !important;
+    gap: 20px !important;
+  }
+  
+  .scrollytelling-visual {
+    height: 45vh !important;
+    top: 70px !important;
+    z-index: 10;
+    margin-bottom: 20px;
+  }
+  
+  .scrollytelling-text {
+    padding-bottom: 5vh !important;
+  }
+  
+  .scrollytelling-text > div {
+    min-height: auto !important;
+    padding: 24px !important;
+  }
 }
 
