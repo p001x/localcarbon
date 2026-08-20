@@ -699,7 +699,7 @@ export default function LedgerTab({ country }) {
                   hint={si.hint}
                 />
                 <div style={{ flex:1, minWidth:160 }}>
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:8 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(120px, 1fr))', gap:8, marginBottom:8 }}>
                     <div style={{ background:'rgba(255,255,255,0.04)', borderRadius:8, padding:'8px 10px' }}>
                       <div style={{ fontSize:'0.68rem', color:'var(--text-muted)' }}>Area</div>
                       <div style={{ fontWeight:700, fontSize:'0.95rem' }}>{analysis.area_ha?.toFixed(1)} ha</div>
@@ -749,7 +749,7 @@ export default function LedgerTab({ country }) {
                 <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginBottom:6, textTransform:'uppercase', letterSpacing:'0.05em' }}>
                   Current Market Value (USD / tCO₂e)
                 </div>
-                <div style={{ display:'flex', gap:8 }}>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                   <MktCard label="Low scenario ($6)" value={analysis.market_value?.low} sub="Conservative VCM" />
                   <MktCard label="Mid scenario ($10)" value={analysis.market_value?.mid} sub="Market median" highlight />
                   <MktCard label="High scenario ($18)" value={analysis.market_value?.high} sub="Premium / REDD+" />
@@ -761,7 +761,7 @@ export default function LedgerTab({ country }) {
                 <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginBottom:6, textTransform:'uppercase', letterSpacing:'0.05em' }}>
                   10-Year Cumulative Revenue Projection
                 </div>
-                <div style={{ display:'flex', gap:8 }}>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                   <MktCard label="Low ($6/t)" value={analysis.projected_10yr?.low} />
                   <MktCard label="Mid ($10/t)" value={analysis.projected_10yr?.mid} highlight />
                   <MktCard label="High ($18/t)" value={analysis.projected_10yr?.high} />
@@ -818,7 +818,7 @@ export default function LedgerTab({ country }) {
             Upload a photo of a single tree, select the species, enter its measurements, and estimate its biomass and carbon score using <strong>Tallo v2</strong> + <strong>BAAD</strong> databases and the <strong>Chave 2014</strong> equation.
           </p>
 
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:10 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))', gap:10, marginBottom:10 }}>
             {/* Photo upload container */}
             <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
               <label style={{ fontSize:'0.76rem', color:'var(--text-primary)', fontWeight:600 }}>📷 Tree Photo</label>
