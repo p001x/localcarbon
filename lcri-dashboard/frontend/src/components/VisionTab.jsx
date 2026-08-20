@@ -205,8 +205,8 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
   const currentOption = steps[activeStep]?.chartOption || {};
 
   return (
-    <div className="scrollytelling-container" style={{ display: 'flex', gap: '40px', marginTop: '60px', position: 'relative' }}>
-      <div className="scrollytelling-text" style={{ flex: '1', paddingBottom: '25vh' }}>
+    <div className="scrollytelling-container">
+      <div className="scrollytelling-text">
         {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
         {steps.map((step, idx) => (
           <div key={idx} ref={el => stepRefs.current[idx] = el}
@@ -217,7 +217,7 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
         ))}
         {ctaText && <div style={{ textAlign: 'left', marginTop: '30px', paddingLeft: '32px' }}><button onClick={() => navigate(ctaLink)} className="vision-cta">{ctaText} →</button></div>}
       </div>
-      <div className="scrollytelling-visual" style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}>
+      <div className="scrollytelling-visual">
         <ReactECharts option={currentOption} style={{ height: '100%', width: '100%' }} />
       </div>
     </div>
@@ -299,6 +299,7 @@ const simulatorSteps = [
       ...rankingBaseOpt,
       title: { text: 'Carbon Credit Pricing Premium ($/ton)', textStyle: { color: '#80cbc4', fontSize: 14 } },
       tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { top: 40, bottom: 80, left: 10, right: 20, containLabel: true },
       xAxis: { type: 'category', data: ['Base Carbon', '+ Biodiversity', '+ Gender Equity', 'Total Premium'], axisLabel: { color: '#80cbc4', rotate: 30, hideOverlap: true } },
       yAxis: { type: 'value', name: 'USD ($)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
       series: [{ type: 'bar', data: [15, 6, 4, { value: 25, itemStyle: { color: '#f1c40f' } }], itemStyle: { color: '#3498db' } }]

@@ -422,5 +422,41 @@ td.mono { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-s
     position: fixed;
     z-index: 1000;
   }
+  
+  .scrollytelling-container {
+    flex-direction: column-reverse !important;
+    gap: 20px !important;
+  }
+  .scrollytelling-text {
+    padding-bottom: 5vh !important;
+  }
+  .scrollytelling-visual {
+    position: relative !important;
+    top: 0 !important;
+    height: 350px !important;
+  }
 }
 
+.scrollytelling-container {
+  display: flex;
+  gap: 40px;
+  margin-top: 60px;
+  position: relative;
+}
+
+.scrollytelling-text {
+  flex: 1;
+  padding-bottom: 25vh;
+}
+
+.scrollytelling-visual {
+  flex: 1;
+  position: sticky;
+  top: 90px;
+  height: 58vh;
+  min-height: 350px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+}
