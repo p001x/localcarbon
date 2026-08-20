@@ -59,11 +59,26 @@ def predict_growth(features):
 
 def extract_ml_features_for_polygon(geojson_geom):
     """
-    Given a GeoJSON polygon, extract the 8 required features using Google Earth Engine.
+    Given a GeoJSON polygon, extract the required features using Google Earth Engine.
+    Uses local caching to significantly speed up repeated analysis of the same area.
     """
     import ee
+    import json
+    import hashlib
     from shapely.geometry import shape
-    
+
+    DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+    CACHE_DIR = os.path.join(DATA_DIR, 'cache')
+    os.makedirs(CACHE_DIR, exist_ok=True)
+
+    geom_str = json.dumps(geojson_geom, sort_keys=True)
+    hash_str = hashlib.md5(geom_str.encode('utf-8')).hexdigest()
+    cache_file = os.path.join(CACHE_DIR, f"ml_features_{hash_str}.json")
+
+    if os.path.exists(cache_file):
+        with open(cache_file, 'r') as f:
+            return json.load(f)
+
     geom = shape(geojson_geom)
     if geom.geom_type not in ('Polygon', 'MultiPolygon'):
         raise ValueError("Only polygons are supported for ML prediction")
@@ -132,7 +147,8 @@ def extract_ml_features_for_polygon(geojson_geom):
             tileScale=16 # Required to process large districts without memory limits
         ).getInfo()
         
-        return {
+        
+        result = {
             'baseline_agb': stats.get('baseline_agb') or 0,
             'sar_hv': stats.get('sar_hv') or 0,
             'sar_hh': stats.get('sar_hh') or 0,
@@ -146,6 +162,11 @@ def extract_ml_features_for_polygon(geojson_geom):
             'tmmx': stats.get('tmmx') or 0,
             'landcover': stats.get('landcover') or 0
         }
+        
+        with open(cache_file, 'w') as f:
+            json.dump(result, f)
+            
+        return result
     except Exception as e:
         print(f"Warning: GEE ML feature extraction failed ({e}), using mock offline features.")
         # Calculate rough area in hectares for somewhat proportional mock logic
