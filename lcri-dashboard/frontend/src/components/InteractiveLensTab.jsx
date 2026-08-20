@@ -66,12 +66,7 @@ export default function InteractiveLensTab() {
         container.style.clipPath = 'circle(0px at 0 0)'
         container.style.willChange = 'clip-path'
 
-        const mapEl = mapRef.current
-        mapEl.addEventListener('mousemove', e => {
-          const rect = mapEl.getBoundingClientRect()
-          const x = e.clientX - rect.left
-          const y = e.clientY - rect.top
-
+        const updateLens = (x, y, latlng) => {
           if (ringRef.current) {
             ringRef.current.style.left = `${x - 170}px`
             ringRef.current.style.top  = `${y - 170}px`
@@ -79,18 +74,39 @@ export default function InteractiveLensTab() {
           }
           container.style.clipPath = `circle(120px at ${x}px ${y}px)`
 
-          const ll = map.containerPointToLatLng([x, y])
-          const bm = estimateBiomass(ll.lat, ll.lng) * 2.0
+          const bm = estimateBiomass(latlng.lat, latlng.lng) * 2.0
           const co2e = bm * 0.47 * 3.67
           const credit = co2e * 15.5
-          setInfo({ seq: co2e.toFixed(1), cred: credit.toFixed(2), lat: ll.lat.toFixed(4), lng: ll.lng.toFixed(4), biomass: bm })
+          setInfo({ seq: co2e.toFixed(1), cred: credit.toFixed(2), lat: latlng.lat.toFixed(4), lng: latlng.lng.toFixed(4), biomass: bm })
           drawRadar(bm)
-        })
-        mapEl.addEventListener('mouseleave', () => {
-          container.style.clipPath = 'circle(0px at 0 0)'
-          if (ringRef.current) ringRef.current.style.display = 'none'
-          setInfo(null)
-        })
+        }
+
+        const isMobile = window.matchMedia("(max-width: 768px)").matches
+
+        if (isMobile) {
+          const updateCenter = () => {
+            const size = map.getSize()
+            const cx = size.x / 2
+            const cy = size.y / 2
+            const latlng = map.getCenter()
+            updateLens(cx, cy, latlng)
+          }
+          
+          map.on('move', updateCenter)
+          
+          // Initial center update
+          setTimeout(updateCenter, 100)
+        } else {
+          map.on('mousemove', e => {
+            updateLens(e.containerPoint.x, e.containerPoint.y, e.latlng)
+          })
+
+          map.on('mouseout', () => {
+            container.style.clipPath = 'circle(0px at 0 0)'
+            if (ringRef.current) ringRef.current.style.display = 'none'
+            setInfo(null)
+          })
+        }
       }, 300)
     }).catch(() => {})
 

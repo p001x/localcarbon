@@ -247,7 +247,14 @@ const dashboardSteps = [
   }
 ];
 
-const rankingBaseOpt = { backgroundColor:'transparent', textStyle:{fontFamily:'Inter',color:'#80cbc4'}, tooltip:{}, xAxis:{type:'category',axisLabel:{color:'#80cbc4'},axisLine:{lineStyle:{color:'#1e3a2a'}}}, yAxis:{type:'value',axisLabel:{color:'#80cbc4'},splitLine:{lineStyle:{color:'#1a2e22'}}} };
+const rankingBaseOpt = { 
+  backgroundColor:'transparent', 
+  textStyle:{fontFamily:'Inter',color:'#80cbc4'}, 
+  tooltip:{ trigger: 'axis' }, 
+  grid: { top: 80, bottom: 60, left: 10, right: 20, containLabel: true },
+  xAxis:{type:'category',axisLabel:{color:'#80cbc4', hideOverlap: true},axisLine:{lineStyle:{color:'#1e3a2a'}}}, 
+  yAxis:{type:'value',axisLabel:{color:'#80cbc4'},splitLine:{lineStyle:{color:'#1a2e22'}}} 
+};
 
 const rankingSteps = [
   {
@@ -361,10 +368,9 @@ const gicumbiSteps = [
     text: "Green Gicumbi reported a massive agroforestry initiative claiming 4,801 hectares planted across 9 sectors.",
     chartOption: {
       ...rankingBaseOpt,
-      title: { text: 'Claimed Agroforestry Hectares by Sector', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { type: 'value', name: 'Hectares (ha)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
+      title: { text: 'Claimed Agroforestry Hectares by Sector', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
+      xAxis: { ...rankingBaseOpt.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
+      yAxis: { ...rankingBaseOpt.yAxis, name: 'Hectares (ha)' },
       series: [{ type: 'bar', data: [580, 520, 610, 490, 540, 510, 480, 560, 511], itemStyle: { color: '#9b59b6' } }]
     }
   },
@@ -373,11 +379,10 @@ const gicumbiSteps = [
     text: "Sentinel-2 multi-spectral bands autonomously compare 2019 baselines to present-day NDVI, confirming ~4,650 hectares of actual canopy gain (a 97% validation rate).",
     chartOption: {
       ...rankingBaseOpt,
-      title: { text: 'Claimed vs. Sentinel-2 Verified Canopy Gain', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      legend: { data: ['Claimed (ha)', 'Satellite Verified (ha)'], textStyle: { color: '#80cbc4' } },
-      xAxis: { type: 'category', data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { type: 'value', name: 'Hectares', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
+      title: { text: 'Claimed vs. Sentinel-2 Verified Canopy Gain', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
+      legend: { data: ['Claimed (ha)', 'Satellite Verified (ha)'], top: 35, textStyle: { color: '#80cbc4', fontSize: 11 } },
+      xAxis: { ...rankingBaseOpt.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
+      yAxis: { ...rankingBaseOpt.yAxis, name: 'Hectares' },
       series: [
         { name: 'Claimed (ha)', type: 'bar', data: [580, 520, 610, 490, 540, 510, 480, 560, 511], itemStyle: { color: 'rgba(155, 89, 182, 0.6)' } },
         { name: 'Satellite Verified (ha)', type: 'bar', data: [562, 508, 595, 472, 526, 498, 465, 542, 482], itemStyle: { color: '#2ecc71' } }
@@ -389,10 +394,9 @@ const gicumbiSteps = [
     text: "The engine disaggregates findings sector by sector, verifying that resources directly reach the grassroots communities doing the physical planting.",
     chartOption: {
       ...rankingBaseOpt,
-      title: { text: 'Sector Validation Accuracy (%)', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { type: 'value', min: 80, max: 100, name: 'Accuracy %', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
+      title: { text: 'Sector Validation Accuracy (%)', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
+      xAxis: { ...rankingBaseOpt.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
+      yAxis: { ...rankingBaseOpt.yAxis, min: 80, max: 100, name: 'Accuracy %' },
       series: [{ type: 'line', smooth: true, data: [96.9, 97.7, 97.5, 96.3, 97.4, 97.6, 96.9, 96.8, 94.3], itemStyle: { color: '#f1c40f' }, markLine: { data: [{ type: 'average', name: 'Avg 96.8%' }] } }]
     }
   },
@@ -401,10 +405,9 @@ const gicumbiSteps = [
     text: "Translating canopy gain into an estimated 162,750 tCO₂e sequestered directly tracks Rwanda's national climate contribution targets.",
     chartOption: {
       ...rankingBaseOpt,
-      title: { text: 'Cumulative CO₂e Contribution (Green Gicumbi)', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: ['2020', '2021', '2022', '2023', '2024', '2025', '2026 (Target)'], axisLabel: { color: '#80cbc4' } },
-      yAxis: { type: 'value', name: 'tCO₂e Sequestered', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
+      title: { text: 'Cumulative CO₂e Contribution (Green Gicumbi)', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
+      xAxis: { ...rankingBaseOpt.xAxis, data: ['2020', '2021', '2022', '2023', '2024', '2025', '2026 (Target)'], axisLabel: { color: '#80cbc4', rotate: 30 } },
+      yAxis: { ...rankingBaseOpt.yAxis, name: 'tCO₂e Sequestered' },
       series: [{ type: 'line', smooth: true, data: [12000, 38000, 72000, 110000, 138000, 152000, 162750], areaStyle: { color: 'rgba(46, 204, 113, 0.3)' }, itemStyle: { color: '#2ecc71' } }]
     }
   }

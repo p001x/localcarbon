@@ -13,7 +13,7 @@ export default function DashboardScannerPanel({ ctx }) {
               Live high-resolution satellite imagery for the selected area running real-time Computer Vision analysis.
             </p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10, background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--accent)', fontWeight: 'bold' }}>⏱️ Time Machine:</span>
             <input 
               type="month" 
@@ -47,7 +47,7 @@ export default function DashboardScannerPanel({ ctx }) {
 
         {/* Health Scanner */}
         <div style={{ flex: 1, minWidth: 300, background: '#0a1912', borderRadius: 8, padding: 10, border: '1px solid var(--border)' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <button 
               className={`btn btn-sm ${selectedIndex === 'ndvi' ? 'btn-primary' : 'btn-secondary'}`} 
               onClick={() => setSelectedIndex('ndvi')}

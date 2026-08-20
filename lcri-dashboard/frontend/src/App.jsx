@@ -181,6 +181,13 @@ export default function App() {
           ⚠️ Earth Engine Offline Mode — Using Mock Data for Previews
         </div>
       )}
+      
+      {/* Mobile Overlay */}
+      <div 
+        className={`mobile-overlay ${isMobileMenuOpen ? 'active' : ''}`} 
+        onClick={() => setIsMobileMenuOpen(false)} 
+      />
+
       {/* ── Sidebar ─────────────────────────────────────────────── */}
       <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-logo">

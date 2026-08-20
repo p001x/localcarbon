@@ -73,6 +73,11 @@ export default function RegistryTab() {
         attribution: '&copy; OpenStreetMap'
       }).addTo(mapInst.current)
       layerGroup.current = L.layerGroup().addTo(mapInst.current)
+      
+      // Fix for grey map tiles on initial render when container size isn't fully resolved yet
+      setTimeout(() => {
+        if (mapInst.current) mapInst.current.invalidateSize()
+      }, 250)
     }
   }, [])
 
@@ -125,13 +130,13 @@ export default function RegistryTab() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', overflow: 'hidden' }}>
       
       {/* Top row: Map and Project Details */}
-      <div style={{ display: 'flex', gap: '20px', flex: '1 1 auto', minHeight: '400px' }}>
+      <div style={{ display: 'flex', gap: '20px', flex: '1 1 auto', minHeight: '400px', flexWrap: 'wrap' }}>
         
-        <div className="card" style={{ flex: '1.5', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+        <div className="card" style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', minHeight: '300px' }}>
           <div ref={mapRef} style={{ flex: 1, width: '100%' }}></div>
         </div>
         
-        <div className="card" style={{ flex: '1', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        <div className="card" style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           <h3>Certified Conservation &amp; Carbon Projects</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-sec)', marginBottom: '10px' }}>
             Select a verified REDD+ or ARR project from the registry to view its boundaries and run live satellite analysis.
