@@ -113,6 +113,28 @@ def _fetch_esa_cci_agb(ee_geom, year):
         return None
 
 
+def _fetch_gedi_l4b_agb(ee_geom):
+    """
+    Fetch mean Above-Ground Biomass Density (Mg/ha) from NASA GEDI L4B
+    (LARSE/GEDI/GEDI04_B_002). Returns None if the call fails.
+    """
+    try:
+        # GEDI L4B provides 1km gridded AGB density
+        img = ee.Image('LARSE/GEDI/GEDI04_B_002').select('MU')
+        stats = img.reduceRegion(
+            reducer=ee.Reducer.mean(),
+            geometry=ee_geom,
+            scale=1000,
+            maxPixels=1e9,
+            bestEffort=True
+        ).getInfo()
+        val = stats.get('MU')
+        return float(val) if val is not None else None
+    except Exception as e:
+        print(f"[parcel_analysis] GEDI L4B AGB: {e}")
+        return None
+
+
 def _fetch_sentinel2_ndvi_change(ee_geom, days_back):
     """
     Compute NDVI change between the most-recent N-day composite and
@@ -227,8 +249,10 @@ def analyse_parcel(geometry, interval='1y'):
         days = cfg['days']
         curr_ndvi, prev_ndvi, ndvi_change_pct = _fetch_sentinel2_ndvi_change(ee_geom, days)
 
-        # Anchor to latest ESA CCI epoch (2024)
-        baseline_agb = _fetch_esa_cci_agb(ee_geom, 2024) or 100.0
+        # Try GEDI first for a highly confident baseline, fallback to ESA CCI
+        gedi_agb = _fetch_gedi_l4b_agb(ee_geom)
+        esa_agb = _fetch_esa_cci_agb(ee_geom, 2024)
+        baseline_agb = gedi_agb or esa_agb or 100.0
 
         # Rough proxy: 1% NDVI change ≈ 2 Mg/ha AGB change
         delta = (ndvi_change_pct or 0) * 2.0
@@ -239,11 +263,13 @@ def analyse_parcel(geometry, interval='1y'):
             {'label': f'Prev {cfg["label"]}', 'agb_mg_ha': round(prev_agb, 2)},
             {'label': 'Current',              'agb_mg_ha': round(curr_agb, 2)},
         ]
+        
+        source_str = "NASA GEDI L4B LiDAR" if gedi_agb else "ESA CCI Biomass v7.0"
         note = (
             f'AGB estimated via Sentinel-2 NDVI change detection '
-            f'(NDVI delta: {ndvi_change_pct:+.1f}%) anchored to ESA CCI Biomass v7.0 (2024 baseline).'
+            f'(NDVI delta: {ndvi_change_pct:+.1f}%) anchored to {source_str} baseline.'
             if ndvi_change_pct is not None
-            else 'Sentinel-2 imagery unavailable; showing ESA CCI 2024 static baseline.'
+            else f'Sentinel-2 imagery unavailable; showing {source_str} static baseline.'
         )
     else:
         # ── Annual: ESA CCI Biomass v7.0 epochs ───────────────────────────

@@ -47,9 +47,10 @@ def predict_growth(features):
     ]]
     prediction = model.predict(input_array)
     
-    # Run the classifier to get a confidence score (probability of class 1: High Carbon Sink)
+    # Run the classifier to get a confidence score in the prediction
     cls_model = load_classifier()
-    confidence = cls_model.predict_proba(input_array)[0][1]
+    probabilities = cls_model.predict_proba(input_array)[0]
+    confidence = max(probabilities) # Confidence is the probability of the *predicted* class
     
     return {
         "agb_prediction": prediction[0],
@@ -70,9 +71,11 @@ def extract_ml_features_for_polygon(geojson_geom):
     ee_geom = ee.Geometry(geojson_geom)
     
     try:
-        # 1. Baseline Biomass (ESA CCI AGB 2020)
-        agb_collection = ee.ImageCollection("ESA/CCI/Above_Ground_Biomass/V6_0")
-        baseline_agb = agb_collection.filterDate('2020-01-01', '2020-12-31').first().select('agb')
+        # 1. Baseline Biomass (NASA GEDI L4B Gridded AGB)
+        # We use GEDI L4B instead of ESA CCI to get higher confidence LiDAR AGB
+        gedi_agb = ee.Image("LARSE/GEDI/GEDI04_B_002").select('MU')
+        baseline_agb = gedi_agb.unmask(0) # Fallback to 0 if no data
+
         
         # 1.5 ALOS-2 PALSAR L-Band SAR (2020)
         palsar = ee.ImageCollection("JAXA/ALOS/PALSAR/YEARLY/SAR_EPOCH") \
