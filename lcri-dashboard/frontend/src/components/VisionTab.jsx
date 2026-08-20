@@ -299,7 +299,7 @@ const simulatorSteps = [
       ...rankingBaseOpt,
       title: { text: 'Carbon Credit Pricing Premium ($/ton)', textStyle: { color: '#80cbc4', fontSize: 14 } },
       tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-      xAxis: { type: 'category', data: ['Base Carbon', '+ Biodiversity', '+ Gender Equity', 'Total Premium'], axisLabel: { color: '#80cbc4', interval: 0 } },
+      xAxis: { type: 'category', data: ['Base Carbon', '+ Biodiversity', '+ Gender Equity', 'Total Premium'], axisLabel: { color: '#80cbc4', rotate: 30, hideOverlap: true } },
       yAxis: { type: 'value', name: 'USD ($)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
       series: [{ type: 'bar', data: [15, 6, 4, { value: 25, itemStyle: { color: '#f1c40f' } }], itemStyle: { color: '#3498db' } }]
     }
@@ -311,7 +311,8 @@ const simulatorSteps = [
       ...rankingBaseOpt,
       title: { text: 'Native Species Growth Dynamics', textStyle: { color: '#80cbc4', fontSize: 14 } },
       tooltip: { trigger: 'axis' },
-      legend: { data: ['Polyscias fulva (Umurava)', 'Markhamia lutea (Umusave)', 'Grevillea robusta'], textStyle: { color: '#80cbc4' }, top: 25 },
+      grid: { top: 40, bottom: 80, left: 10, right: 20, containLabel: true },
+      legend: { data: ['Polyscias fulva (Umurava)', 'Markhamia lutea (Umusave)', 'Grevillea robusta'], textStyle: { color: '#80cbc4' }, bottom: 0 },
       xAxis: { type: 'category', data: ['Yr 0', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'], axisLabel: { color: '#80cbc4' } },
       yAxis: { type: 'value', name: 'Biomass (Mg/ha)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
       series: [
@@ -328,6 +329,8 @@ const simulatorSteps = [
       ...rankingBaseOpt,
       title: { text: 'Monte Carlo 20% Risk Buffer Corridor', textStyle: { color: '#80cbc4', fontSize: 14 } },
       tooltip: { trigger: 'axis' },
+      grid: { top: 40, bottom: 80, left: 10, right: 20, containLabel: true },
+      legend: { textStyle: { color: '#80cbc4' }, bottom: 0 },
       xAxis: { type: 'category', data: ['Yr 1', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'], axisLabel: { color: '#80cbc4' } },
       yAxis: { type: 'value', name: 'Net Revenue ($k)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
       series: [
