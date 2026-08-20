@@ -66,19 +66,39 @@ export default function InteractiveLensTab() {
         container.style.clipPath = 'circle(0px at 0 0)'
         container.style.willChange = 'clip-path'
 
+        let lastUpdate = 0
+        let pendingUpdate = null
+        
         const updateLens = (x, y, latlng) => {
           if (ringRef.current) {
             ringRef.current.style.left = `${x - 170}px`
             ringRef.current.style.top  = `${y - 170}px`
             ringRef.current.style.display = 'block'
           }
-          container.style.clipPath = `circle(120px at ${x}px ${y}px)`
+          
+          // Use layerPoint to ensure clipPath stays correct even during pan animations
+          const layerPt = map.containerPointToLayerPoint([x, y])
+          container.style.clipPath = `circle(120px at ${layerPt.x}px ${layerPt.y}px)`
 
-          const bm = estimateBiomass(latlng.lat, latlng.lng) * 2.0
-          const co2e = bm * 0.47 * 3.67
-          const credit = co2e * 15.5
-          setInfo({ seq: co2e.toFixed(1), cred: credit.toFixed(2), lat: latlng.lat.toFixed(4), lng: latlng.lng.toFixed(4), biomass: bm })
-          drawRadar(bm)
+          const now = Date.now()
+          if (now - lastUpdate > 100) {
+            lastUpdate = now
+            const bm = estimateBiomass(latlng.lat, latlng.lng) * 2.0
+            const co2e = bm * 0.47 * 3.67
+            const credit = co2e * 15.5
+            setInfo({ seq: co2e.toFixed(1), cred: credit.toFixed(2), lat: latlng.lat.toFixed(4), lng: latlng.lng.toFixed(4), biomass: bm })
+            drawRadar(bm)
+          } else {
+            clearTimeout(pendingUpdate)
+            pendingUpdate = setTimeout(() => {
+              const bm = estimateBiomass(latlng.lat, latlng.lng) * 2.0
+              const co2e = bm * 0.47 * 3.67
+              const credit = co2e * 15.5
+              setInfo({ seq: co2e.toFixed(1), cred: credit.toFixed(2), lat: latlng.lat.toFixed(4), lng: latlng.lng.toFixed(4), biomass: bm })
+              drawRadar(bm)
+              lastUpdate = Date.now()
+            }, 100)
+          }
         }
 
         const isMobile = window.matchMedia("(max-width: 768px)").matches
@@ -92,7 +112,7 @@ export default function InteractiveLensTab() {
             updateLens(cx, cy, latlng)
           }
           
-          map.on('move', updateCenter)
+          map.on('move', () => requestAnimationFrame(updateCenter))
           
           // Initial center update
           setTimeout(updateCenter, 100)
