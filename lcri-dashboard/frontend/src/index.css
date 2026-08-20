@@ -412,7 +412,7 @@ td.mono { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-s
   }
   
   .tab-content {
-    padding: 16px 12px;
+    padding: 16px 12px 80px;
   }
   
   .fab-return-story {

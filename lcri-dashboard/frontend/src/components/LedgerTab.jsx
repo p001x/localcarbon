@@ -592,11 +592,11 @@ export default function LedgerTab({ country }) {
           {F('ledger-date',   'Submission Date',                      form.date,   'date', 'date')}
         </div>
 
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8, flexWrap:'wrap', gap: 8 }}>
           <p style={{ fontSize:'0.78rem', color:'var(--text-muted)', margin:0 }}>
             Draw your planting polygon on the map or upload a study file:
           </p>
-          <div style={{ display:'flex', gap:6 }}>
+          <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
             {/* File Upload Button */}
             <label className="btn btn-secondary btn-sm" style={{ cursor:'pointer', margin:0, display:'inline-block' }}>
               📁 {uploadLoading ? 'Uploading...' : 'Upload Shapefile/KML'}
@@ -619,7 +619,7 @@ export default function LedgerTab({ country }) {
         </div>
 
         {/* Map legend */}
-        <div style={{ display:'flex', gap:16, marginTop:6, fontSize:'0.74rem', color:'var(--text-muted)' }}>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:16, marginTop:6, fontSize:'0.74rem', color:'var(--text-muted)' }}>
           <span style={{ display:'flex', alignItems:'center', gap:4 }}>
             <span style={{ display:'inline-block', width:14, height:14, borderRadius:2, background:'rgba(0,188,212,0.35)', border:'2px dashed #00bcd4' }} />
             Pending verification
@@ -633,12 +633,12 @@ export default function LedgerTab({ country }) {
         {drawnGeom && <div className="alert alert-success" style={{ marginTop:8 }}>Polygon captured ✅ — you can submit or analyse below.</div>}
         {msg && <div className={`alert alert-${msg.type === 'success' ? 'success' : 'error'}`} style={{ marginTop:8 }}>{msg.text}</div>}
 
-        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-          <button id="ledger-verify-btn" className={`btn ${gpsVerified ? 'btn-success' : 'btn-secondary'}`} style={{ flex: 1 }}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
+          <button id="ledger-verify-btn" className={`btn ${gpsVerified ? 'btn-success' : 'btn-secondary'}`} style={{ flex: 1, minWidth: 140 }}
             onClick={handleVerifyGps} disabled={verifyingGps || gpsVerified}>
             {gpsVerified ? '🔒 GPS Verified' : verifyingGps ? '⏳ Verifying...' : '📍 Capture Live GPS'}
           </button>
-          <button id="ledger-submit-btn" className="btn btn-primary" style={{ flex: 2 }}
+          <button id="ledger-submit-btn" className="btn btn-primary" style={{ flex: 2, minWidth: 140 }}
             onClick={handleSubmit} disabled={loading}>
             {loading ? '⏳ Submitting…' : '📤 Submit Site'}
           </button>
