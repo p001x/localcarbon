@@ -59,6 +59,24 @@ export default function DashboardReportsPanel({ ctx }) {
 
   const displayTimeseries = timeseriesRows.length > 0 ? timeseriesRows : defaultTimeseries;
 
+  // Scientific Interpretation Logic
+  const getAgbAnalysis = (agb) => {
+    if (agb < 15) return { class: "Critical Degradation / Severe Soil Exposure", meaning: "Values below 15 Mg/ha indicate severe biomass loss, likely from clear-cutting or intense agricultural degradation.", action: "Immediate radical terracing & pioneer planting (e.g., Acacia polyacantha) required to stabilize soil.", color: "#e74c3c" };
+    if (agb < 35) return { class: "Moderate Agroforestry / Recovering Canopy", meaning: "Values between 15-35 Mg/ha suggest active secondary growth or established agroforestry systems.", action: "Optimal for enrichment planting with native hardwoods (e.g., Markhamia lutea) to increase canopy density.", color: "#f39c12" };
+    if (agb < 70) return { class: "Dense Montane Forest / High Carbon Density", meaning: "Values between 35-70 Mg/ha represent healthy, intact forest ecosystems with significant carbon storage.", action: "Ideal for biodiversity buffer corridors & high-value credit issuance. Focus on community protection.", color: "#2ecc71" };
+    return { class: "Old-Growth Cloud Forest Core", meaning: "Values exceeding 70 Mg/ha denote ancient climax forests with maximum ecological integrity.", action: "Strict conservation enforcement & REDD+ avoided deforestation baselining. No extraction permitted.", color: "#27ae60" };
+  };
+
+  const getTrendAnalysis = (t) => {
+    if (t < -0.5) return { alert: "Severe Deforestation Alert", meaning: "Losing more than 0.5 Mg/ha annually indicates active logging or land-use conversion.", action: "Uninsurable without immediate risk buffer intervention and patrol deployment.", color: "#e74c3c" };
+    if (t < 0.0) return { alert: "Stagnant / Minor Degradation", meaning: "Negative flux indicates slow degradation or canopy thinning over time.", action: "Requires community stewardship incentives and assisted natural regeneration.", color: "#e67e22" };
+    if (t < 0.8) return { alert: "Healthy Active Sequestration", meaning: "Positive flux up to 0.8 Mg/ha/yr represents steady, verifiable carbon drawdown.", action: "Standard high-yield carbon credit asset. Continue current monitoring.", color: "#2ecc71" };
+    return { alert: "Rapid Ecological Regrowth", meaning: "Exceptional growth over 0.8 Mg/ha/yr suggests highly successful recent afforestation.", action: "Premium Article 6.2 sovereign asset status. Prioritize for international registry.", color: "#3498db" };
+  };
+
+  const agbAnalysis = getAgbAnalysis(meanAgb);
+  const trendAnalysis = getTrendAnalysis(trend);
+
   // Handle Export CSV
   const handleExportCsv = () => {
     const headers = ["Year", "Mean AGB (Mg/ha)", "Carbon Stock (Mg C)", "CO2e Potential (Mg)", "Satellite Sensor"];
@@ -296,9 +314,66 @@ export default function DashboardReportsPanel({ ctx }) {
           </div>
         </div>
 
+        {/* NEW: Scientific Interpretation & Recommendations */}
+        <h3 style={{ color: 'var(--accent)', fontSize: '1.2rem', fontWeight: 700, marginBottom: 16 }}>
+          2. Scientific Interpretation & Policy Recommendations
+        </h3>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, marginBottom: 36 }}>
+          {/* AGB Interpretation Card */}
+          <div style={{ 
+            background: 'rgba(255,255,255,0.02)', 
+            border: `1px solid ${agbAnalysis.color}40`, 
+            borderLeft: `4px solid ${agbAnalysis.color}`,
+            borderRadius: 8, 
+            padding: '20px' 
+          }}>
+            <h4 style={{ color: agbAnalysis.color, margin: '0 0 10px 0', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              🌲 AGB Analysis: {agbAnalysis.class}
+            </h4>
+            <div style={{ marginBottom: 12 }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Ecological Meaning</span>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.88rem', color: '#e0e0e0', lineHeight: 1.5 }}>
+                {agbAnalysis.meaning}
+              </p>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Recommended Intervention</span>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.88rem', color: 'var(--accent)', lineHeight: 1.5 }}>
+                {agbAnalysis.action}
+              </p>
+            </div>
+          </div>
+
+          {/* Trend Interpretation Card */}
+          <div style={{ 
+            background: 'rgba(255,255,255,0.02)', 
+            border: `1px solid ${trendAnalysis.color}40`, 
+            borderLeft: `4px solid ${trendAnalysis.color}`,
+            borderRadius: 8, 
+            padding: '20px' 
+          }}>
+            <h4 style={{ color: trendAnalysis.color, margin: '0 0 10px 0', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              📈 Sequestration Trend: {trendAnalysis.alert}
+            </h4>
+            <div style={{ marginBottom: 12 }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Flux Meaning</span>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.88rem', color: '#e0e0e0', lineHeight: 1.5 }}>
+                {trendAnalysis.meaning}
+              </p>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Required Action</span>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.88rem', color: 'var(--accent)', lineHeight: 1.5 }}>
+                {trendAnalysis.action}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* 4. Complete Satellite Biomass Timeseries Table */}
         <h3 style={{ color: 'var(--accent)', fontSize: '1.2rem', fontWeight: 700, marginBottom: 16 }}>
-          2. Historical Orbital Telemetry Timeseries (2010 – 2022)
+          3. Historical Orbital Telemetry Timeseries (2010 – 2022)
         </h3>
 
         <div style={{ overflowX: 'auto', marginBottom: 36, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12 }}>
@@ -331,7 +406,7 @@ export default function DashboardReportsPanel({ ctx }) {
 
         {/* 5. AI Random Forest 10-Year Forecast & Risk Assessment */}
         <h3 style={{ color: 'var(--accent)', fontSize: '1.2rem', fontWeight: 700, marginBottom: 16 }}>
-          3. Machine Learning 10-Year Growth & Risk Forecast
+          4. Machine Learning 10-Year Growth & Risk Forecast
         </h3>
 
         <div style={{ 
@@ -372,7 +447,7 @@ export default function DashboardReportsPanel({ ctx }) {
 
         {/* 6. Native Rwandan Tree Species Recommendations */}
         <h3 style={{ color: 'var(--accent)', fontSize: '1.2rem', fontWeight: 700, marginBottom: 16 }}>
-          4. Recommended Indigenous Rwandan Tree Species (Restor.eco Standard)
+          5. Recommended Indigenous Rwandan Tree Species (Restor.eco Standard)
         </h3>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginBottom: 36 }}>
