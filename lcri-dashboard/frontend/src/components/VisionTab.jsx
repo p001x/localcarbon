@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import './VisionTab.css';
 
-// Animated Ticker Component
+// ── Animated Data Ticker Component ──────────────────────────────────────────
 function DataTicker({ endValue, label, suffix = '', duration = 2000 }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -23,7 +23,7 @@ function DataTicker({ endValue, label, suffix = '', duration = 2000 }) {
         requestAnimationFrame(animate);
         observer.disconnect();
       }
-    });
+    }, { threshold: 0.2 });
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [endValue, duration]);
@@ -36,8 +36,8 @@ function DataTicker({ endValue, label, suffix = '', duration = 2000 }) {
   );
 }
 
-// ScrollyTelling Component for dynamic narrative sections
-function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
+// ── Fluid Image Scrollytelling Stage with Telemetry HUD ───────────────────────
+function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title, badge = "ORBITAL PIPELINE" }) {
   const [activeStep, setActiveStep] = useState(0);
   const stepRefs = useRef([]);
 
@@ -51,7 +51,7 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
           }
         }
       });
-    }, { rootMargin: '-35% 0px -35% 0px' });
+    }, { rootMargin: '-25% 0px -30% 0px', threshold: 0.25 });
 
     stepRefs.current.forEach(ref => {
       if (ref) observer.observe(ref);
@@ -59,33 +59,29 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
     return () => observer.disconnect();
   }, [steps]);
 
+  const currentStep = steps[activeStep] || steps[0];
+
   return (
-    <div className="scrollytelling-container" style={{ display: 'flex', gap: '40px', marginTop: '60px', position: 'relative' }}>
-      {/* Left Column (Text) */}
-      <div className="scrollytelling-text" style={{ flex: '1', paddingBottom: '25vh' }}>
-        {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
+    <div className="scrollytelling-container">
+      {/* Left Narrative Column */}
+      <div className="scrollytelling-text">
+        {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '24px' }}>{title}</h2>}
         {steps.map((step, idx) => (
           <div 
             key={idx} 
             ref={el => stepRefs.current[idx] = el}
-            style={{
-              minHeight: '38vh',
-              padding: '32px',
-              marginBottom: '20px',
-              background: activeStep === idx ? 'rgba(46, 204, 113, 0.1)' : 'transparent',
-              borderLeft: activeStep === idx ? '4px solid var(--accent)' : '4px solid transparent',
-              borderRadius: '0 12px 12px 0',
-              transition: 'all 0.4s ease',
-              opacity: activeStep === idx ? 1 : 0.4
-            }}
+            className={`scrolly-step-card ${activeStep === idx ? 'active' : ''}`}
           >
-            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.6rem', marginBottom: '12px' }}>{step.title}</h3>
-            <p className="vision-text" style={{ fontSize: '1.1rem', lineHeight: '1.75' }}>{step.text}</p>
+            <div className="scrolly-step-chip">
+              <span>●</span> STEP 0{idx + 1} OF 0{steps.length} · {badge}
+            </div>
+            <h3 className="scrolly-step-title">{step.title}</h3>
+            <p className="vision-text">{step.text}</p>
           </div>
         ))}
         
         {ctaText && (
-          <div style={{ textAlign: 'left', marginTop: '30px', paddingLeft: '32px' }}>
+          <div style={{ marginTop: '20px' }}>
             <button onClick={() => navigate(ctaLink)} className="vision-cta">
               {ctaText} →
             </button>
@@ -93,8 +89,12 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
         )}
       </div>
       
-      {/* Right Column (Sticky Visuals) */}
-      <div className="scrollytelling-visual" style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}>
+      {/* Right Sticky Telemetry Visual Stage */}
+      <div className="scrollytelling-visual">
+        <div className="visual-step-badge">
+          🛰️ STEP 0{activeStep + 1} / 0{steps.length}: {currentStep.title}
+        </div>
+
         {steps.map((step, idx) => (
           <img 
             key={idx}
@@ -106,86 +106,29 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
               width: '100%', height: '100%',
               objectFit: 'cover',
               opacity: activeStep === idx ? 1 : 0,
-              transition: 'opacity 0.7s ease-in-out'
+              transform: activeStep === idx ? 'scale(1)' : 'scale(1.04)',
+              transition: 'opacity 0.65s ease-in-out, transform 0.85s ease-out'
             }}
           />
         ))}
+
+        {/* Live HUD Telemetry Overlay */}
+        <div className="visual-hud-footer">
+          <span style={{ color: '#2ecc71', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#2ecc71', animation: 'pulse 1.5s infinite' }}></span>
+            {currentStep.hudTag || "ORBITAL TELEMETRY"}
+          </span>
+          <span style={{ color: 'var(--text-sec)', fontSize: '0.8rem' }}>
+            {currentStep.hudCoords || "Gicumbi Sector · 1.58° S, 30.06° E"}
+          </span>
+        </div>
       </div>
     </div>
   );
 }
 
-// MapScrollyTelling Component for interactive geospatial narratives
-function MapScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
-  const [activeStep, setActiveStep] = useState(0);
-  const stepRefs = useRef([]);
-  const mapRef = useRef(null);
-  const mapInst = useRef(null);
-  const layerRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const index = stepRefs.current.findIndex(ref => ref === entry.target);
-          if (index !== -1) setActiveStep(index);
-        }
-      });
-    }, { rootMargin: '-35% 0px -35% 0px' });
-    stepRefs.current.forEach(ref => { if (ref) observer.observe(ref); });
-    return () => observer.disconnect();
-  }, [steps]);
-
-  useEffect(() => {
-    if (!mapRef.current || mapInst.current) return;
-    const map = L.map(mapRef.current, { zoomControl: false, scrollWheelZoom: false, dragging: false }).setView([-1.94, 29.87], 8);
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri'
-    }).addTo(map);
-    L.rectangle([[-90, -180], [90, 180]], { color: 'transparent', fillColor: '#050b08', fillOpacity: 0.4 }).addTo(map);
-    mapInst.current = map;
-    return () => { map.remove(); mapInst.current = null; };
-  }, []);
-
-  useEffect(() => {
-    if (!mapInst.current) return;
-    const step = steps[activeStep];
-    if (step && step.mapConfig) {
-      if (step.mapConfig.center && step.mapConfig.zoom) {
-        mapInst.current.flyTo(step.mapConfig.center, step.mapConfig.zoom, { duration: 1.5 });
-      }
-      if (layerRef.current) {
-        mapInst.current.removeLayer(layerRef.current);
-        layerRef.current = null;
-      }
-      if (step.mapConfig.polygon) {
-        layerRef.current = L.polygon(step.mapConfig.polygon, step.mapConfig.style || { color: '#2ecc71', weight: 2 }).addTo(mapInst.current);
-      }
-    }
-  }, [activeStep, steps]);
-
-  return (
-    <div className="scrollytelling-container" style={{ display: 'flex', gap: '40px', marginTop: '60px', position: 'relative' }}>
-      <div className="scrollytelling-text" style={{ flex: '1', paddingBottom: '25vh' }}>
-        {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
-        {steps.map((step, idx) => (
-          <div key={idx} ref={el => stepRefs.current[idx] = el}
-            style={{ minHeight: '38vh', padding: '32px', marginBottom: '20px', background: activeStep === idx ? 'rgba(46, 204, 113, 0.1)' : 'transparent', borderLeft: activeStep === idx ? '4px solid var(--accent)' : '4px solid transparent', borderRadius: '0 12px 12px 0', transition: 'all 0.4s ease', opacity: activeStep === idx ? 1 : 0.4 }}>
-            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.6rem', marginBottom: '12px' }}>{step.title}</h3>
-            <p className="vision-text" style={{ fontSize: '1.1rem', lineHeight: '1.75' }}>{step.text}</p>
-          </div>
-        ))}
-        {ctaText && <div style={{ textAlign: 'left', marginTop: '30px', paddingLeft: '32px' }}><button onClick={() => navigate(ctaLink)} className="vision-cta">{ctaText} →</button></div>}
-      </div>
-      <div className="scrollytelling-visual" style={{ flex: '1', position: 'sticky', top: '90px', height: '58vh', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)' }}>
-        <div ref={mapRef} style={{ width: '100%', height: '100%' }}></div>
-      </div>
-    </div>
-  );
-}
-
-// ChartScrollyTelling Component for data narratives
-function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
+// ── Fluid Chart Scrollytelling Stage ─────────────────────────────────────────
+function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title, badge = "LIVE TELEMETRY" }) {
   const [activeStep, setActiveStep] = useState(0);
   const stepRefs = useRef([]);
 
@@ -197,7 +140,7 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
           if (index !== -1) setActiveStep(index);
         }
       });
-    }, { rootMargin: '-35% 0px -35% 0px' });
+    }, { rootMargin: '-25% 0px -30% 0px', threshold: 0.25 });
     stepRefs.current.forEach(ref => { if (ref) observer.observe(ref); });
     return () => observer.disconnect();
   }, [steps]);
@@ -206,298 +149,292 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title }) {
 
   return (
     <div className="scrollytelling-container">
+      {/* Left Narrative Column */}
       <div className="scrollytelling-text">
-        {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '30px' }}>{title}</h2>}
+        {title && <h2 className="vision-subtitle" style={{ color: 'var(--accent)', marginBottom: '24px' }}>{title}</h2>}
         {steps.map((step, idx) => (
-          <div key={idx} ref={el => stepRefs.current[idx] = el}
-            style={{ minHeight: '38vh', padding: '32px', marginBottom: '20px', background: activeStep === idx ? 'rgba(46, 204, 113, 0.1)' : 'transparent', borderLeft: activeStep === idx ? '4px solid var(--accent)' : '4px solid transparent', borderRadius: '0 12px 12px 0', transition: 'all 0.4s ease', opacity: activeStep === idx ? 1 : 0.4 }}>
-            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.6rem', marginBottom: '12px' }}>{step.title}</h3>
-            <p className="vision-text" style={{ fontSize: '1.1rem', lineHeight: '1.75' }}>{step.text}</p>
+          <div 
+            key={idx} 
+            ref={el => stepRefs.current[idx] = el}
+            className={`scrolly-step-card ${activeStep === idx ? 'active' : ''}`}
+          >
+            <div className="scrolly-step-chip">
+              <span>●</span> STEP 0{idx + 1} OF 0{steps.length} · {badge}
+            </div>
+            <h3 className="scrolly-step-title">{step.title}</h3>
+            <p className="vision-text">{step.text}</p>
           </div>
         ))}
-        {ctaText && <div style={{ textAlign: 'left', marginTop: '30px', paddingLeft: '32px' }}><button onClick={() => navigate(ctaLink)} className="vision-cta">{ctaText} →</button></div>}
+        {ctaText && (
+          <div style={{ marginTop: '20px' }}>
+            <button onClick={() => navigate(ctaLink)} className="vision-cta">
+              {ctaText} →
+            </button>
+          </div>
+        )}
       </div>
-      <div className="scrollytelling-visual">
-        <ReactECharts option={currentOption} style={{ height: '100%', width: '100%' }} />
+
+      {/* Right Sticky Chart Visual Stage */}
+      <div className="scrollytelling-visual" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div className="visual-step-badge">
+          📊 FRAME 0{activeStep + 1} / 0{steps.length}: {steps[activeStep]?.title}
+        </div>
+        <div style={{ width: '100%', height: 'calc(100% - 30px)', marginTop: '20px' }}>
+          <ReactECharts 
+            option={currentOption} 
+            notMerge={false}
+            lazyUpdate={true}
+            style={{ height: '100%', width: '100%' }} 
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-const dashboardSteps = [
-  {
-    title: "1. The Proposal",
-    text: "A local cooperative proposes a 500-hectare restoration project in Gicumbi District, Rwanda.",
-    img: "/images/dashboard_proposal_1787155462625.jpg"
-  },
-  {
-    title: "2. The Safeguard",
-    text: "Before capital is deployed, the LCRI engine autonomously scans the perimeter. It cross-references boundaries against the World Database on Protected Areas (WDPA), guaranteeing the project safeguards native reserves.",
-    img: "/images/dashboard_safeguard_1787155473240.jpg"
-  },
-  {
-    title: "3. The Baseline",
-    text: "Next, NASA and ESA orbital sensors sweep the terrain. The engine strips away the canopy to reveal the baseline: a degraded state of only 12 tons of carbon per hectare.",
-    img: "/images/dashboard_baseline_1787155483215.jpg"
-  },
-  {
-    title: "4. The Prediction",
-    text: "Finally, the Random Forest algorithm takes over. Factoring in steep slopes and soil conditions, it projects a 10-year yield of 45 tons per hectare with an 85% AI Confidence Score, creating an investment-grade asset.",
-    img: "/images/dashboard_prediction_1787155494547.jpg"
-  }
-];
-
-const rankingBaseOpt = { 
-  backgroundColor:'transparent', 
-  textStyle:{fontFamily:'Inter',color:'#80cbc4'}, 
-  tooltip:{ trigger: 'axis' }, 
-  grid: { top: 80, bottom: 60, left: 10, right: 20, containLabel: true },
-  xAxis:{type:'category',axisLabel:{color:'#80cbc4', hideOverlap: true},axisLine:{lineStyle:{color:'#1e3a2a'}}}, 
-  yAxis:{type:'value',axisLabel:{color:'#80cbc4'},splitLine:{lineStyle:{color:'#1a2e22'}}} 
-};
-
-const rankingSteps = [
-  {
-    title: "1. The Overwhelming Scale",
-    text: "With 16,636 hectares across 150 candidate parcels, manual selection is impossible. The LCRI Ranking Engine acts as an autonomous triage system, analyzing massive datasets in milliseconds to isolate optimal restoration zones.",
-    chartOption: { ...rankingBaseOpt, xAxis: { type:'category', data:['P1','P2','P3','P4','P5','...P150'] }, series: [{ type: 'bar', data: [12,15,8,30,22,10], itemStyle: { color: '#3498db' } }] }
-  },
-  {
-    title: "2. Multi-Dimensional Weighting",
-    text: "It runs a multi-factor analysis: Carbon Potential (35%), Degradation Urgency (25%), Slope Feasibility (20%), and Community Engagement (20%). Users can adjust live weight sliders to align capital allocation with specific ESG targets.",
-    chartOption: { ...rankingBaseOpt, tooltip: { trigger: 'item' }, xAxis: {show: false}, yAxis: {show: false}, series: [{ type: 'pie', radius: ['40%', '70%'], data: [{value:35, name:'Carbon Potential'}, {value:25, name:'Degradation'}, {value:20, name:'Slope'}, {value:20, name:'Community'}], label: { color: '#80cbc4' } }] }
-  },
-  {
-    title: "3. Native Species Matching",
-    text: "Once top parcels are isolated, the engine pairs each parcel with native Rwandan tree species—such as Umusave (Markhamia lutea) for agroforestry or Umurava (Polyscias fulva) for montane slopes.",
-    chartOption: { ...rankingBaseOpt, xAxis: { type: 'value', name: 'Suitability' }, yAxis: { type: 'category', data: ['Polyscias fulva', 'Markhamia lutea', 'Grevillea'] }, series: [{ type: 'bar', data: [95, 88, 70], itemStyle: { color: '#2ecc71' } }] }
-  },
-  {
-    title: "4. Investment-Ready Output",
-    text: "The final output is an actionable, ranked ledger. Highest-scoring land is prioritized for immediate capital deployment, maximizing both carbon yield and ecological integrity.",
-    chartOption: { ...rankingBaseOpt, xAxis: { type: 'category', data: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4'] }, series: [{ type: 'bar', data: [98, 92, 85, 80], itemStyle: { color: '#f1c40f' } }] }
-  }
-];
-
-const simulatorSteps = [
-  {
-    title: "1. The Base Variables",
-    text: "Project developers enter target area, operational costs, and market carbon prices to simulate 30-year financial returns and net present value (NPV).",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: '30-Year Carbon Sequestration (tCO₂e)', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: ['Yr 1', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'], axisLabel: { color: '#80cbc4' } },
-      yAxis: { type: 'value', name: 'tCO₂e / ha', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
-      series: [{ name: 'Accumulated Carbon', type: 'line', smooth: true, data: [2, 18, 48, 85, 122, 150, 168], areaStyle: { color: 'rgba(46, 204, 113, 0.25)' }, itemStyle: { color: '#2ecc71' } }]
-    }
-  },
-  {
-    title: "2. Co-Benefit Multipliers",
-    text: "Carbon is priced higher when projects demonstrate tangible biodiversity protection and gender equity in the local planting workforce.",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Carbon Credit Pricing Premium ($/ton)', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-      grid: { top: 40, bottom: 80, left: 10, right: 20, containLabel: true },
-      xAxis: { type: 'category', data: ['Base Carbon', '+ Biodiversity', '+ Gender Equity', 'Total Premium'], axisLabel: { color: '#80cbc4', rotate: 30, hideOverlap: true } },
-      yAxis: { type: 'value', name: 'USD ($)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
-      series: [{ type: 'bar', data: [15, 6, 4, { value: 25, itemStyle: { color: '#f1c40f' } }], itemStyle: { color: '#3498db' } }]
-    }
-  },
-  {
-    title: "3. Native Growth Curves",
-    text: "Precise allometric growth equations model native Rwandan species (Umusave, Polyscias fulva) across 3 decades of biomass accumulation.",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Native Species Growth Dynamics', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      grid: { top: 40, bottom: 80, left: 10, right: 20, containLabel: true },
-      legend: { data: ['Polyscias fulva (Umurava)', 'Markhamia lutea (Umusave)', 'Grevillea robusta'], textStyle: { color: '#80cbc4' }, bottom: 0 },
-      xAxis: { type: 'category', data: ['Yr 0', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'], axisLabel: { color: '#80cbc4' } },
-      yAxis: { type: 'value', name: 'Biomass (Mg/ha)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
-      series: [
-        { name: 'Polyscias fulva (Umurava)', type: 'line', smooth: true, data: [0, 22, 54, 88, 118, 140, 155], itemStyle: { color: '#2ecc71' } },
-        { name: 'Markhamia lutea (Umusave)', type: 'line', smooth: true, data: [0, 14, 42, 78, 112, 145, 172], itemStyle: { color: '#f39c12' } },
-        { name: 'Grevillea robusta', type: 'line', smooth: true, data: [0, 10, 28, 52, 76, 98, 115], itemStyle: { color: '#3498db' } }
-      ]
-    }
-  },
-  {
-    title: "4. Risk-Adjusted Projections",
-    text: "Monte Carlo risk scenarios apply a mandatory 20% risk buffer, guaranteeing conservative projections resilient to drought and wildfire risks.",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Monte Carlo 20% Risk Buffer Corridor', textStyle: { color: '#80cbc4', fontSize: 14 } },
-      tooltip: { trigger: 'axis' },
-      grid: { top: 40, bottom: 80, left: 10, right: 20, containLabel: true },
-      legend: { textStyle: { color: '#80cbc4' }, bottom: 0 },
-      xAxis: { type: 'category', data: ['Yr 1', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'], axisLabel: { color: '#80cbc4' } },
-      yAxis: { type: 'value', name: 'Net Revenue ($k)', axisLabel: { color: '#80cbc4' }, splitLine: { lineStyle: { color: '#1a2e22' } } },
-      series: [
-        { name: 'Optimistic (P90)', type: 'line', smooth: true, data: [5, 45, 120, 210, 310, 420, 510], lineStyle: { type: 'dashed' }, itemStyle: { color: '#2ecc71' } },
-        { name: 'Expected (P50)', type: 'line', smooth: true, data: [3, 32, 90, 165, 245, 330, 405], itemStyle: { color: '#3498db' } },
-        { name: 'Risk-Buffered Floor (P10)', type: 'line', smooth: true, data: [2, 24, 68, 125, 185, 250, 310], areaStyle: { color: 'rgba(231, 76, 60, 0.15)' }, itemStyle: { color: '#e74c3c' } }
-      ]
-    }
-  }
-];
-
-const registrySteps = [
-  {
-    title: "1. The Verification Crisis",
-    text: "Carbon markets historically suffered from opacity and phantom credits. The LCRI Registry acts as a cryptographic single source of truth, linking every credit directly to Earth Observation telemetry.",
-    img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80"
-  },
-  {
-    title: "2. Global Standard Integration",
-    text: "Synchronized with international benchmarks (Verra, Gold Standard), the registry aggregates active REDD+ and ARR projects across Africa into one transparent ledger.",
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
-  },
-  {
-    title: "3. Live Satellite Auditing",
-    text: "Stakeholders can inspect projects across the continent to load Sentinel-2 imagery and audit canopy health and biomass density directly from the browser.",
-    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
-  },
-  {
-    title: "4. End-to-End Transparency",
-    text: "From the first sapling planted by a rural cooperative to the retired credit, every ton of CO₂ is mathematically accounted for, ending greenwashing.",
-    img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80"
-  }
-];
-
-const gicumbiSteps = [
-  {
-    title: "1. The Official Claim",
-    text: "Green Gicumbi reported a massive agroforestry initiative claiming 4,801 hectares planted across 9 sectors.",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Claimed Agroforestry Hectares by Sector', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
-      xAxis: { ...rankingBaseOpt.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { ...rankingBaseOpt.yAxis, name: 'Hectares (ha)' },
-      series: [{ type: 'bar', data: [580, 520, 610, 490, 540, 510, 480, 560, 511], itemStyle: { color: '#9b59b6' } }]
-    }
-  },
-  {
-    title: "2. Orbital Observation",
-    text: "Sentinel-2 multi-spectral bands autonomously compare 2019 baselines to present-day NDVI, confirming ~4,650 hectares of actual canopy gain (a 97% validation rate).",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Claimed vs. Sentinel-2 Verified Canopy Gain', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
-      legend: { data: ['Claimed (ha)', 'Satellite Verified (ha)'], top: 35, textStyle: { color: '#80cbc4', fontSize: 11 } },
-      xAxis: { ...rankingBaseOpt.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { ...rankingBaseOpt.yAxis, name: 'Hectares' },
-      series: [
-        { name: 'Claimed (ha)', type: 'bar', data: [580, 520, 610, 490, 540, 510, 480, 560, 511], itemStyle: { color: 'rgba(155, 89, 182, 0.6)' } },
-        { name: 'Satellite Verified (ha)', type: 'bar', data: [562, 508, 595, 472, 526, 498, 465, 542, 482], itemStyle: { color: '#2ecc71' } }
-      ]
-    }
-  },
-  {
-    title: "3. Sector-Level Precision",
-    text: "The engine disaggregates findings sector by sector, verifying that resources directly reach the grassroots communities doing the physical planting.",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Sector Validation Accuracy (%)', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
-      xAxis: { ...rankingBaseOpt.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { ...rankingBaseOpt.yAxis, min: 80, max: 100, name: 'Accuracy %' },
-      series: [{ type: 'line', smooth: true, data: [96.9, 97.7, 97.5, 96.3, 97.4, 97.6, 96.9, 96.8, 94.3], itemStyle: { color: '#f1c40f' }, markLine: { data: [{ type: 'average', name: 'Avg 96.8%' }] } }]
-    }
-  },
-  {
-    title: "4. National NDC Tracking",
-    text: "Translating canopy gain into an estimated 162,750 tCO₂e sequestered directly tracks Rwanda's national climate contribution targets.",
-    chartOption: {
-      ...rankingBaseOpt,
-      title: { text: 'Cumulative CO₂e Contribution (Green Gicumbi)', left: 'center', top: 0, textStyle: { color: '#80cbc4', fontSize: 13, width: 300, overflow: 'break' } },
-      xAxis: { ...rankingBaseOpt.xAxis, data: ['2020', '2021', '2022', '2023', '2024', '2025', '2026 (Target)'], axisLabel: { color: '#80cbc4', rotate: 30 } },
-      yAxis: { ...rankingBaseOpt.yAxis, name: 'tCO₂e Sequestered' },
-      series: [{ type: 'line', smooth: true, data: [12000, 38000, 72000, 110000, 138000, 152000, 162750], areaStyle: { color: 'rgba(46, 204, 113, 0.3)' }, itemStyle: { color: '#2ecc71' } }]
-    }
-  }
-];
-
-const CHAPTERS = [
-  { id: 'act-1', num: '01', title: 'The Crisis & Baseline', icon: '🚨' },
-  { id: 'act-2', num: '02', title: 'Ecological Science',    icon: '🛰️' },
-  { id: 'act-3', num: '03', title: 'Grassroots Action',     icon: '🌱' },
-  { id: 'act-4', num: '04', title: 'Capital Engine',        icon: '📊' },
-];
-
-export default function VisionTab() {
-  const navigate = useNavigate();
-  const observerRef = useRef(null);
-  const mapRef = useRef(null);
-  const mapInst = useRef(null);
-  const [activeChapter, setActiveChapter] = useState('act-1');
-
-  // Sticky Chapter Tracker
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + 200;
-      for (let i = CHAPTERS.length - 1; i >= 0; i--) {
-        const el = document.getElementById(CHAPTERS[i].id);
-        if (el && el.offsetTop <= scrollPos) {
-          setActiveChapter(CHAPTERS[i].id);
-          break;
-        }
-      }
-      sessionStorage.setItem('storyMapScroll', window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToChapter = (id) => {
-    const el = document.getElementById(id);
+// ── Narrative Bridge Component ──────────────────────────────────────────────
+function NarrativeBridge({ icon, tag, question, answer, nextStageId }) {
+  const scrollTo = () => {
+    const el = document.getElementById(nextStageId);
     if (el) {
       const topOffset = el.getBoundingClientRect().top + window.pageYOffset - 80;
       window.scrollTo({ top: topOffset, behavior: 'smooth' });
     }
   };
 
-  useEffect(() => {
-    // Setup intersection observer for scroll animations
-    observerRef.current = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('fade-in-up');
-          observerRef.current.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
+  return (
+    <div className="narrative-bridge" onClick={scrollTo} style={{ cursor: 'pointer' }}>
+      <div className="bridge-left">
+        <div className="bridge-icon">{icon}</div>
+        <div>
+          <div className="bridge-tag">{tag}</div>
+          <h4 className="bridge-question">{question}</h4>
+          <p className="bridge-answer">{answer}</p>
+        </div>
+      </div>
+      <div className="bridge-arrow">↓</div>
+    </div>
+  );
+}
 
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach((el) => observerRef.current.observe(el));
+// ── Step Data Definitions with Telemetry HUD Meta ───────────────────────────
+const orbitalScanSteps = [
+  {
+    title: "1. The Proposal & Perimeter",
+    text: "A local farming cooperative submits a 500-hectare agroforestry project in Gicumbi District, Northern Rwanda.",
+    img: "/images/dashboard_proposal_1787155462625.jpg",
+    hudTag: "SENTINEL-2 (10m) · 500 ha PROPOSED AREA",
+    hudCoords: "Gicumbi District · 1.581° S, 30.063° E"
+  },
+  {
+    title: "2. Autonomous WDPA Safeguards",
+    text: "Before capital is deployed, orbital algorithms cross-reference boundaries against the World Database on Protected Areas (WDPA), ensuring native biological corridors are safeguarded.",
+    img: "/images/dashboard_safeguard_1787155473240.jpg",
+    hudTag: "WDPA SHIELD: VERIFIED · 0% ENCROACHMENT",
+    hudCoords: "Albertine Rift Buffer Zone · Protected"
+  },
+  {
+    title: "3. Orbital Baseline Extraction",
+    text: "NASA and ESA orbital sensors sweep the terrain. The engine strips away canopy reflections to establish the degraded baseline of only 12 tons of carbon per hectare.",
+    img: "/images/dashboard_baseline_1787155483215.jpg",
+    hudTag: "NASA GEDI / ORNL · 12 tC/ha DEGRADED BASELINE",
+    hudCoords: "NDVI Spectral Index: 0.32 (Severely Eroded)"
+  },
+  {
+    title: "4. Machine Learning Yield Prediction",
+    text: "Random Forest models factor in slope gradients, soil moisture, and climatic curves to project a 10-year yield of 45 tC/ha with an 85% AI Confidence Score.",
+    img: "/images/dashboard_prediction_1787155494547.jpg",
+    hudTag: "AI MODEL: RANDOM FOREST · 45 tC/ha FORECAST",
+    hudCoords: "85% Reliability Probability"
+  }
+];
 
-    // Restore scroll position
-    const savedScroll = sessionStorage.getItem('storyMapScroll');
-    if (savedScroll) {
-      setTimeout(() => window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'auto' }), 50);
+const baseChartTheme = {
+  backgroundColor: 'transparent',
+  grid: { top: 60, right: 25, bottom: 45, left: 20, containLabel: true },
+  textStyle: { color: '#a0b3a9', fontFamily: 'Inter, system-ui, sans-serif' },
+  xAxis: {
+    type: 'category',
+    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } },
+    axisLabel: { color: '#a0b3a9', fontSize: 11 }
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+    axisLabel: { color: '#a0b3a9', fontSize: 11 }
+  }
+};
+
+const gicumbiProofSteps = [
+  {
+    title: "1. The Ground Claim (4,801 ha)",
+    text: "Between 2019 and 2024, Green Gicumbi mobilized thousands of local farmers across 9 sectors to plant 4,801 hectares of steep montane hills.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Green Gicumbi: Claimed Tree Planting by Sector', left: 'center', top: 10, textStyle: { color: '#fff', fontSize: 13 } },
+      xAxis: { ...baseChartTheme.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#a0b3a9', rotate: 30 } },
+      yAxis: { ...baseChartTheme.yAxis, name: 'Claimed (ha)' },
+      series: [{ name: 'Claimed', type: 'bar', data: [580, 520, 610, 490, 540, 510, 480, 560, 511], itemStyle: { color: 'rgba(155, 89, 182, 0.7)', borderRadius: [4, 4, 0, 0] } }]
     }
+  },
+  {
+    title: "2. Sentinel-2 Orbital Observation",
+    text: "Sentinel-2 multi-spectral NDVI bands autonomously compared 2019 baselines to 2026 present-day imagery, confirming 4,650 hectares of net canopy gain—a 97% validation rate.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Claimed vs. Satellite-Verified Canopy Gain', left: 'center', top: 10, textStyle: { color: '#2ecc71', fontSize: 13 } },
+      legend: { data: ['Claimed (ha)', 'Satellite Verified (ha)'], top: 35, textStyle: { color: '#a0b3a9', fontSize: 11 } },
+      xAxis: { ...baseChartTheme.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#a0b3a9', rotate: 30 } },
+      yAxis: { ...baseChartTheme.yAxis, name: 'Hectares' },
+      series: [
+        { name: 'Claimed (ha)', type: 'bar', data: [580, 520, 610, 490, 540, 510, 480, 560, 511], itemStyle: { color: 'rgba(155, 89, 182, 0.45)', borderRadius: [4, 4, 0, 0] } },
+        { name: 'Satellite Verified (ha)', type: 'bar', data: [562, 508, 595, 472, 526, 498, 465, 542, 482], itemStyle: { color: '#2ecc71', borderRadius: [4, 4, 0, 0] } }
+      ]
+    }
+  },
+  {
+    title: "3. Sector Accuracy Audit (Avg 96.8%)",
+    text: "Disaggregating findings sector by sector proves that community forestry was executed uniformly without phantom drop-offs.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Sector Validation Accuracy (%)', left: 'center', top: 10, textStyle: { color: '#f1c40f', fontSize: 13 } },
+      xAxis: { ...baseChartTheme.xAxis, data: ['Byumba', 'Kaniga', 'Manyagiro', 'Miyove', 'Mukarange', 'Rubaya', 'Rushaki', 'Rutare', 'Shangasha'], axisLabel: { color: '#a0b3a9', rotate: 30 } },
+      yAxis: { ...baseChartTheme.yAxis, min: 85, max: 100, name: 'Accuracy %' },
+      series: [{ type: 'line', smooth: true, data: [96.9, 97.7, 97.5, 96.3, 97.4, 97.6, 96.9, 96.8, 94.3], itemStyle: { color: '#f1c40f' }, lineStyle: { width: 3 } }]
+    }
+  },
+  {
+    title: "4. Carbon Yield: 162,750 tCO₂e",
+    text: "Translating verified canopy gain into carbon tonnage establishes 162,750 tCO₂e sequestered, feeding directly into Rwanda's national climate contributions.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Cumulative Carbon Sequestered (Gicumbi)', left: 'center', top: 10, textStyle: { color: '#2ecc71', fontSize: 13 } },
+      xAxis: { ...baseChartTheme.xAxis, data: ['2020', '2021', '2022', '2023', '2024', '2025', '2026 (Target)'], axisLabel: { color: '#a0b3a9' } },
+      yAxis: { ...baseChartTheme.yAxis, name: 'tCO₂e' },
+      series: [{ type: 'line', smooth: true, data: [12000, 38000, 72000, 110000, 138000, 152000, 162750], areaStyle: { color: 'rgba(46, 204, 113, 0.25)' }, itemStyle: { color: '#2ecc71' } }]
+    }
+  }
+];
 
-    return () => {
-      if (observerRef.current) observerRef.current.disconnect();
+const capitalSimulationSteps = [
+  {
+    title: "1. 30-Year Carbon Yield Model",
+    text: "Simulate biological growth curves for native Polyscias fulva and agroforestry Grevillea robusta across 30 years under changing climate parameters.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: '30-Year Cumulative Carbon Sequestration', left: 'center', top: 10, textStyle: { color: '#2ecc71', fontSize: 13 } },
+      legend: { data: ['Polyscias fulva (Native)', 'Grevillea robusta (Agroforestry)'], top: 35, textStyle: { color: '#a0b3a9', fontSize: 11 } },
+      xAxis: { ...baseChartTheme.xAxis, data: ['Yr 1', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'] },
+      yAxis: { ...baseChartTheme.yAxis, name: 'tCO₂/ha' },
+      series: [
+        { name: 'Polyscias fulva (Native)', type: 'line', smooth: true, data: [2, 18, 55, 105, 160, 210, 245], itemStyle: { color: '#2ecc71' } },
+        { name: 'Grevillea robusta (Agroforestry)', type: 'line', smooth: true, data: [4, 30, 75, 120, 150, 175, 190], itemStyle: { color: '#3498db' } }
+      ]
+    }
+  },
+  {
+    title: "2. Carbon Price Sensitivity Curves",
+    text: "Dynamic revenue modeling across conservative ($15/ton), base ($25/ton), and premium biodiversity ($40/ton) market scenarios.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Project Revenue by Carbon Price Curve ($/tCO₂)', left: 'center', top: 10, textStyle: { color: '#f1c40f', fontSize: 13 } },
+      legend: { data: ['$15/t (Voluntary Base)', '$25/t (Article 6.2 Target)', '$40/t (Biodiversity Premium)'], top: 35, textStyle: { color: '#a0b3a9', fontSize: 11 } },
+      xAxis: { ...baseChartTheme.xAxis, data: ['Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25', 'Yr 30'] },
+      yAxis: { ...baseChartTheme.yAxis, name: 'Revenue ($M)' },
+      series: [
+        { name: '$15/t (Voluntary Base)', type: 'bar', data: [0.18, 0.55, 1.05, 1.60, 2.10, 2.45], itemStyle: { color: 'rgba(241, 196, 15, 0.4)' } },
+        { name: '$25/t (Article 6.2 Target)', type: 'bar', data: [0.30, 0.92, 1.75, 2.67, 3.50, 4.08], itemStyle: { color: 'rgba(52, 152, 219, 0.7)' } },
+        { name: '$40/t (Biodiversity Premium)', type: 'bar', data: [0.48, 1.47, 2.80, 4.27, 5.60, 6.53], itemStyle: { color: '#2ecc71' } }
+      ]
+    }
+  },
+  {
+    title: "3. 20% Monte Carlo Risk Buffer",
+    text: "Every carbon transaction autonomously locks 20% of credits into an orbital escrow pool to insure against drought, wildfire, or seedling loss.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Risk Buffer Escrow vs Tradeable Volume', left: 'center', top: 10, textStyle: { color: '#e74c3c', fontSize: 13 } },
+      series: [{
+        type: 'pie',
+        radius: ['45%', '70%'],
+        center: ['50%', '55%'],
+        data: [
+          { value: 80, name: 'Tradeable Carbon (80%)', itemStyle: { color: '#2ecc71' } },
+          { value: 20, name: 'Risk Buffer Escrow (20%)', itemStyle: { color: '#e74c3c' } }
+        ],
+        label: { color: '#fff', fontSize: 12 }
+      }]
+    }
+  },
+  {
+    title: "4. Equitable Community Benefit Split",
+    text: "Transparent revenue sharing guarantees that 60% of all credit proceeds go directly to local cooperative bank accounts and tree nurseries.",
+    chartOption: {
+      ...baseChartTheme,
+      title: { text: 'Smart-Contract Carbon Revenue Distribution', left: 'center', top: 10, textStyle: { color: '#bb8fce', fontSize: 13 } },
+      series: [{
+        type: 'pie',
+        radius: ['45%', '70%'],
+        center: ['50%', '55%'],
+        data: [
+          { value: 60, name: 'Local Cooperatives (60%)', itemStyle: { color: '#9b59b6' } },
+          { value: 20, name: 'Monitoring & GEE Telemetry (20%)', itemStyle: { color: '#3498db' } },
+          { value: 20, name: 'National Green Fund FONERWA (20%)', itemStyle: { color: '#2ecc71' } }
+        ],
+        label: { color: '#fff', fontSize: 12 }
+      }]
+    }
+  }
+];
+
+const STAGES = [
+  { id: 'stage-1', num: '01', title: 'The Crisis & Baseline', icon: '🚨' },
+  { id: 'stage-2', num: '02', title: 'The Orbital Scan',      icon: '🛰️' },
+  { id: 'stage-3', num: '03', title: 'Grassroots Action',     icon: '🌱' },
+  { id: 'stage-4', num: '04', title: 'Space Proof & ML',      icon: '🔍' },
+  { id: 'stage-5', num: '05', title: 'Capital & Return',       icon: '💰' },
+];
+
+export default function VisionTab() {
+  const navigate = useNavigate();
+  const mapRef = useRef(null);
+  const mapInst = useRef(null);
+  const [activeStage, setActiveStage] = useState('stage-1');
+
+  // Sticky Stage Scroll Tracker
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 220;
+      for (let i = STAGES.length - 1; i >= 0; i--) {
+        const el = document.getElementById(STAGES[i].id);
+        if (el && el.offsetTop <= scrollPos) {
+          setActiveStage(STAGES[i].id);
+          break;
+        }
+      }
     };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Initialize Embedded Mini-Map for Biodiversity
+  const scrollToStage = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const topOffset = el.getBoundingClientRect().top + window.pageYOffset - 75;
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    }
+  };
+
+  // Initialize Biodiversity Corridor Map in Stage 2
   useEffect(() => {
     if (!mapRef.current || mapInst.current) return;
     
-    // Coordinates for Gishwati-Mukura (approx -1.78, 29.41)
     const map = L.map(mapRef.current, { zoomControl: false, scrollWheelZoom: false })
       .setView([-1.785, 29.412], 12);
       
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles &copy; Esri'
-    }).addTo(map);
-    
-    L.rectangle([[-90, -180], [90, 180]], {
-      color: 'transparent',
-      fillColor: '#050b08',
-      fillOpacity: 0.4
     }).addTo(map);
 
     const degradedPolygon = [
@@ -508,11 +445,15 @@ export default function VisionTab() {
       color: '#e74c3c',
       fillColor: '#c0392b',
       weight: 2,
-      fillOpacity: 0.3,
+      fillOpacity: 0.35,
       dashArray: '5, 5'
     }).addTo(map);
 
-    polygon.bindTooltip("Critical Biodiversity Corridor (Chimpanzee & Golden Monkey Habitat)", { permanent: true, direction: 'right', className: 'vision-map-tooltip' });
+    polygon.bindTooltip("Albertine Rift Corridor · Chimpanzee & Golden Monkey Zone", { 
+      permanent: true, 
+      direction: 'right', 
+      className: 'vision-map-tooltip' 
+    });
     
     mapInst.current = map;
 
@@ -525,367 +466,302 @@ export default function VisionTab() {
   return (
     <div className="vision-container">
       
-      {/* ── STICKY CHAPTER NAVIGATION BAR ── */}
+      {/* ── STICKY TOP STAGE NAVIGATION BAR ── */}
       <div className="vision-chapter-nav">
         <div className="vision-chapter-title">
-          <span>📖</span> The LCRI Story Map
+          <span>📖</span> The LCRI Connected Journey
         </div>
         <div className="vision-chapter-pills">
-          {CHAPTERS.map((ch) => (
+          {STAGES.map((st) => (
             <button
-              key={ch.id}
-              onClick={() => scrollToChapter(ch.id)}
-              className={`chapter-pill ${activeChapter === ch.id ? 'active' : ''}`}
+              key={st.id}
+              onClick={() => scrollToStage(st.id)}
+              className={`chapter-pill ${activeStage === st.id ? 'active' : ''}`}
             >
-              <span className="pill-number">ACT {ch.num}</span>
-              <span>{ch.icon} {ch.title}</span>
+              <span className="pill-number">STAGE {st.num}</span>
+              <span>{st.icon} {st.title}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* ── EXECUTIVE OVERVIEW HERO BANNER ── */}
-      <div style={{ maxWidth: 1100, margin: '40px auto 0 auto', padding: '0 24px' }}>
+      {/* ── HERO BANNER ── */}
+      <div style={{ maxWidth: 1150, margin: '30px auto 0 auto', padding: '0 24px' }}>
         <div className="vision-hero-banner">
           <span className="hero-tag">RCMRD Arts & Maps 2026 · "Acting Locally for Global Impact"</span>
-          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', color: '#fff', marginBottom: 12, fontWeight: 800 }}>
-            From Grassroots Tree Planting to Space-Verified Carbon Credits
+          <h1 style={{ fontSize: 'clamp(1.9rem, 3.8vw, 2.7rem)', color: '#fff', marginBottom: 14, fontWeight: 800 }}>
+            From Grassroots Tree Planting to Space-Verified Carbon Capital
           </h1>
-          <p style={{ color: 'var(--text-sec)', fontSize: '1.1rem', lineHeight: 1.7, margin: 0 }}>
-            This interactive Story Map demonstrates how the <strong>Local Carbon Return Index (LCRI)</strong> bridges Rwanda's cultural tradition of community planting (<em>Umuganda</em>) with orbital satellite telemetry and machine learning to create transparent, investment-grade carbon assets.
+          <p style={{ color: 'var(--text-sec)', fontSize: '1.12rem', lineHeight: 1.75, margin: 0 }}>
+            Follow the complete step-by-step lifecycle: How Rwanda's cultural tradition of community planting (<em>Umuganda</em>) connects with orbital satellite telemetry and machine learning to turn degraded hills into investment-grade carbon assets.
           </p>
         </div>
       </div>
 
-      {/* ════════════════════════════════════════════════════════════
-          ACT 1: THE CRISIS & BASELINE
-         ════════════════════════════════════════════════════════════ */}
-      <div id="act-1">
-        {/* Section 1: Global Mandate */}
-        <section className="vision-section">
-          <div className="ambient-glow"></div>
-          <div className="vision-content">
-            <div className="act-header">
-              <span className="act-badge act-badge-1">ACT 01</span>
-              <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>The Crisis & Deforestation Baseline</span>
-            </div>
-            
-            <div className="animate-on-scroll">
-              <h1 className="vision-title">Africa Holds the Key to Global Climate Targets.</h1>
-              <h2 className="vision-subtitle">Yet carbon funds bottleneck before reaching the ground.</h2>
-            </div>
-            
-            <div className="animate-on-scroll delay-1">
-              <p className="vision-text">
-                While global corporations have pledged billions to African reforestation to meet Net-Zero goals, capital flow is constrained by a <strong>catastrophic data deficit</strong>. 
-              </p>
-              <p className="vision-text">
-                Reforestation projects are often plagued by "phantom carbon"—initiatives that look promising on paper but fail due to drought, severe slopes, or lack of community stewardship. The LCRI platform provides the missing layer of verifiable, satellite-backed proof that turns ecological restoration into a trusted asset.
-              </p>
-            </div>
+      {/* ── CONNECTED 5-STAGE STORY SPINE ── */}
+      <div className="story-spine-container">
 
-            {/* Tickers */}
-            <div className="vision-grid" style={{ marginTop: 40 }}>
-              <DataTicker endValue={124000} label="Hectares of Deforested Land in Rwanda" suffix=" ha" />
-              <DataTicker endValue={85} label="Model Prediction Reliability" suffix="%" />
-              <DataTicker endValue={4} label="Endangered Species Corridors Restored" suffix="+" />
-            </div>
+        {/* ════════════════════════════════════════════════════════════
+            STAGE 1: THE CRISIS & GROUND BASELINE
+           ════════════════════════════════════════════════════════════ */}
+        <div id="stage-1" className="stage-wrapper">
+          <div className="stage-header">
+            <span className="stage-badge stage-badge-1">STAGE 01 · THE PROBLEM</span>
+            <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>The African Carbon Deficit</span>
           </div>
-        </section>
 
-        {/* Section 2: Before/After Slider */}
-        <section className="vision-section">
-          <div className="ambient-glow glow-right"></div>
-          <div className="vision-content">
-            <div className="animate-on-scroll" style={{ textAlign: 'center', marginBottom: '36px' }}>
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.8vw, 3.2rem)' }}>The Power of Verified Reforestation</h1>
-              <h2 className="vision-subtitle" style={{ color: '#2ecc71' }}>A Local Perspective: Canopy Restoration in Critical Biomes</h2>
-              <p className="vision-text" style={{ margin: '0 auto', maxWidth: 880 }}>
-                With high-fidelity spatial data, tree planting succeeds even on steep slopes or high-erosion areas. Drag the slider below to witness the transformation from severe degradation to thriving restored canopy in Rwanda's montane landscapes.
-              </p>
-            </div>
-            
-            <div className="animate-on-scroll delay-1">
-              <BeforeAfterSlider 
-                beforeImage="/images/rwanda_before.jpg" 
-                afterImage="/images/rwanda_after.jpg" 
-                beforeLabel="2018: Severe Erosion & Degradation (Green Gicumbi)" 
-                afterLabel="2026: Radical Terracing & Agroforestry (Restored)" 
-              />
-            </div>
-          </div>
-        </section>
-      </div>
+          <h1 className="vision-title">Africa Holds the Key to Global Climate Targets.</h1>
+          <h2 className="vision-subtitle" style={{ color: '#ff6b6b' }}>Yet international carbon capital bottlenecks before reaching the soil.</h2>
 
-      {/* ════════════════════════════════════════════════════════════
-          ACT 2: ECOLOGICAL SCIENCE & CORRIDORS
-         ════════════════════════════════════════════════════════════ */}
-      <div id="act-2">
-        {/* Section 3: Biodiversity Corridors */}
-        <section className="vision-section">
-          <div className="vision-content">
-            <div className="act-header">
-              <span className="act-badge act-badge-2">ACT 02</span>
-              <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>Ecological Science & Space Telemetry</span>
-            </div>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 40, alignItems: 'center' }}>
-              <div className="animate-on-scroll" style={{ flex: '1 1 400px' }}>
-                <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)' }}>More Than Just Carbon.</h1>
-                <h2 className="vision-subtitle" style={{ color: '#f39c12' }}>Rebuilding Critical Biological Corridors</h2>
-                <p className="vision-text">
-                  In fragile ecosystems like the Albertine Rift, reforestation is also a race to reconnect fragmented habitats for the endangered <strong>Eastern Chimpanzee</strong> and the endemic <strong>Golden Monkey</strong>.
-                </p>
-                <p className="vision-text">
-                  The LCRI engine prioritizes critical biological corridors, ensuring carbon investments double as biodiversity life-support systems.
-                </p>
-                <div style={{ marginTop: 24 }}>
-                  <button onClick={() => navigate('/lcri')} className="vision-cta">
-                    View Species & Parcel Suitability →
-                  </button>
-                </div>
-              </div>
-
-              <div className="animate-on-scroll delay-1" style={{ flex: '1 1 400px', height: '380px', position: 'relative' }}>
-                <div ref={mapRef} style={{ width: '100%', height: '100%', borderRadius: 16, border: '2px solid rgba(243,156,18,0.4)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 4: Earth Observation & Map Scrollytelling */}
-        <section className="vision-section">
-          <div className="vision-content">
-            <div className="animate-on-scroll">
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}>Investment-Grade Ecological Intelligence</h1>
-              <h2 className="vision-subtitle">Fusing Satellite Telemetry with Machine Learning</h2>
-              <p className="vision-text">
-                The LCRI synthesizes open-source Earth Observation datasets with Random Forest regression models to predict 10-year biomass yields, quantify carbon stock, and compute AI confidence probabilities.
-              </p>
-            </div>
-
-            {/* Satellite Biomass Telemetry Showcase Card */}
-            <div className="animate-on-scroll delay-1" style={{ margin: '30px 0', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(46, 204, 113, 0.3)', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
-              <img 
-                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" 
-                alt="Satellite Aboveground Biomass Heatmap & Telemetry" 
-                style={{ width: '100%', height: 'auto', maxHeight: '420px', objectFit: 'cover', display: 'block' }} 
-              />
-              <div style={{ background: 'rgba(5, 15, 10, 0.95)', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderTop: '1px solid rgba(46, 204, 113, 0.2)' }}>
-                <span style={{ color: '#2ecc71', fontSize: '0.9rem', fontWeight: 700 }}>🛰️ LIVE EO TELEMETRY · SENTINEL-2 SPECTRAL INDICES & NASA/ORNL AGB DENSITY</span>
-                <span style={{ color: 'var(--text-sec)', fontSize: '0.85rem' }}>Resolution: 10m · Radiometric Calibration: Level-2A BOA</span>
-              </div>
-            </div>
-
-            <div className="vision-grid">
-              <div className="glass-card animate-on-scroll delay-1">
-                <span className="card-icon">🛰️</span>
-                <h3>Copernicus Sentinel-2</h3>
-                <p>Multi-spectral bands track canopy NDVI, seasonal health, and vegetative stress in near real-time.</p>
-              </div>
-              
-              <div className="glass-card animate-on-scroll delay-2">
-                <span className="card-icon">🌍</span>
-                <h3>NASA / ORNL Biomass</h3>
-                <p>Aboveground Biomass (AGB) density models calculate carbon stock and sequestration headroom per hectare.</p>
-              </div>
-              
-              <div className="glass-card animate-on-scroll delay-3">
-                <span className="card-icon">🏔️</span>
-                <h3>Terrain Feasibility</h3>
-                <p>Slope and elevation models identify high-erosion zones to stabilize watersheds and prevent seedling loss.</p>
-              </div>
-            </div>
-
-            <div className="animate-on-scroll" style={{ marginTop: '60px' }}>
-              <ImageScrollyTelling 
-                steps={dashboardSteps} 
-                navigate={navigate} 
-                title="The Anatomy of a Verified Project"
-                ctaText="Open Dashboard & Map" 
-                ctaLink="/dashboard" 
-              />
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* ════════════════════════════════════════════════════════════
-          ACT 3: GRASSROOTS ACTION & VALIDATION
-         ════════════════════════════════════════════════════════════ */}
-      <div id="act-3">
-        {/* Section 5: Umuganda Ledger */}
-        <section className="vision-section">
-          <div className="ambient-glow glow-left" style={{ background: 'radial-gradient(circle, rgba(155,89,182,0.12) 0%, rgba(0,0,0,0) 70%)' }}></div>
-          <div className="vision-content">
-            <div className="act-header">
-              <span className="act-badge act-badge-3">ACT 03</span>
-              <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>The Grassroots Sensor Network</span>
-            </div>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap-reverse', gap: 50, alignItems: 'center' }}>
-              <div className="animate-on-scroll" style={{ flex: '1 1 400px' }}>
-                <div className="glass-card" style={{ padding: '36px', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: -20, left: -20, fontSize: '2.8rem' }}>🌱</div>
-                  <h3 style={{ color: '#9b59b6', marginBottom: 12, fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: 2 }}>Umuganda Community Ledger</h3>
-                  <div style={{ background: 'rgba(0,0,0,0.5)', padding: 14, borderRadius: 8, marginBottom: 12, borderLeft: '3px solid #9b59b6' }}>
-                    <strong style={{ color: '#fff' }}>Sector: Kanyinya / Gicumbi</strong><br/>
-                    <span style={{ color: '#a0b3a9', fontSize: '0.9rem' }}>Species: 1,200 Polyscias fulva stems planted</span>
-                  </div>
-                  <div style={{ background: 'rgba(0,0,0,0.5)', padding: 14, borderRadius: 8, borderLeft: '3px solid #2ecc71' }}>
-                    <strong style={{ color: '#fff' }}>Sentinel-2 Orbital Cross-Check</strong><br/>
-                    <span style={{ color: '#a0b3a9', fontSize: '0.9rem' }}>Status: Confirmed High Confidence (0.85)</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="animate-on-scroll delay-1" style={{ flex: '1 1 400px' }}>
-                <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)' }}>The Human Sensor Network</h1>
-                <h2 className="vision-subtitle" style={{ color: '#9b59b6' }}>Umuganda: Community at the Core</h2>
-                <p className="vision-text">
-                  Satellites alone cannot plant trees. The core innovation of LCRI is its integration with <strong>Umuganda</strong>—Rwanda’s cultural tradition of monthly community labor.
-                </p>
-                <p className="vision-text">
-                  When local cooperatives log planting polygons, orbital satellites autonomously monitor canopy emergence. This bidirectional loop of human action validated by space creates undeniable transparency.
-                </p>
-                
-                <div style={{ marginTop: 24, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                  <button onClick={() => navigate('/ledger')} className="vision-cta" style={{ background: '#9b59b6', color: '#fff' }}>
-                    Explore Community Ledger →
-                  </button>
-                  <button onClick={() => navigate('/gicumbi')} className="vision-cta vision-cta-secondary" style={{ borderColor: '#9b59b6', color: '#9b59b6' }}>
-                    View Gicumbi Audit
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 6: Green Gicumbi Verification Scrollytelling (Interactive ECharts) */}
-        <section className="vision-section">
-          <div className="vision-content">
-            <div className="animate-on-scroll" style={{ textAlign: 'center', marginBottom: '40px' }}>
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)' }}>Ground-Truth Case Study</h1>
-              <h2 className="vision-subtitle" style={{ color: '#2ecc71' }}>Green Gicumbi Verification (4,801 ha)</h2>
-              <p className="vision-text" style={{ margin: '0 auto', maxWidth: 880 }}>
-                How satellite telemetry independently validated 4,650 hectares of actual canopy gain out of a 4,801 ha claim—achieving a 97% validation rate.
-              </p>
-            </div>
-            
-            <div className="animate-on-scroll">
-              <ChartScrollyTelling 
-                steps={gicumbiSteps} 
-                navigate={navigate} 
-                ctaText="Open Green Gicumbi Verification" 
-                ctaLink="/gicumbi" 
-              />
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* ════════════════════════════════════════════════════════════
-          ACT 4: PRECISION CAPITAL & SIMULATION
-         ════════════════════════════════════════════════════════════ */}
-      <div id="act-4">
-        {/* Section 7: LCRI Ranking */}
-        <section className="vision-section">
-          <div className="vision-content">
-            <div className="act-header">
-              <span className="act-badge act-badge-4">ACT 04</span>
-              <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>Precision Capital & Financial Projections</span>
-            </div>
-
-            <div className="animate-on-scroll" style={{ textAlign: 'center', marginBottom: '40px' }}>
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)' }}>Precision Capital Allocation</h1>
-              <h2 className="vision-subtitle" style={{ color: '#80cbc4' }}>The LCRI Ranking Engine</h2>
-              <p className="vision-text" style={{ margin: '0 auto', maxWidth: 880 }}>
-                With thousands of degraded hectares across Rwanda, the LCRI Ranking Engine prioritizes parcels by balancing carbon potential, degradation urgency, terrain feasibility, and community capacity.
-              </p>
-            </div>
-            
-            <div className="animate-on-scroll">
-              <ChartScrollyTelling 
-                steps={rankingSteps} 
-                navigate={navigate} 
-                ctaText="Open LCRI Ranking Engine" 
-                ctaLink="/lcri" 
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Section 8: Financial Simulator (Interactive ECharts) */}
-        <section className="vision-section">
-          <div className="vision-content">
-            <div className="animate-on-scroll" style={{ textAlign: 'center', marginBottom: '40px' }}>
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)' }}>Financial Engineering & Risk Buffering</h1>
-              <h2 className="vision-subtitle" style={{ color: '#2ecc71' }}>The Reforestation Investment Simulator</h2>
-              <p className="vision-text" style={{ margin: '0 auto', maxWidth: 880 }}>
-                Run Monte Carlo risk simulations, adjust co-benefit multipliers, and model 30-year revenue projections under fluctuating carbon price curves.
-              </p>
-            </div>
-            
-            <div className="animate-on-scroll">
-              <ChartScrollyTelling 
-                steps={simulatorSteps} 
-                navigate={navigate} 
-                ctaText="Run Reforestation Simulator" 
-                ctaLink="/simulator" 
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Section 9: Carbon Project Registry (Cryptographic Scientific Infographics) */}
-        <section className="vision-section">
-          <div className="vision-content">
-            <div className="animate-on-scroll" style={{ textAlign: 'center', marginBottom: '40px' }}>
-              <h1 className="vision-title" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)' }}>Cryptographic Truth & Live Auditing</h1>
-              <h2 className="vision-subtitle" style={{ color: '#3498db' }}>Pan-African Project Registry</h2>
-              <p className="vision-text" style={{ margin: '0 auto', maxWidth: 880 }}>
-                Audit active REDD+ and ARR projects across Africa in real-time, connecting global carbon markets to verifiable Earth Observation records.
-              </p>
-            </div>
-            
-            <div className="animate-on-scroll">
-              <ImageScrollyTelling 
-                steps={registrySteps} 
-                navigate={navigate} 
-                ctaText="Audit Live Registry" 
-                ctaLink="/registry" 
-              />
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* ── SECTION 5: FINAL CALL TO ACTION ── */}
-      <section className="vision-section">
-        <div className="ambient-glow" style={{ background: 'radial-gradient(circle, rgba(46,204,113,0.15) 0%, rgba(0,0,0,0) 60%)' }}></div>
-        <div className="vision-content" style={{ textAlign: 'center' }}>
-          <div className="animate-on-scroll">
-            <h1 className="vision-title">Don't just read the story.</h1>
-            <h2 className="vision-subtitle" style={{ color: 'var(--text-primary)' }}>Simulate the impact.</h2>
-            <p className="vision-text" style={{ margin: '0 auto 36px auto' }}>
-              Tested in Rwanda. Built for Africa. Discover planting sites, run financial simulations, and audit canopy growth in real-time.
+          <div style={{ maxWidth: 880 }}>
+            <p className="vision-text">
+              While global corporations have pledged billions to African reforestation to meet Net-Zero goals, capital flow is constrained by a <strong>catastrophic data deficit</strong>. 
             </p>
+            <p className="vision-text">
+              Reforestation projects are often plagued by "phantom carbon"—initiatives that look promising on paper but fail due to severe slopes, erosion, or lack of community stewardship. The LCRI platform bridges this divide by providing continuous satellite-backed proof.
+            </p>
+          </div>
+
+          {/* Live Data Tickers */}
+          <div className="vision-grid" style={{ marginTop: 32 }}>
+            <DataTicker endValue={124000} label="Hectares of Degraded Land in Rwanda" suffix=" ha" />
+            <DataTicker endValue={85} label="Model Prediction Reliability" suffix="%" />
+            <DataTicker endValue={4} label="Endangered Species Corridors Restored" suffix="+" />
+          </div>
+
+          {/* Before / After Slider */}
+          <div style={{ marginTop: 48 }}>
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+              <h3 style={{ color: '#2ecc71', fontSize: '1.4rem', fontWeight: 700, marginBottom: 8 }}>Visualizing Restored Montane Landscapes</h3>
+              <p className="vision-text" style={{ margin: '0 auto', maxWidth: 750 }}>
+                Drag the interactive slider below to witness the transformation from severe degradation to thriving restored canopy in Rwanda's montane landscapes.
+              </p>
+            </div>
+            <BeforeAfterSlider 
+              beforeImage="/images/rwanda_before.jpg" 
+              afterImage="/images/rwanda_after.jpg" 
+              beforeLabel="2018: Severe Erosion & Degradation (Green Gicumbi)" 
+              afterLabel="2026: Radical Terracing & Agroforestry (Restored)" 
+            />
+          </div>
+        </div>
+
+        {/* ── NARRATIVE BRIDGE 1 → 2 ── */}
+        <NarrativeBridge 
+          icon="🛰️"
+          tag="NEXT STEP IN THE CHAIN"
+          question="How do we identify degraded land without spending millions on manual surveys?"
+          answer="Stage 2: Orbital satellites sweep the country from space to map exact biomass density and erosion boundaries."
+          nextStageId="stage-2"
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            STAGE 2: THE ORBITAL SCAN & SAFEGUARDS
+           ════════════════════════════════════════════════════════════ */}
+        <div id="stage-2" className="stage-wrapper">
+          <div className="stage-header">
+            <span className="stage-badge stage-badge-2">STAGE 02 · ORBITAL DISCOVERY</span>
+            <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>Space Telemetry & Biodiversity Safeguards</span>
+          </div>
+
+          <h1 className="vision-title">Autonomous Satellite Telemetry from Space.</h1>
+          <h2 className="vision-subtitle" style={{ color: '#5dade2' }}>Fusing Sentinel-2, NASA GEDI, and AI models into an automated discovery engine.</h2>
+
+          {/* Biodiversity Corridor Spotlight */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 36, alignItems: 'center', margin: '36px 0' }}>
+            <div style={{ flex: '1 1 380px' }}>
+              <h3 style={{ color: '#f39c12', fontSize: '1.4rem', fontWeight: 700, marginBottom: 12 }}>
+                Protecting Critical Albertine Rift Corridors
+              </h3>
+              <p className="vision-text">
+                In fragile ecosystems like Gishwati-Mukura and Nyungwe, reforestation is a race to reconnect fragmented habitats for the endangered <strong>Eastern Chimpanzee</strong> and the endemic <strong>Golden Monkey</strong>.
+              </p>
+              <p className="vision-text">
+                The LCRI engine automatically scans WDPA boundaries to ensure projects safeguard native biomes while prioritizing high-biodiversity corridors.
+              </p>
+              <button onClick={() => navigate('/lens')} className="vision-cta" style={{ marginTop: 8 }}>
+                Open Interactive Satellite Lens →
+              </button>
+            </div>
+
+            <div style={{ flex: '1 1 380px', height: '340px', position: 'relative' }}>
+              <div ref={mapRef} style={{ width: '100%', height: '100%', borderRadius: 18, border: '2px solid rgba(243,156,18,0.4)', boxShadow: '0 16px 36px rgba(0,0,0,0.5)' }}></div>
+            </div>
+          </div>
+
+          {/* Scrollytelling Stage: The Anatomy of a Verified Project */}
+          <div style={{ marginTop: 50 }}>
+            <ImageScrollyTelling 
+              steps={orbitalScanSteps} 
+              navigate={navigate} 
+              title="The 4-Step Orbital Ingestion Pipeline"
+              badge="ORBITAL SCAN"
+              ctaText="Explore Live Dashboard & Map" 
+              ctaLink="/dashboard" 
+            />
+          </div>
+        </div>
+
+        {/* ── NARRATIVE BRIDGE 2 → 3 ── */}
+        <NarrativeBridge 
+          icon="🌱"
+          tag="NEXT STEP IN THE CHAIN"
+          question="Now that satellites mapped the coordinates, who actually plants the trees?"
+          answer="Stage 3: Rwanda's cultural tradition of Umuganda mobilizes local farming cooperatives on the ground."
+          nextStageId="stage-3"
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            STAGE 3: GRASSROOTS ACTION & GPS LEDGER
+           ════════════════════════════════════════════════════════════ */}
+        <div id="stage-3" className="stage-wrapper">
+          <div className="stage-header">
+            <span className="stage-badge stage-badge-3">STAGE 03 · GROUND ACTION</span>
+            <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>The Human Sensor Network</span>
+          </div>
+
+          <h1 className="vision-title">Satellites Don't Plant Trees. Communities Do.</h1>
+          <h2 className="vision-subtitle" style={{ color: '#bb8fce' }}>Umuganda: Community Stewardship at the Core</h2>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap-reverse', gap: 40, alignItems: 'center', marginTop: 32 }}>
+            <div style={{ flex: '1 1 380px' }}>
+              <div className="glass-card" style={{ padding: '32px', position: 'relative', border: '1px solid rgba(155, 89, 182, 0.4)' }}>
+                <div style={{ position: 'absolute', top: -18, left: -18, fontSize: '2.5rem' }}>🌱</div>
+                <h3 style={{ color: '#bb8fce', marginBottom: 14, fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                  Live Umuganda Community Ledger
+                </h3>
+                <div style={{ background: 'rgba(0,0,0,0.5)', padding: 14, borderRadius: 10, marginBottom: 12, borderLeft: '4px solid #bb8fce' }}>
+                  <strong style={{ color: '#fff' }}>Sector: Kanyinya / Gicumbi District</strong><br/>
+                  <span style={{ color: '#a0b3a9', fontSize: '0.9rem' }}>Species: 1,200 Polyscias fulva & Grevillea stems planted</span>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.5)', padding: 14, borderRadius: 10, borderLeft: '4px solid #2ecc71' }}>
+                  <strong style={{ color: '#fff' }}>Sentinel-2 Orbital Cross-Check</strong><br/>
+                  <span style={{ color: '#a0b3a9', fontSize: '0.9rem' }}>Telemetry Status: High Confidence Emergence (85%)</span>
+                </div>
+              </div>
+            </div>
             
+            <div style={{ flex: '1 1 380px' }}>
+              <p className="vision-text">
+                The core breakthrough of LCRI is uniting high-tech space data with <strong>Umuganda</strong>—Rwanda’s national tradition of monthly community service.
+              </p>
+              <p className="vision-text">
+                When local cooperatives log their planting perimeters into the Community Ledger, orbital satellites automatically lock onto those coordinates to monitor seedling emergence month after month.
+              </p>
+              
+              <div style={{ marginTop: 24, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <button onClick={() => navigate('/ledger')} className="vision-cta" style={{ background: '#9b59b6', color: '#fff' }}>
+                  Open Community Ledger →
+                </button>
+                <button onClick={() => navigate('/gicumbi')} className="vision-cta vision-cta-secondary" style={{ borderColor: '#9b59b6', color: '#bb8fce' }}>
+                  View Gicumbi Audit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── NARRATIVE BRIDGE 3 → 4 ── */}
+        <NarrativeBridge 
+          icon="🔍"
+          tag="NEXT STEP IN THE CHAIN"
+          question="Once seedlings are in the ground, how do international funders verify they grew?"
+          answer="Stage 4: Multi-year Sentinel-2 NDVI change detection independently audits real canopy gain."
+          nextStageId="stage-4"
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            STAGE 4: SPACE PROOF & ML VALIDATION
+           ════════════════════════════════════════════════════════════ */}
+        <div id="stage-4" className="stage-wrapper">
+          <div className="stage-header">
+            <span className="stage-badge stage-badge-4">STAGE 04 · PROOF OF SURVIVAL</span>
+            <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>Ground-Truth Case Study: Green Gicumbi</span>
+          </div>
+
+          <h1 className="vision-title">4,650 Hectares Independently Validated.</h1>
+          <h2 className="vision-subtitle" style={{ color: '#f4d03f' }}>How satellite telemetry confirmed a 97% validation rate in Northern Rwanda.</h2>
+
+          <div style={{ maxWidth: 880, marginBottom: 36 }}>
+            <p className="vision-text">
+              Between 2019 and 2026, the Green Gicumbi project mobilized local communities across 9 sectors. LCRI's automated Sentinel-2 engine audited all 4,801 claimed hectares, confirming 4,650 ha of net new canopy and generating <strong>162,750 tons of verified CO₂e sequestered</strong>.
+            </p>
+          </div>
+
+          {/* Scrollytelling Stage: Gicumbi Data Proof */}
+          <ChartScrollyTelling 
+            steps={gicumbiProofSteps} 
+            navigate={navigate} 
+            title="The Verification Proof Chain"
+            badge="GICUMBI CASE STUDY"
+            ctaText="Audit Green Gicumbi Verification" 
+            ctaLink="/gicumbi" 
+          />
+        </div>
+
+        {/* ── NARRATIVE BRIDGE 4 → 5 ── */}
+        <NarrativeBridge 
+          icon="💰"
+          tag="NEXT STEP IN THE CHAIN"
+          question="With verified carbon proven by space, how do we price it and distribute capital?"
+          answer="Stage 5: The LCRI Ranking Engine and 30-Year Financial Simulator model market returns and community payouts."
+          nextStageId="stage-5"
+        />
+
+        {/* ════════════════════════════════════════════════════════════
+            STAGE 5: CAPITAL ALLOCATION & FINANCIAL RETURN
+           ════════════════════════════════════════════════════════════ */}
+        <div id="stage-5" className="stage-wrapper">
+          <div className="stage-header">
+            <span className="stage-badge stage-badge-5">STAGE 05 · CAPITAL ENGINE</span>
+            <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>Precision Carbon Finance & Payouts</span>
+          </div>
+
+          <h1 className="vision-title">Turning Ecological Truth into Investment Capital.</h1>
+          <h2 className="vision-subtitle" style={{ color: '#58d68d' }}>From satellite telemetry to Article 6.2 carbon revenue and local community wealth.</h2>
+
+          <div style={{ maxWidth: 880, marginBottom: 36 }}>
+            <p className="vision-text">
+              Transparent, space-verified carbon commands premium prices on international markets ($25–$40/tCO₂e). The LCRI engine models 30-year yield curves, locks a 20% risk buffer into orbital escrow, and automatically channels 60% of revenues back into local farmer cooperatives.
+            </p>
+          </div>
+
+          {/* Scrollytelling Stage: Capital & Financial Simulator */}
+          <ChartScrollyTelling 
+            steps={capitalSimulationSteps} 
+            navigate={navigate} 
+            title="30-Year Capital & Risk Architecture"
+            badge="FINANCIAL ENGINE"
+            ctaText="Launch Reforestation Simulator" 
+            ctaLink="/simulator" 
+          />
+
+          {/* Final Call to Action Box */}
+          <div style={{ marginTop: 60, padding: '48px 36px', background: 'linear-gradient(135deg, rgba(46, 204, 113, 0.12) 0%, rgba(10, 25, 20, 0.95) 100%)', border: '1px solid rgba(46, 204, 113, 0.35)', borderRadius: 24, textAlign: 'center', boxShadow: '0 20px 48px rgba(0,0,0,0.5)' }}>
+            <h2 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff', marginBottom: 12 }}>
+              Don't just read the story. Explore the platform.
+            </h2>
+            <p className="vision-text" style={{ margin: '0 auto 32px auto', maxWidth: 700 }}>
+              Tested in Rwanda. Built for Africa. Explore live satellite layers, run financial simulations, and audit community planting in real-time.
+            </p>
             <div className="vision-cta-group" style={{ justifyContent: 'center' }}>
               <button onClick={() => navigate('/dashboard')} className="vision-cta">
                 Explore Satellite Dashboard →
               </button>
               <button onClick={() => navigate('/simulator')} className="vision-cta vision-cta-secondary">
-                Run Restoration Simulator
+                Run 30-Yr Simulator
+              </button>
+              <button onClick={() => navigate('/lcri')} className="vision-cta vision-cta-secondary">
+                View Parcel Rankings
               </button>
               <button onClick={() => navigate('/registry')} className="vision-cta vision-cta-secondary">
-                View Project Registry
+                Open Project Registry
               </button>
             </div>
           </div>
         </div>
-      </section>
+
+      </div>
 
     </div>
   );
