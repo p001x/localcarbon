@@ -44,22 +44,34 @@ def init_ee():
     try:
         env_creds = os.environ.get("GEE_SERVICE_ACCOUNT_JSON")
         if env_creds:
-            # Parse the JSON from the environment variable
-            creds = json.loads(env_creds)
-            # Write it to a temporary file because ee.ServiceAccountCredentials requires a file path
-            import tempfile
-            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
-                json.dump(creds, temp_file)
-                cred_path = temp_file.name
+            # Handle potential escaping issues in environment variables (Vercel sometimes double-escapes newlines)
+            if env_creds.startswith("'") and env_creds.endswith("'"):
+                env_creds = env_creds[1:-1]
+            # Replace escaped newlines if any
+            env_creds = env_creds.replace('\\n', '\n')
+            
+            creds_dict = json.loads(env_creds, strict=False)
+            
+            from google.oauth2 import service_account
+            credentials = service_account.Credentials.from_service_account_info(
+                creds_dict, scopes=['https://www.googleapis.com/auth/earthengine']
+            )
+            project_id = creds_dict.get('project_id')
         else:
             with open(GEE_CRED_PATH, 'r') as f:
-                creds = json.load(f)
-            cred_path = GEE_CRED_PATH
+                creds_dict = json.load(f)
+            from google.oauth2 import service_account
+            credentials = service_account.Credentials.from_service_account_info(
+                creds_dict, scopes=['https://www.googleapis.com/auth/earthengine']
+            )
+            project_id = creds_dict.get('project_id')
             
-        credentials = ee.ServiceAccountCredentials(creds['client_email'], cred_path)
-        ee.Initialize(credentials, project=creds['project_id'])
+        ee.Initialize(credentials, project=project_id)
         _ee_initialized = True
     except Exception as e:
+        import traceback
+        print(f"CRITICAL: Earth Engine initialization failed!")
+        print(traceback.format_exc())
         print(f"Warning: Earth Engine unavailable: {e}")
         
 @cache_data
