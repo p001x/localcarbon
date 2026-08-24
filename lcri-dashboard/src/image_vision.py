@@ -196,7 +196,7 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
         dw_url = None
 
     # 8. Hansen Global Forest Change (Loss Year)
-    hansen = ee.Image('UMD/hansen/global_forest_change_2023_v1_11').clip(bbox)
+    hansen = ee.Image('UMD/hansen/global_forest_change_2022_v1_10').clip(bbox)
     lossyear = hansen.select('lossyear')
     hansen_vis = {
         'min': 1, 'max': 23,

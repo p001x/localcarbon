@@ -251,7 +251,7 @@ export default function App() {
           <div className="sidebar-section-title">Study Area (District/Region)</div>
           <div className="form-row" style={{ padding: '0 6px' }}>
             <select className="form-input form-select" value={district}
-              onChange={e => setDistrict(e.target.value)} id="global-district-select">
+              onChange={e => { setDistrict(e.target.value); setIsMobileMenuOpen(false); }} id="global-district-select">
               {districtOptions.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>

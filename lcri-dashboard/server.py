@@ -627,7 +627,7 @@ def gicumbi_change_layer():
         ndvi_present = get_ndvi(s2_present)
         
         # Hansen Global Forest Change
-        hansen = _ee.Image('UMD/hansen/global_forest_change_2023_v1_11').clip(clip_geom)
+        hansen = _ee.Image('UMD/hansen/global_forest_change_2022_v1_10').clip(clip_geom)
         loss = hansen.select('loss').updateMask(hansen.select('loss').gt(0))
         
         vis_ndvi = {'min': 0, 'max': 0.8, 'palette': ['ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901', '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01', '012e01', '011d01', '011301']}
@@ -639,6 +639,8 @@ def gicumbi_change_layer():
             "hansen_loss": loss.getMapId(vis_loss)['tile_fetcher'].url_format
         })
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"GEE Error in Gicumbi layers: {e}")
         return jsonify({
             "ndvi_2019": "",
