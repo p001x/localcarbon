@@ -30,7 +30,7 @@ else:
 
 # Base data directory relative to the src folder
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
-VECTOR_DIR = r"C:\Users\user\Documents\local carbon\dataset vector"
+VECTOR_DIR = os.path.join(DATA_DIR, "dataset vector")
 GEE_CRED_PATH = r"C:\Users\user\Documents\local carbon\ee-petersonyang87-52f0e0a9ad78.json"
 
 _ee_initialized = False
