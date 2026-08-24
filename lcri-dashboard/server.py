@@ -592,6 +592,8 @@ def _get_gicumbi_sectors_gdf():
 @app.route("/api/gicumbi/change-layer", methods=["GET"])
 def gicumbi_change_layer():
     try:
+        from src.data_sources import init_ee
+        init_ee()
         import ee as _ee
         import datetime
         import json
@@ -645,7 +647,8 @@ def gicumbi_change_layer():
         return jsonify({
             "ndvi_2019": "",
             "ndvi_present": "",
-            "hansen_loss": ""
+            "hansen_loss": "",
+            "error": str(e)
         })
 
 # ────────────────────────────────────────────────────────────────────────────

@@ -30,7 +30,7 @@ const FALLBACK_STATS = {
   ]
 }
 
-export default function GicumbiVerificationTab() {
+export default function GicumbiVerificationTab({ isOffline }) {
   const mapRef = useRef(null)
   const mapInst = useRef(null)
   
@@ -52,6 +52,13 @@ export default function GicumbiVerificationTab() {
     }
 
     const fetchData = async () => {
+      if (isOffline) {
+        setError('Earth Engine offline — displaying pre-computed Sentinel-2 audit results.')
+        setStats(FALLBACK_STATS)
+        setLoading(false)
+        return
+      }
+      
       try {
         setLoading(true)
         const [layerRes, statsRes, boundaryRes] = await Promise.all([
@@ -59,6 +66,12 @@ export default function GicumbiVerificationTab() {
           axios.get('/api/gicumbi/stats'),
           axios.get('/api/gicumbi/project-boundary').catch(() => ({ data: null }))
         ])
+        
+        // If the backend returns empty layers or offline flag, treat as offline
+        if (!layerRes.data || !layerRes.data.ndvi_2019 || layerRes.data.offline) {
+          throw new Error("Earth Engine layers not available")
+        }
+        
         setLayers(layerRes.data)
         setStats(statsRes.data)
         
@@ -71,7 +84,7 @@ export default function GicumbiVerificationTab() {
         
         setLoading(false)
       } catch (err) {
-        console.error(err)
+        console.error("Gicumbi Tab Error:", err)
         setError('Earth Engine offline — displaying pre-computed Sentinel-2 audit results.')
         setStats(FALLBACK_STATS)
         setLoading(false)
@@ -85,7 +98,7 @@ export default function GicumbiVerificationTab() {
         mapInst.current = null
       }
     }
-  }, [])
+  }, [isOffline])
 
   // Create layers once when data arrives
   useEffect(() => {
