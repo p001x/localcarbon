@@ -596,14 +596,11 @@ def gicumbi_change_layer():
         init_ee()
         import ee as _ee
         import datetime
-        import json
         
-        # Get sector boundary and convert to ee.Geometry
-        gdf = _get_gicumbi_sectors_gdf()
-        geom = gdf.geometry.unary_union.simplify(0.001)
-        import shapely.geometry
-        geom_json = shapely.geometry.mapping(geom)
-        clip_geom = _ee.Geometry(geom_json)
+        # Use Earth Engine's native GAUL boundaries instead of loading a heavy local shapefile
+        # This completely avoids GeoPandas memory spikes (OOM errors) on Render's free tier
+        gicumbi_fc = _ee.FeatureCollection("FAO/GAUL/2015/level2").filter(_ee.Filter.eq('ADM2_NAME', 'Gicumbi'))
+        clip_geom = gicumbi_fc.geometry()
         
         # 2019 baseline (Project start)
         s2_2019 = (_ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
