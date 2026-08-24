@@ -12,6 +12,7 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 CACHE_DIR = os.path.join(DATA_DIR, 'cache')
 
 def _get_cache_filename(polygon_geojson, years):
+    os.makedirs(CACHE_DIR, exist_ok=True)
     geom_str = json.dumps(polygon_geojson, sort_keys=True)
     years_str = "_".join(map(str, years))
     hash_str = hashlib.md5(f"{geom_str}_{years_str}".encode('utf-8')).hexdigest()
@@ -99,7 +100,8 @@ def _compute_zonal_stats_cached(polygon_geojson_str, years_tuple):
         
         results[str(year)] = {
             "mean_agb_mg_ha": round(simulated_agb, 2),
-            "pixel_count": pixel_count
+            "pixel_count": pixel_count,
+            "area_ha": round(area_ha, 2)
         }
     
     # Write to disk cache
