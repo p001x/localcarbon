@@ -818,9 +818,9 @@ export default function LedgerTab({ country }) {
             Upload a photo of a single tree, select the species, enter its measurements, and estimate its biomass and carbon score using <strong>Tallo v2</strong> + <strong>BAAD</strong> databases and the <strong>Chave 2014</strong> equation.
           </p>
 
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))', gap:10, marginBottom:10 }}>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:10, marginBottom:10 }}>
             {/* Photo upload container */}
-            <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:6, flex: '1 1 140px' }}>
               <label style={{ fontSize:'0.76rem', color:'var(--text-primary)', fontWeight:600 }}>📷 Tree Photo</label>
               <div style={{
                 height:100, border:'1px dashed rgba(255,255,255,0.15)', borderRadius:6,
@@ -838,7 +838,7 @@ export default function LedgerTab({ country }) {
             </div>
 
             {/* Inputs */}
-            <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:6, flex: '1 1 140px' }}>
               <div>
                 <label htmlFor="tree-species" style={{ fontSize:'0.76rem', color:'var(--text-primary)', fontWeight:600 }}>Species</label>
                 <input
@@ -942,9 +942,9 @@ export default function LedgerTab({ country }) {
         </div>
 
         {/* ── Submissions list ─────────────────────────────────────────── */}
-        <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12, flexWrap:'wrap' }}>
           <h3 style={{ color:'var(--accent)', fontWeight:700 }}>All Submissions</h3>
-          <select id="ledger-sector-filter" className="form-input form-select" style={{ width:160 }}
+          <select id="ledger-sector-filter" className="form-input form-select" style={{ width:160, flex: '1 1 auto' }}
             value={filterSector}
             onChange={e => { setFilterSector(e.target.value); loadLedger(e.target.value) }}>
             {sectors.map(s => <option key={s} value={s}>{s}</option>)}
@@ -955,7 +955,7 @@ export default function LedgerTab({ country }) {
           ? <div className="alert alert-info">No submissions yet.</div>
           : <>
               <div className="table-wrap" style={{ maxHeight:220, overflowY:'auto', marginBottom:14 }}>
-                <table>
+                <table style={{ minWidth: 600 }}>
                   <thead><tr><th>Group</th><th>Sector</th><th>Date</th><th>Notes</th><th>Verified</th></tr></thead>
                   <tbody>
                     {filtered.map((r,i) => {
@@ -1013,7 +1013,7 @@ export default function LedgerTab({ country }) {
                   </h4>
                   
                   <div style={{ display:'flex', gap:16, alignItems:'center', flexWrap:'wrap' }}>
-                    <div>
+                    <div style={{ flex: '1 1 auto' }}>
                       <div style={{ fontSize:'0.68rem', color:'var(--text-muted)' }}>Index Price / tCO₂e</div>
                       <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
                         <span className="mono" style={{ fontSize:'1.4rem', fontWeight:800, color: tickerDir === 'up' ? '#2ecc71' : '#e74c3c', transition: 'color 0.15s' }}>
@@ -1025,7 +1025,7 @@ export default function LedgerTab({ country }) {
                       </div>
                     </div>
 
-                    <div style={{ flex:1, borderLeft:'1px solid rgba(255,255,255,0.08)', paddingLeft:16 }}>
+                    <div style={{ flex:'1 1 auto', borderLeft:'1px solid rgba(255,255,255,0.08)', paddingLeft:16 }}>
                       <div style={{ fontSize:'0.68rem', color:'var(--text-muted)' }}>Estimated Live Value</div>
                       <div className="mono" style={{ fontSize:'1.2rem', fontWeight:700, color:'#e0f0e8' }}>
                         ${(tickerVal * (analysis?.latest_co2e_mg || 120.0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}

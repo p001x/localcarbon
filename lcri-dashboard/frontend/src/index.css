@@ -212,8 +212,8 @@ a:hover { text-decoration: underline; }
 textarea.form-input { resize: vertical; min-height: 80px; }
 .form-select { appearance: none; cursor: pointer; }
 .form-row { margin-bottom: 16px; }
-.form-group { display: flex; gap: 14px; }
-.form-group > * { flex: 1; }
+.form-group { display: flex; gap: 14px; flex-wrap: wrap; }
+.form-group > * { flex: 1 1 200px; }
 
 /* ── Slider ────────────────────────────────────────────────────────────── */
 .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }

@@ -33,9 +33,9 @@ export default function DashboardMapPanel({ ctx }) {
 
           <div className="form-row">
             <label className="form-label" htmlFor="district-select-inline">Study Area / District</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <select id="district-select-inline" className="form-input form-select" value={district}
-                onChange={e => setDistrict(e.target.value)} style={{ flex: 1 }}>
+                onChange={e => setDistrict(e.target.value)} style={{ flex: '1 1 200px' }}>
                 {districtOpts.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
               <button 
@@ -43,7 +43,7 @@ export default function DashboardMapPanel({ ctx }) {
                 title="Run Satellite Analysis"
                 onClick={() => triggerAnalysis()}
                 disabled={!aoiGeom || kpiLoading}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                style={{ flex: '1 1 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', whiteSpace: 'nowrap' }}
               >
                 {kpiLoading ? <div className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> : '▶️ Run Analysis'}
               </button>
