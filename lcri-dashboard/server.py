@@ -42,8 +42,8 @@ def check_extrapolated_zone(geom=None, country=None):
     return False
 
 app = Flask(__name__)
-# Restrict CORS to localhost to prevent cross-origin exploitation
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"]}})
+# Allow CORS from localhost and the deployed frontend on Render
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "https://local-carbon-ui.onrender.com"]}})
 
 # ── Initialise Earth Engine on startup ──────────────────────────────────────
 try:
