@@ -12,6 +12,7 @@ export const fetchProtectedAreas = ()        => api.get('/protected-areas').then
 export const fetchShapefileLayer = (name)    => api.get(`/shapefile/${encodeURIComponent(name)}`).then(r => r.data)
 export const computeKpis      = (geometry)  => api.post('/kpis', { geometry }).then(r => r.data)
 export const predictMl        = (geometry)  => api.post('/ml-predict', { geometry }).then(r => r.data)
+export const fetchPointBiomass= (lat, lng, opts = {})  => api.post('/point-biomass', { lat, lng }, opts).then(r => r.data)
 export const fetchMonitoringImages = (geometry, targetDate) => api.post('/monitoring-images', { geometry, target_date: targetDate }).then(r => r.data)
 export const fetchCustomAreas = ()           => api.get('/custom-areas').then(r => r.data)
 export const createCustomArea = (payload)    => api.post('/custom-areas', payload).then(r => r.data)

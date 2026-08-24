@@ -2,14 +2,14 @@
 
 /* ── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
-  --bg-page:      #09090b;
-  --bg-card:      #0d1f17;
-  --bg-panel:     #111827;
-  --bg-input:     #0c1a10;
-  --bg-header-trans: rgba(13,31,23,0.7);
-  --bg-glass:     rgba(13,31,23,0.6);
-  --bg-lens:      rgba(10,25,17,0.95);
-  --border:       #1e3a2a;
+  --bg-page:      #000000;
+  --bg-card:      #0a0a0a;
+  --bg-panel:     #121212;
+  --bg-input:     #18181b;
+  --bg-header-trans: rgba(10,10,10,0.75);
+  --bg-glass:     rgba(10,10,10,0.65);
+  --bg-lens:      rgba(0,0,0,0.95);
+  --border:       #27272a;
   --border-glow:  #2ecc71;
   --accent:       #2ecc71;
   --accent-dim:   #a8dda8;
@@ -64,6 +64,15 @@ a:hover { text-decoration: underline; }
 
 /* ── Layout Shell ──────────────────────────────────────────────────────── */
 .app-shell { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── Main Content Area ─────────────────────────────────────────────────── */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  background: var(--bg-page);
+}
 
 /* ── Sidebar ───────────────────────────────────────────────────────────── */
 .sidebar {

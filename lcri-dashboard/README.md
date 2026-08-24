@@ -23,17 +23,20 @@ A hybrid reforestation investment simulator (National scale) and community plant
 ## Quick Start
 
 ```bash
-# 1. Install dependencies
+# 1. Install dependencies for the backend
 pip install -r requirements.txt
 
-# 2. (Optional) Pre-build zonal stats cache for judging day
-C:\Users\user\miniconda3\python.exe scripts\build_cache.py
+# 2. Install dependencies for the frontend
+cd frontend
+npm install
+cd ..
 
-# 3. Run the app
-streamlit run app.py
+# 3. Run the application
+# Double-click the Start_Portal.bat file and select Option [1] 
+# (Start React Frontend & Flask Backend)
 ```
 
-Open http://localhost:8501 in your browser.
+The application will open at `http://localhost:5173` (Frontend) and `http://localhost:5000` (Backend API).
 
 ---
 

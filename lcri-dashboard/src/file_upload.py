@@ -36,7 +36,18 @@ def _read_shapefile_zip(data: bytes) -> dict:
         with open(zip_path, 'wb') as f:
             f.write(data)
         with zipfile.ZipFile(zip_path, 'r') as zf:
-            zf.extractall(tmpdir)
+            # Safe extraction to prevent Zip Slip vulnerability
+            for member in zf.namelist():
+                # Get the absolute paths of the target directory and the extracted file
+                target_path = os.path.abspath(os.path.join(tmpdir, member))
+                tmpdir_path = os.path.abspath(tmpdir)
+                
+                # Check if the extracted file path starts with the target directory path
+                if not target_path.startswith(tmpdir_path + os.sep):
+                    print(f"Warning: Skipping potentially malicious file path: {member}")
+                    continue
+                    
+                zf.extract(member, tmpdir)
 
         shp_files = sorted(Path(tmpdir).glob('**/*.shp'))
         if not shp_files:

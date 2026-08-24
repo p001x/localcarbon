@@ -174,6 +174,16 @@ export default function App() {
 
   const tabProps = { appConfig, country, district, setDistrict, customAreas, refreshAreas, districtOptions, isOffline }
 
+  if (currentTabId === 'home') {
+    return (
+      <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', width: '100%', padding: '60px 20px' }}>
+        <Routes>
+          <Route path="/" element={<HomeTab />} />
+        </Routes>
+      </div>
+    )
+  }
+
   return (
     <div className="app-shell">
       {isOffline && (

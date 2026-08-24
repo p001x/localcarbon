@@ -95,47 +95,80 @@ export default function HomeTab() {
   }
 
   return (
-    <div style={{ maxWidth: 1020, margin: '0 auto', paddingBottom: 60 }}>
+    <div style={{ maxWidth: 1020, margin: '0 auto', paddingBottom: 0 }}>
+
+      {/* ── Navbar (Header) ─────────────────────────────────────────── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0 40px 0', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ background: 'var(--accent)', color: '#000', fontWeight: 900, padding: '4px 8px', borderRadius: 6, fontSize: '1.2rem', letterSpacing: '-0.05em' }}>LCRI</div>
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.1rem', letterSpacing: '-0.02em' }}>Environmental Intelligence</div>
+        </div>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'center', fontSize: '0.9rem', fontWeight: 600 }}>
+          <span style={{ color: 'var(--text-sec)', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/vision')}>Story Map</span>
+          <span style={{ color: 'var(--text-sec)', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/methodology')}>Methodology</span>
+          <span style={{ color: 'var(--text-sec)', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/datasources')}>Data Sources</span>
+          <button className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => navigate('/dashboard')}>Launch App</button>
+        </div>
+      </div>
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <div style={{
         background: 'linear-gradient(135deg, rgba(46,204,113,0.13) 0%, rgba(9,9,11,0) 60%)',
         border: '1px solid rgba(46,204,113,0.25)',
         borderRadius: 20,
-        padding: '52px 40px 44px',
+        padding: '52px 40px',
         marginBottom: 28,
-        textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '40px',
+        flexWrap: 'wrap'
       }}>
         <div style={{ position:'absolute', inset:0, backgroundImage:'repeating-linear-gradient(0deg,rgba(46,204,113,0.03) 0 1px,transparent 1px 60px),repeating-linear-gradient(90deg,rgba(46,204,113,0.03) 0 1px,transparent 1px 60px)', pointerEvents:'none' }} />
-        <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(46,204,113,0.13)', color:'var(--accent)', padding:'4px 14px', borderRadius:20, fontSize:'0.75rem', fontWeight:700, letterSpacing: '0.04em', marginBottom:20, border:'1px solid rgba(46,204,113,0.28)' }}>
-          RWANDA NATIONAL FOCUS · RCMRD ARTS &amp; MAPS COMPETITION 2026
+        
+        {/* Left Column: Text */}
+        <div style={{ flex: '1 1 400px', position: 'relative', zIndex: 1 }}>
+          <h1 style={{ fontSize:'2.8rem', color:'var(--accent)', margin:'0 0 18px 0', lineHeight:1.1, fontWeight:800, letterSpacing: '-0.02em' }}>
+            LCRI Environmental Intelligence
+          </h1>
+          <p style={{ fontSize:'1.1rem', color:'var(--text-primary)', margin:'0 0 12px 0', fontWeight:500, lineHeight:1.6, maxWidth: '100%' }}>
+            Local Carbon Return Index — satellite-driven land triage, 20-year restoration simulation &amp; grassroots verification for Rwanda's conservation pipeline.
+          </p>
+          <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', margin:'0 0 32px 0', lineHeight:1.7 }}>
+            Built on <strong style={{color:'var(--text-sec)'}}>ESA CCI Biomass v7</strong> · <strong style={{color:'var(--text-sec)'}}>NASA GEDI LiDAR</strong> · <strong style={{color:'var(--text-sec)'}}>Sentinel-2 L2A</strong>
+          </p>
+          <div style={{ display:'flex', gap:14, flexWrap:'wrap' }}>
+            <button
+              className="btn btn-primary"
+              style={{ padding:'13px 28px', fontSize:'0.95rem', fontWeight:700, background:'linear-gradient(135deg, #2ecc71, #27ae60)', boxShadow:'0 4px 20px rgba(46,204,113,0.35)' }}
+              onClick={startTour}
+            >
+              Start Guided Competition Tour →
+            </button>
+            <button
+              className="btn btn-secondary"
+              style={{ padding:'13px 24px', fontSize:'0.95rem', fontWeight:600 }}
+              onClick={() => navigate('/vision')}
+            >
+              Explore Story Map
+            </button>
+          </div>
         </div>
-        <h1 style={{ fontSize:'2.7rem', color:'var(--accent)', margin:'0 0 14px 0', lineHeight:1.1, fontWeight:800, letterSpacing: '-0.02em' }}>
-          LCRI Environmental Intelligence
-        </h1>
-        <p style={{ fontSize:'1.05rem', color:'var(--text-primary)', margin:'0 0 10px 0', fontWeight:500, lineHeight:1.6, maxWidth:680, marginLeft:'auto', marginRight:'auto' }}>
-          Local Carbon Return Index — satellite-driven land triage, 20-year restoration simulation &amp; grassroots verification for Rwanda's conservation pipeline.
-        </p>
-        <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', maxWidth:600, margin:'0 auto 32px', lineHeight:1.7 }}>
-          Built on <strong style={{color:'var(--text-sec)'}}>ESA CCI Biomass v7</strong> · <strong style={{color:'var(--text-sec)'}}>NASA GEDI LiDAR</strong> · <strong style={{color:'var(--text-sec)'}}>Sentinel-2 L2A</strong> · <strong style={{color:'var(--text-sec)'}}>Chave et al. 2014</strong>
-        </p>
-        <div style={{ display:'flex', gap:14, justifyContent:'center', flexWrap:'wrap' }}>
-          <button
-            className="btn btn-primary"
-            style={{ padding:'13px 32px', fontSize:'0.95rem', fontWeight:700, background:'linear-gradient(135deg, #2ecc71, #27ae60)', boxShadow:'0 4px 20px rgba(46,204,113,0.35)' }}
-            onClick={startTour}
-          >
-            Start Guided Competition Tour (5 Steps) →
-          </button>
-          <button
-            className="btn btn-secondary"
-            style={{ padding:'13px 24px', fontSize:'0.95rem', fontWeight:600 }}
-            onClick={() => navigate('/vision')}
-          >
-            Explore Interactive Story Map
-          </button>
+
+        {/* Right Column: Image */}
+        <div style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+          <img 
+            src="/hero_satellite.jpg" 
+            alt="3D Satellite scanning forest" 
+            style={{ 
+              width: '100%', 
+              maxWidth: '380px', 
+              borderRadius: '16px', 
+              boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+              border: '1px solid rgba(46,204,113,0.3)'
+            }} 
+          />
         </div>
       </div>
 
@@ -146,6 +179,32 @@ export default function HomeTab() {
         <StatTile end={96.8}   suffix="%"    label="Sentinel-2 Accuracy"      sub="Orbital vs ground-truth validation"        color="#f1c40f" decimals={1} />
         <StatTile end={30}     suffix=" yr"  label="Simulation Horizon"       sub="Logistic growth projection window"         color="#9b59b6" />
         <StatTile end={25}     suffix=" USD" label="Premium Carbon Price/ton" sub="Base $15 + biodiversity + gender equity"   color="#e67e22" />
+      </div>
+
+      {/* ── How It Works ──────────────────────────────────────────────── */}
+      <div style={{ marginBottom: 36 }}>
+        <div style={{ fontSize:'0.67rem', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', fontWeight:700, marginBottom:16, textAlign: 'center' }}>
+          How LCRI Works
+        </div>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ flex: '1 1 200px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: 12 }}>🛰️</div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>1. Orbital Scanning</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>Ingest real-time Sentinel-2 L2A and ESA CCI Biomass data to assess degraded land.</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--border)' }}>→</div>
+          <div style={{ flex: '1 1 200px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: 12 }}>🧠</div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>2. AI Estimation</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>Apply Chave et al. allometry to forecast 20-year CO₂e yield and ecological impact.</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--border)' }}>→</div>
+          <div style={{ flex: '1 1 200px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: 12 }}>🌱</div>
+            <div style={{ fontWeight: 700, color: 'var(--accent)', marginBottom: 6 }}>3. Carbon Finance</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-sec)', lineHeight: 1.5 }}>Issue verified green bonds to local communities, driving grassroots restoration.</div>
+          </div>
+        </div>
       </div>
 
       {/* ── Conservation Banner ───────────────────────────────────────── */}
@@ -194,14 +253,62 @@ export default function HomeTab() {
         <ToolCard navigate={navigate} path="/ledger"     title="Community Ledger"    desc="Geo-tagged field submissions with per-tree allometric scoring and satellite cross-check." accent="#9b59b6" />
       </div>
 
-      {/* ── Footer ───────────────────────────────────────────────────── */}
-      <div style={{ padding:'16px 24px', background:'rgba(255,255,255,0.02)', borderRadius:10, border:'1px solid var(--border)', textAlign:'center' }}>
-        <p style={{ margin:0, color:'var(--text-muted)', fontSize:'0.8rem', lineHeight:1.9 }}>
-          All Earth Observation datasets open-access under CC-BY-4.0 / CC-0 licences. Full provenance →&nbsp;
-          <span onClick={() => navigate('/datasources')} style={{ color:'var(--accent)', cursor:'pointer', textDecoration:'underline' }}>Data Sources</span>
-          &nbsp;·&nbsp;
-          <span onClick={() => navigate('/methodology')} style={{ color:'var(--accent)', cursor:'pointer', textDecoration:'underline' }}>Methodology</span>
-        </p>
+      {/* ── Tech Stack & Data Partners ────────────────────────────────── */}
+      <div style={{ marginBottom: 36, textAlign: 'center', background: 'rgba(0,0,0,0.2)', padding: '24px', borderRadius: 12, border: '1px solid var(--border)' }}>
+        <div style={{ fontSize:'0.67rem', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', fontWeight:700, marginBottom:16 }}>
+          Powered By Open Earth Observation Data
+        </div>
+        <div style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap', opacity: 0.85 }}>
+          <div style={{ fontWeight: 800, color: '#f1c40f', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{fontSize:'1.3rem'}}>🇪🇺</span> COPERNICUS</div>
+          <div style={{ fontWeight: 800, color: '#3498db', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{fontSize:'1.3rem'}}>🛰️</span> ESA CCI</div>
+          <div style={{ fontWeight: 800, color: '#e74c3c', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{fontSize:'1.3rem'}}>🚀</span> NASA GEDI</div>
+          <div style={{ fontWeight: 800, color: '#9b59b6', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{fontSize:'1.3rem'}}>🌍</span> RCMRD</div>
+          <div style={{ fontWeight: 800, color: '#2ecc71', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{fontSize:'1.3rem'}}>💻</span> PYTHON + REACT</div>
+        </div>
+      </div>
+
+      {/* ── Expanded Footer ──────────────────────────────────────────── */}
+      <footer style={{ marginTop: 60, borderTop: '1px solid var(--border)', paddingTop: 40, paddingBottom: 40, display: 'flex', flexWrap: 'wrap', gap: 40, justifyContent: 'space-between' }}>
+        
+        {/* Column 1: Brand & Contact */}
+        <div style={{ flex: '1 1 250px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <div style={{ background: 'var(--border)', color: 'var(--accent)', fontWeight: 900, padding: '4px 8px', borderRadius: 6, fontSize: '1.1rem' }}>LCRI</div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Project HQ</div>
+          </div>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-sec)', lineHeight: 1.8 }}>
+            Kigali Innovation City<br/>
+            Kigali, Rwanda<br/>
+            <a href="mailto:pierrendorimana16@gmail.com" style={{ color: 'var(--accent)', textDecoration: 'none' }}>pierrendorimana16@gmail.com</a><br/>
+            +250 798 790 115<br/>
+            <a href="https://www.linkedin.com/in/ndorimana-pierre-b470bb2a8/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>LinkedIn Profile</a>
+          </div>
+        </div>
+
+        {/* Column 2: Quick Links */}
+        <div style={{ flex: '1 1 200px' }}>
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Platform</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: '0.85rem', color: 'var(--text-sec)' }}>
+            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/dashboard')}>Satellite Dashboard</span>
+            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/simulator')}>Restoration Simulator</span>
+            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/gicumbi')}>Green Gicumbi Audit</span>
+            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/ledger')}>Community Ledger</span>
+          </div>
+        </div>
+
+        {/* Column 3: Legal & Citations */}
+        <div style={{ flex: '1 1 250px' }}>
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Science &amp; Legal</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: '0.85rem', color: 'var(--text-sec)' }}>
+            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/methodology')}>Methodology &amp; Allometry</span>
+            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'} onClick={() => navigate('/datasources')}>Data Provenance</span>
+            <span style={{ color: 'var(--text-muted)' }}>Privacy Policy</span>
+          </div>
+        </div>
+
+      </footer>
+      <div style={{ textAlign: 'center', padding: '24px 0', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+        &copy; 2026 Local Carbon Return Index (LCRI) Project. All Earth Observation datasets open-access under CC-BY-4.0.
       </div>
 
     </div>

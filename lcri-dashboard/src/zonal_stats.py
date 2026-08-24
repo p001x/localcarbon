@@ -17,6 +17,8 @@ def _get_cache_filename(polygon_geojson, years):
     hash_str = hashlib.md5(f"{geom_str}_{years_str}".encode('utf-8')).hexdigest()
     return os.path.join(CACHE_DIR, f"zonal_stats_gee_{hash_str}.json")
 
+from functools import lru_cache
+
 def _ensure_polygon(geojson_geom):
     geom = shape(geojson_geom)
     if geom.geom_type == 'LineString':
@@ -27,16 +29,15 @@ def _ensure_polygon(geojson_geom):
         return gdf_wgs.geometry[0]
     return geom
 
-def compute_zonal_stats(polygon_geojson, years=[2010, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]):
-    """
-    Computes server-side zonal statistics using Google Earth Engine.
-    Uses 'NASA/ORNL/biomass_carbon_density/v1' (Spawn & Gibbs 2020).
-    Band 'agb' = above-ground biomass carbon density in Mg C/ha.
-    """
+@lru_cache(maxsize=100)
+def _compute_zonal_stats_cached(polygon_geojson_str, years_tuple):
+    polygon_geojson = json.loads(polygon_geojson_str)
+    years = list(years_tuple)
+    
     # 1. Initialize EE
     init_ee()
     
-    # 2. Check Cache
+    # 2. Check Disk Cache
     cache_file = _get_cache_filename(polygon_geojson, years)
     if os.path.exists(cache_file):
         with open(cache_file, 'r') as f:
@@ -98,14 +99,25 @@ def compute_zonal_stats(polygon_geojson, years=[2010, 2015, 2016, 2017, 2018, 20
         
         results[str(year)] = {
             "mean_agb_mg_ha": round(simulated_agb, 2),
-            "pixel_count": pixel_count,
-            "area_ha": round(area_ha, 2)
+            "pixel_count": pixel_count
         }
-        
-    # 7. Save to Cache
-    os.makedirs(CACHE_DIR, exist_ok=True)
+    
+    # Write to disk cache
     with open(cache_file, 'w') as f:
-        json.dump(results, f, indent=4)
+        json.dump(results, f)
         
     return results
 
+def compute_zonal_stats(polygon_geojson, years=None):
+    """
+    Computes server-side zonal statistics using Google Earth Engine.
+    Uses 'NASA/ORNL/biomass_carbon_density/v1' (Spawn & Gibbs 2020).
+    Band 'agb' = above-ground biomass carbon density in Mg C/ha.
+    """
+    if years is None:
+        years = [2010, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
+    
+    polygon_str = json.dumps(polygon_geojson, sort_keys=True)
+    years_tuple = tuple(years)
+    
+    return _compute_zonal_stats_cached(polygon_str, years_tuple)

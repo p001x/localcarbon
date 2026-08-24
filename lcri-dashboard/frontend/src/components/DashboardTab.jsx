@@ -64,6 +64,7 @@ export default function DashboardTab({ appConfig, country, district, setDistrict
       setPdfLoading(false)
     } catch (e) {
       console.error('PDF download error:', e)
+      alert('Failed to generate PDF report. Please check the network connection and try again.')
       setPdfLoading(false)
     }
   }

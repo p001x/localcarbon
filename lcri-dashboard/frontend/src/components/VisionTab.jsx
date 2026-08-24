@@ -243,7 +243,7 @@ const orbitalScanSteps = [
   {
     title: "4. Machine Learning Yield Prediction",
     text: "Random Forest models factor in slope gradients, soil moisture, and climatic curves to project a 10-year yield of 45 tC/ha with an 85% AI Confidence Score.",
-    img: "/images/dashboard_prediction_1787155494547.jpg",
+    img: "/maps/13_Predicted_AGB.png",
     hudTag: "AI MODEL: RANDOM FOREST · 45 tC/ha FORECAST",
     hudCoords: "85% Reliability Probability"
   }
@@ -596,8 +596,8 @@ export default function VisionTab() {
               navigate={navigate} 
               title="The 4-Step Orbital Ingestion Pipeline"
               badge="ORBITAL SCAN"
-              ctaText="Explore Live Dashboard & Map" 
-              ctaLink="/dashboard" 
+              ctaText="View 13-Layer Data Atlas" 
+              ctaLink="/atlas" 
             />
           </div>
         </div>

@@ -86,10 +86,10 @@ def extract_ml_features_for_polygon(geojson_geom):
     ee_geom = ee.Geometry(geojson_geom)
     
     try:
-        # 1. Baseline Biomass (NASA GEDI L4B Gridded AGB)
-        # We use GEDI L4B instead of ESA CCI to get higher confidence LiDAR AGB
-        gedi_agb = ee.Image("LARSE/GEDI/GEDI04_B_002").select('MU')
-        baseline_agb = gedi_agb.unmask(0) # Fallback to 0 if no data
+        # 1. Baseline Biomass (ESA CCI AGB)
+        # Using ESA CCI (same as training) instead of GEDI L4B to avoid spatial track gaps (striping artifacts)
+        agb_collection = ee.ImageCollection("ESA/CCI/Above_Ground_Biomass/V6_0")
+        baseline_agb = agb_collection.filterDate('2020-01-01', '2020-12-31').first().select('agb').unmask(0)
 
         
         # 1.5 ALOS-2 PALSAR L-Band SAR (2020)
@@ -115,7 +115,9 @@ def extract_ml_features_for_polygon(geojson_geom):
         soc = ee.Image("projects/soilgrids-isric/soc_mean").select('soc_0-5cm_mean')
         
         # 4.6 GEDI Lidar Canopy Height (RH98)
+        # Apply a focal mean to interpolate missing tracks and prevent scanline gaps, then unmask
         gedi_rh98 = ee.ImageCollection("LARSE/GEDI/GEDI02_A_002_MONTHLY").mean().select('rh98')
+        gedi_rh98 = gedi_rh98.focal_mean(radius=3, units='pixels').unmask(0)
         
         # 5. Drought & Temp
         terraclimate = ee.ImageCollection("IDAHO_EPSCOR/TERRACLIMATE") \
