@@ -705,11 +705,21 @@ def gicumbi_stats():
 @app.route("/api/gicumbi/project-boundary", methods=["GET"])
 def gicumbi_project_boundary():
     try:
-        gdf_filtered = _get_gicumbi_sectors_gdf()
-        import json
-        return jsonify(json.loads(gdf_filtered.to_json()))
+        # Return a static bounding box GeoJSON for Gicumbi to avoid GeoPandas OOM crashes
+        # Approximate bounds for Gicumbi: [29.8, -1.8, 30.2, -1.5]
+        static_geojson = {
+            "type": "Polygon",
+            "coordinates": [[
+                [29.8, -1.8],
+                [30.2, -1.8],
+                [30.2, -1.5],
+                [29.8, -1.5],
+                [29.8, -1.8]
+            ]]
+        }
+        return jsonify(static_geojson)
     except Exception as e:
-        print(f"Error in project boundary: {e}")
+        print(f"[LCRI Server] Gicumbi boundary error: {e}")
         return jsonify({"error": str(e)}), 500
 
 
