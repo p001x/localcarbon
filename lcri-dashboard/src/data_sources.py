@@ -44,14 +44,15 @@ def init_ee():
     try:
         env_creds = os.environ.get("GEE_SERVICE_ACCOUNT_JSON")
         if env_creds:
-            # Handle potential escaping issues in environment variables (Vercel sometimes double-escapes newlines)
             if env_creds.startswith("'") and env_creds.endswith("'"):
                 env_creds = env_creds[1:-1]
-            # Replace escaped newlines if any
-            env_creds = env_creds.replace('\\n', '\n')
             
             creds_dict = json.loads(env_creds, strict=False)
             
+            # Vercel sometimes passes literal '\n' sequences in the private key string instead of actual newlines.
+            if 'private_key' in creds_dict and '\\n' in creds_dict['private_key']:
+                creds_dict['private_key'] = creds_dict['private_key'].replace('\\n', '\n')
+                
             from google.oauth2 import service_account
             credentials = service_account.Credentials.from_service_account_info(
                 creds_dict, scopes=['https://www.googleapis.com/auth/earthengine']
