@@ -115,6 +115,7 @@ export default function LedgerTab({ country }) {
   const [msg,          setMsg]          = useState(null)
   const [loading,      setLoading]      = useState(false)
   const [mapReady,     setMapReady]     = useState(false)
+  const [ledgerSubTab, setLedgerSubTab] = useState('submit')
 
   // ── Analysis & File Upload State ──────────────────────────────────────────
   const [interval,     setInterval]     = useState('1y')
@@ -580,11 +581,30 @@ export default function LedgerTab({ country }) {
   const si       = analysis?.score_info || {}
 
   return (
-    <div className="col2">
+    <div>
+      {/* ── Mobile-only Tab Header ────────────────────────────────────────── */}
+      <div className="ledger-mobile-tabs" style={{ gap: 10, marginBottom: 20, borderBottom: '1px solid var(--border)', paddingBottom: 12, flexWrap: 'wrap' }}>
+        {[
+          ['submit', '1. Map & Submit'],
+          ['tree', '2. Tree Estimator'],
+          ['log', '3. Submissions Log']
+        ].map(([key, label]) => (
+          <button 
+            key={key} 
+            className={`btn ${ledgerSubTab === key ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setLedgerSubTab(key)}
+            style={{ fontWeight: 700, fontSize: '0.85rem', padding: '8px 12px', flex: '1 1 auto', justifyContent: 'center' }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-      {/* ── Left column: Submit form + map ─────────────────────────────── */}
-      <div>
-        <div className="card" style={{ marginBottom:14 }}>
+      <div className="col2">
+
+        {/* ── Left column: Submit form + map ─────────────────────────────── */}
+        <div className={ledgerSubTab !== 'submit' ? 'hidden-on-mobile' : ''}>
+          <div className="card" style={{ marginBottom:14 }}>
           <h3 style={{ color:'var(--accent)', fontWeight:700, marginBottom:14 }}>Submit a New Site</h3>
           {F('ledger-group',  'Submitting Group / Umuganda Cell *', form.group,  'group')}
           {F('ledger-sector', 'Administrative Sector *',             form.sector, 'sector')}
@@ -808,9 +828,10 @@ export default function LedgerTab({ country }) {
       </div>
 
       {/* ── Right column: Submissions + Tree Carbon Estimator ──────────── */}
-      <div>
+      <div className={ledgerSubTab === 'submit' ? 'hidden-on-mobile' : ''}>
+        
         {/* ── Tree Carbon Estimator Card (NEW) ─────────────────────────── */}
-        <div className="card" style={{ marginBottom:20 }}>
+        <div className={`card ${ledgerSubTab !== 'tree' ? 'hidden-on-mobile' : ''}`} style={{ marginBottom:20 }}>
           <h3 style={{ color:'var(--accent)', fontWeight:700, marginBottom:10 }}>
             🌳 Individual Tree Carbon Estimator
           </h3>
@@ -942,8 +963,9 @@ export default function LedgerTab({ country }) {
         </div>
 
         {/* ── Submissions list ─────────────────────────────────────────── */}
-        <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12, flexWrap:'wrap' }}>
-          <h3 style={{ color:'var(--accent)', fontWeight:700 }}>All Submissions</h3>
+        <div className={ledgerSubTab !== 'log' ? 'hidden-on-mobile' : ''}>
+          <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12, flexWrap:'wrap' }}>
+            <h3 style={{ color:'var(--accent)', fontWeight:700 }}>All Submissions</h3>
           <select id="ledger-sector-filter" className="form-input form-select" style={{ width:160, flex: '1 1 auto' }}
             value={filterSector}
             onChange={e => { setFilterSector(e.target.value); loadLedger(e.target.value) }}>
@@ -1073,6 +1095,7 @@ export default function LedgerTab({ country }) {
               </div>
             </>
         }
+        </div>
       </div>
 
     </div>
