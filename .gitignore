@@ -7,7 +7,7 @@ ee-*.json
 *.zip
 *.tif
 *.tiff
-dataset vector/
+dataset vector/CROM_Vector.gdb/
 gaul_prot_unprot_2020/
 Mangrove_carbon_stored1/
 
