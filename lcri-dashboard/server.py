@@ -73,11 +73,13 @@ def get_config():
 # ────────────────────────────────────────────────────────────────────────────
 @app.route("/api/health", methods=["GET"])
 def health_check():
-    from src.data_sources import _ee_initialized
+    import src.data_sources
+    src.data_sources.init_ee()
     return jsonify({
         "status": "ok",
-        "gee_available": _ee_initialized
+        "gee_available": src.data_sources._ee_initialized
     })
+
 
 # ────────────────────────────────────────────────────────────────────────────
 # /api/districts/<country>  — dynamic list of level-2 admin divisions
