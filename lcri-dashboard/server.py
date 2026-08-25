@@ -668,36 +668,21 @@ def gicumbi_stats():
             "national_ndc_tco2e": 102000000,
             "message": "Green Gicumbi shows local agroforestry action can be independently verified from space — a model for scaling Rwanda's carbon credit pipeline."
         },
-        "sectors": []
+        # Hardcoded to avoid GeoPandas memory spikes (OOM errors) on Render's free tier
+        "sectors": [
+            {"estimated_tco2e": 20325, "name": "Bwisige", "official_claim_ha": 599, "satellite_observed_ha": 580},
+            {"estimated_tco2e": 21039, "name": "Byumba", "official_claim_ha": 620, "satellite_observed_ha": 601},
+            {"estimated_tco2e": 9687, "name": "Cyumba", "official_claim_ha": 285, "satellite_observed_ha": 276},
+            {"estimated_tco2e": 16867, "name": "Kaniga", "official_claim_ha": 497, "satellite_observed_ha": 481},
+            {"estimated_tco2e": 12869, "name": "Manyagiro", "official_claim_ha": 379, "satellite_observed_ha": 367},
+            {"estimated_tco2e": 17378, "name": "Mukarange", "official_claim_ha": 512, "satellite_observed_ha": 496},
+            {"estimated_tco2e": 23414, "name": "Mukarange", "official_claim_ha": 690, "satellite_observed_ha": 668},
+            {"estimated_tco2e": 6968, "name": "Rubaya", "official_claim_ha": 205, "satellite_observed_ha": 199},
+            {"estimated_tco2e": 20084, "name": "Rushaki", "official_claim_ha": 592, "satellite_observed_ha": 573},
+            {"estimated_tco2e": 14116, "name": "Shangasha", "official_claim_ha": 416, "satellite_observed_ha": 403}
+        ]
     }
     
-    try:
-        gdf = _get_gicumbi_sectors_gdf()
-        
-        # Project area to measure EPSG:3857 for area calc
-        gdf_proj = gdf.to_crs("EPSG:3857")
-        gdf['area_sqm'] = gdf_proj.geometry.area
-        total_area = gdf['area_sqm'].sum()
-        
-        sectors_list = []
-        for _, row in gdf.iterrows():
-            ratio = row['area_sqm'] / total_area
-            sectors_list.append({
-                "name": row['sector_name'],
-                "official_claim_ha": int(total_claim * ratio),
-                "satellite_observed_ha": int(total_observed * ratio),
-                "estimated_tco2e": int(total_tco2e * ratio)
-            })
-            
-        # Sort alphabetically
-        sectors_list.sort(key=lambda x: x['name'])
-        stats_data["sectors"] = sectors_list
-        
-    except Exception as e:
-        print(f"Error calculating sector stats: {e}")
-        # Fallback if shapefile fails
-        stats_data["sectors"] = []
-        
     return jsonify(stats_data)
 
 
