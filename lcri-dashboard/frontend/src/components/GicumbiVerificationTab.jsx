@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import axios from 'axios'
+import { api } from '../api'
 
 const GOOGLE_SAT = 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 
@@ -62,9 +62,9 @@ export default function GicumbiVerificationTab({ isOffline }) {
       try {
         setLoading(true)
         const [layerRes, statsRes, boundaryRes] = await Promise.all([
-          axios.get('/api/gicumbi/change-layer'),
-          axios.get('/api/gicumbi/stats'),
-          axios.get('/api/gicumbi/project-boundary').catch(() => ({ data: null }))
+          api.get('/gicumbi/change-layer'),
+          api.get('/gicumbi/stats'),
+          api.get('/gicumbi/project-boundary').catch(() => ({ data: null }))
         ])
         
         // If the backend returns empty layers or offline flag, treat as offline
