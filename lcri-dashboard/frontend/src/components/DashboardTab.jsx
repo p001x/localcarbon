@@ -99,7 +99,7 @@ export default function DashboardTab({ appConfig, country, district, setDistrict
       <div style={{ display: 'flex', gap: 10, marginBottom: 20, borderBottom: '1px solid var(--border)', paddingBottom: 12, flexWrap: 'wrap' }}>
         {[
           ['map', '1. Map & Carbon KPIs'],
-          ['scanner', '2. Sentinel-2 CV Scanner'],
+          ['scanner', '2. Multi-Satellite CV Scanner'],
           ['reports', '3. Audit & Reports']
         ].map(([key, label]) => (
           <button 

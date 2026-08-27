@@ -7,7 +7,7 @@ export default function DashboardScannerPanel({ ctx }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <h3 style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '1.1rem' }}>
-              🛰️ Sentinel-2 Computer Vision Vegetation Scanner{hasDistrict ? ` — ${district}` : ''}
+              🛰️ Multi-Satellite CV Scanner (Landsat & Sentinel){hasDistrict ? ` — ${district}` : ''}
             </h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-sec)', marginTop: 4 }}>
               Live high-resolution satellite imagery for the selected area running real-time Computer Vision analysis.
