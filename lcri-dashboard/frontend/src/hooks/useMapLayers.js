@@ -166,6 +166,6 @@ export default function useMapLayers(country, district, customAreas, mode, setMo
   }, [aoiGeom, mode]);
 
   return {
-    mapRef, drawnLayer, geeTile, availShp, selShp, setSelShp
+    mapRef, mapInst, drawnLayer, geeTile, availShp, selShp, setSelShp
   };
 }

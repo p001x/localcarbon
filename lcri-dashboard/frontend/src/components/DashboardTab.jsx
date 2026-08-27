@@ -29,7 +29,7 @@ export default function DashboardTab({ appConfig, country, district, setDistrict
   } = useCarbonAnalysis(aoiGeom, targetMonth)
 
   const { 
-    mapRef, drawnLayer, geeTile, availShp, selShp, setSelShp 
+    mapRef, mapInst, drawnLayer, geeTile, availShp, selShp, setSelShp 
   } = useMapLayers(country, district, customAreas, mode, setMode, setAoiGeom, aoiGeom)
 
   const handleSaveArea = async () => {
@@ -105,7 +105,16 @@ export default function DashboardTab({ appConfig, country, district, setDistrict
           <button 
             key={key} 
             className={`btn ${dashSubTab === key ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setDashSubTab(key)}
+            onClick={() => {
+              setDashSubTab(key)
+              if (key === 'map') {
+                setTimeout(() => {
+                  if (mapInst && mapInst.current) {
+                    mapInst.current.invalidateSize()
+                  }
+                }, 150)
+              }
+            }}
             style={{ fontWeight: 700, fontSize: '0.9rem', padding: '8px 16px' }}
           >
             {label}
@@ -114,22 +123,20 @@ export default function DashboardTab({ appConfig, country, district, setDistrict
       </div>
 
       {/* ── SUB-TAB 1: MAP & CARBON KPIS ───────────────────────────────── */}
-      {dashSubTab === 'map' && (
-        <>
-          <DashboardMapPanel ctx={ctx} />
-          <DashboardKpiPanel ctx={ctx} />
-        </>
-      )}
+      <div style={{ display: dashSubTab === 'map' ? 'block' : 'none' }}>
+        <DashboardMapPanel ctx={ctx} />
+        <DashboardKpiPanel ctx={ctx} />
+      </div>
 
       {/* ── SUB-TAB 2: SENTINEL-2 CV SCANNER ───────────────────────────── */}
-      {dashSubTab === 'scanner' && (
+      <div style={{ display: dashSubTab === 'scanner' ? 'block' : 'none' }}>
         <DashboardScannerPanel ctx={ctx} />
-      )}
+      </div>
 
       {/* ── SUB-TAB 3: AUDIT & REPORTS ───────────────────────────────── */}
-      {dashSubTab === 'reports' && (
+      <div style={{ display: dashSubTab === 'reports' ? 'block' : 'none' }}>
         <DashboardReportsPanel ctx={ctx} />
-      )}
+      </div>
     </div>
   )
 }
