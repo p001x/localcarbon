@@ -67,7 +67,11 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
             .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 30))
             
         def scale_s2(img):
-            return img.multiply(0.0001).copyProperties(img, img.propertyNames())
+            # SCL: 3=Cloud shadow, 8=Cloud (med), 9=Cloud (high), 10=Cirrus
+            scl = img.select('SCL')
+            mask = scl.neq(3).And(scl.neq(8)).And(scl.neq(9)).And(scl.neq(10))
+            return img.updateMask(mask).multiply(0.0001).copyProperties(img, img.propertyNames())
+            
         col = col.map(scale_s2)
 
         band_blue = 'B2'
@@ -84,8 +88,11 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
             .filter(ee.Filter.lt('CLOUD_COVER', 30))
             
         def scale_l8(img):
+            qa = img.select('QA_PIXEL')
+            mask = qa.bitwiseAnd(1 << 3).eq(0).And(qa.bitwiseAnd(1 << 4).eq(0)).And(qa.bitwiseAnd(1 << 1).eq(0))
             optical = img.select('SR_B.').multiply(0.0000275).add(-0.2)
-            return img.addBands(optical, None, True).copyProperties(img, img.propertyNames())
+            return img.updateMask(mask).addBands(optical, None, True).copyProperties(img, img.propertyNames())
+            
         col = col.map(scale_l8)
 
         band_blue = 'SR_B2'
@@ -104,8 +111,11 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
             .filter(ee.Filter.lt('CLOUD_COVER', 30))
             
         def scale_l7(img):
+            qa = img.select('QA_PIXEL')
+            mask = qa.bitwiseAnd(1 << 3).eq(0).And(qa.bitwiseAnd(1 << 4).eq(0)).And(qa.bitwiseAnd(1 << 1).eq(0))
             optical = img.select('SR_B.').multiply(0.0000275).add(-0.2)
-            return img.addBands(optical, None, True).copyProperties(img, img.propertyNames())
+            return img.updateMask(mask).addBands(optical, None, True).copyProperties(img, img.propertyNames())
+            
         col = col.map(scale_l7)
 
         band_blue = 'SR_B1'
