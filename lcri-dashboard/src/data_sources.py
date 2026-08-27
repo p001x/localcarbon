@@ -44,10 +44,25 @@ def init_ee():
     try:
         env_creds = os.environ.get("GEE_SERVICE_ACCOUNT_JSON")
         if env_creds:
+            env_creds = env_creds.strip()
+            
+            # Check if it might be base64 encoded (doesn't start with '{')
+            if not env_creds.startswith('{'):
+                import base64
+                try:
+                    env_creds = base64.b64decode(env_creds).decode('utf-8')
+                except Exception:
+                    pass
+            
             if env_creds.startswith("'") and env_creds.endswith("'"):
                 env_creds = env_creds[1:-1]
             
-            creds_dict = json.loads(env_creds, strict=False)
+            try:
+                creds_dict = json.loads(env_creds, strict=False)
+            except Exception:
+                # Fallback: clean up common escaping issues in env vars
+                env_creds_clean = env_creds.replace('\\n', '\n').replace('\\"', '"').replace("\\'", "'")
+                creds_dict = json.loads(env_creds_clean, strict=False)
             
             # Vercel sometimes passes literal '\n' sequences in the private key string instead of actual newlines.
             if 'private_key' in creds_dict and '\\n' in creds_dict['private_key']:
