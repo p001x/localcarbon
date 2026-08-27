@@ -18,6 +18,8 @@ export default function DashboardScannerPanel({ ctx }) {
             <input 
               type="month" 
               value={targetMonth} 
+              min="2000-01"
+              max={new Date().toISOString().slice(0, 7)}
               onChange={e => setTargetMonth(e.target.value)} 
               style={{ background: '#1a1a1a', color: '#fff', border: '1px solid var(--border)', padding: '4px 8px', borderRadius: 4 }}
             />
