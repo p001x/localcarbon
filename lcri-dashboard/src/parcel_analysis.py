@@ -20,6 +20,7 @@ import hashlib, json, os
 
 import config
 from src.data_sources import init_ee
+from src.utils import get_normalized_geom_str
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 CACHE_DIR = os.path.join(DATA_DIR, 'cache')
@@ -58,7 +59,7 @@ INTERVAL_CONFIG = {
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def _cache_key(geometry, interval):
-    geom_str = json.dumps(geometry, sort_keys=True)
+    geom_str = get_normalized_geom_str(geometry)
     h = hashlib.md5(f"{geom_str}_{interval}".encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"parcel_analysis_{interval}_{h}.json")
 

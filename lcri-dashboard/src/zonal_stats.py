@@ -7,13 +7,14 @@ import hashlib
 import config
 import ee
 from src.data_sources import init_ee
+from src.utils import get_normalized_geom_str
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 CACHE_DIR = os.path.join(DATA_DIR, 'cache')
 
 def _get_cache_filename(polygon_geojson, years):
     os.makedirs(CACHE_DIR, exist_ok=True)
-    geom_str = json.dumps(polygon_geojson, sort_keys=True)
+    geom_str = get_normalized_geom_str(polygon_geojson)
     years_str = "_".join(map(str, years))
     hash_str = hashlib.md5(f"{geom_str}_{years_str}".encode('utf-8')).hexdigest()
     return os.path.join(CACHE_DIR, f"zonal_stats_gee_{hash_str}.json")

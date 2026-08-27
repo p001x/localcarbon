@@ -66,12 +66,13 @@ def extract_ml_features_for_polygon(geojson_geom):
     import json
     import hashlib
     from shapely.geometry import shape
+    from src.utils import get_normalized_geom_str
 
     DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
     CACHE_DIR = os.path.join(DATA_DIR, 'cache')
     os.makedirs(CACHE_DIR, exist_ok=True)
 
-    geom_str = json.dumps(geojson_geom, sort_keys=True)
+    geom_str = get_normalized_geom_str(geojson_geom)
     hash_str = hashlib.md5(geom_str.encode('utf-8')).hexdigest()
     cache_file = os.path.join(CACHE_DIR, f"ml_features_{hash_str}.json")
 
