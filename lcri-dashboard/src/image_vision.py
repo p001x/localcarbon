@@ -65,24 +65,35 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
             .filterBounds(ee_geom) \
             .filterDate(start_date, now) \
             .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 30))
+            
+        def scale_s2(img):
+            return img.multiply(0.0001).copyProperties(img, img.propertyNames())
+        col = col.map(scale_s2)
+
         band_blue = 'B2'
         band_green = 'B3'
         band_red = 'B4'
         band_nir = 'B8'
         band_swir = 'B12'
-        rgb_max = 3000
+        rgb_max = 0.3
     elif target_year >= 2013:
         # Landsat 8 Surface Reflectance
         col = ee.ImageCollection("LANDSAT/LC08/C02/T1_L2") \
             .filterBounds(ee_geom) \
             .filterDate(start_date, now) \
             .filter(ee.Filter.lt('CLOUD_COVER', 30))
+            
+        def scale_l8(img):
+            optical = img.select('SR_B.').multiply(0.0000275).add(-0.2)
+            return img.addBands(optical, None, True).copyProperties(img, img.propertyNames())
+        col = col.map(scale_l8)
+
         band_blue = 'SR_B2'
         band_green = 'SR_B3'
         band_red = 'SR_B4'
         band_nir = 'SR_B5'
         band_swir = 'SR_B7'
-        rgb_max = 30000
+        rgb_max = 0.3
         satellite_name = "Landsat 8"
         resolution = "30m/px"
     else:
@@ -91,12 +102,18 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
             .filterBounds(ee_geom) \
             .filterDate(start_date, now) \
             .filter(ee.Filter.lt('CLOUD_COVER', 30))
+            
+        def scale_l7(img):
+            optical = img.select('SR_B.').multiply(0.0000275).add(-0.2)
+            return img.addBands(optical, None, True).copyProperties(img, img.propertyNames())
+        col = col.map(scale_l7)
+
         band_blue = 'SR_B1'
         band_green = 'SR_B2'
         band_red = 'SR_B3'
         band_nir = 'SR_B4'
         band_swir = 'SR_B7'
-        rgb_max = 30000
+        rgb_max = 0.3
         satellite_name = "Landsat 7"
         resolution = "30m/px"
         
@@ -168,7 +185,7 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
 
     # 6. Generate Enhanced Vegetation Index (EVI) Image URL
     evi = img.expression(
-        '2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 10000))', {
+        '2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))', {
             'NIR': img.select(band_nir),
             'RED': img.select(band_red),
             'BLUE': img.select(band_blue)
