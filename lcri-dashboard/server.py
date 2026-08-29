@@ -45,12 +45,10 @@ app = Flask(__name__)
 # Allow CORS from localhost and the deployed frontend on Render
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "https://local-carbon-ui.onrender.com"]}})
 
-# ── Initialise Earth Engine on startup ──────────────────────────────────────
-try:
-    init_ee()
-    print("[LCRI Server] Earth Engine initialised.")
-except Exception as e:
-    print(f"[LCRI Server] Warning: Earth Engine init failed: {e}")
+# ── Earth Engine Initialization ─────────────────────────────────────────────
+# Removed global init_ee() call to prevent Gunicorn boot timeouts on Render.
+# Earth Engine will now lazy-load on the first API request that requires it.
+# ────────────────────────────────────────────────────────────────────────────
 
 
 # ────────────────────────────────────────────────────────────────────────────
