@@ -89,6 +89,9 @@ export default function App() {
   const [districtsList, setDistrictsList] = useState(DEFAULT_CONFIG.districts)
   const [customAreas, setCustomAreas]     = useState({})
   
+  // Keep-alive tracking for tabs
+  const [visitedTabs, setVisitedTabs] = useState(() => new Set(['home']))
+  
   // Theme Configuration
   const [themeConfig, setThemeConfig] = useState(() => {
     const saved = localStorage.getItem('lcri-theme')
@@ -169,23 +172,47 @@ export default function App() {
   const location = useLocation()
   // remove leading slash, default to 'home'
   const currentTabId = location.pathname.substring(1) || 'home'
+  
+  // Handle invalid routes (404)
+  useEffect(() => {
+    if (!TAB_META[currentTabId] && currentTabId !== 'home') {
+      navigate('/', { replace: true })
+    }
+  }, [currentTabId, navigate])
+
+  // Track visited tabs and trigger map resize
+  useEffect(() => {
+    setVisitedTabs(prev => {
+      const next = new Set(prev)
+      next.add(currentTabId)
+      return next
+    })
+    
+    // Trigger window resize so Leaflet/ECharts maps resize when their container becomes display: block
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'))
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [currentTabId])
+
   const meta = TAB_META[currentTabId] || TAB_META['home']
   const districtOptions = [...Object.keys(customAreas), ...districtsList]
 
   const tabProps = { appConfig, country, district, setDistrict, customAreas, refreshAreas, districtOptions, isOffline }
 
-  if (currentTabId === 'home') {
-    return (
-      <div style={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', width: '100%', padding: '60px 20px' }}>
-        <Routes>
-          <Route path="/" element={<HomeTab />} />
-        </Routes>
-      </div>
-    )
-  }
-
   return (
-    <div className="app-shell">
+    <>
+      {/* Home Tab Overlay (Keeps app-shell alive in background) */}
+      <div style={{ 
+        display: currentTabId === 'home' ? 'block' : 'none', 
+        backgroundColor: 'var(--bg-page)', 
+        minHeight: '100vh', width: '100%', padding: '60px 20px',
+        position: 'absolute', top: 0, left: 0, zIndex: 10000 
+      }}>
+        {visitedTabs.has('home') && <HomeTab />}
+      </div>
+
+      <div className="app-shell" style={{ display: currentTabId === 'home' ? 'none' : 'flex' }}>
       {isOffline && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, background: '#d35400', color: 'white', textAlign: 'center', padding: '6px', fontSize: '0.85rem', zIndex: 9999, fontWeight: 'bold' }}>
           ⚠️ Earth Engine Offline Mode — Using Mock Data for Previews
@@ -338,23 +365,20 @@ export default function App() {
         </div>
 
         <div className="tab-content">
-          <Routes>
-            <Route path="/"            element={<HomeTab />} />
-            <Route path="/vision"      element={<VisionTab />} />
-            <Route path="/dashboard"   element={<DashboardTab       {...tabProps} />} />
-            <Route path="/lcri"        element={<LcriRankingTab     {...tabProps} />} />
-            <Route path="/simulator"   element={<SimulatorTab       {...tabProps} />} />
-            <Route path="/registry"    element={<RegistryTab        {...tabProps} />} />
-            <Route path="/gicumbi"     element={<GicumbiVerificationTab {...tabProps} />} />
-            <Route path="/ledger"      element={<LedgerTab          {...tabProps} />} />
-            <Route path="/lens"        element={<InteractiveLensTab {...tabProps} />} />
-            <Route path="/atlas"       element={<VisualAtlasTab     {...tabProps} />} />
-            <Route path="/methodology" element={<MethodologyTab />} />
-            <Route path="/datasources" element={<DataSourcesTab />} />
-            <Route path="*"            element={<Navigate to="/" replace />} />
-          </Routes>
+          {visitedTabs.has('vision')      && <div style={{ display: currentTabId === 'vision' ? 'block' : 'none', height: '100%' }}><VisionTab /></div>}
+          {visitedTabs.has('dashboard')   && <div style={{ display: currentTabId === 'dashboard' ? 'block' : 'none', height: '100%' }}><DashboardTab       {...tabProps} /></div>}
+          {visitedTabs.has('lcri')        && <div style={{ display: currentTabId === 'lcri' ? 'block' : 'none', height: '100%' }}><LcriRankingTab     {...tabProps} /></div>}
+          {visitedTabs.has('simulator')   && <div style={{ display: currentTabId === 'simulator' ? 'block' : 'none', height: '100%' }}><SimulatorTab       {...tabProps} /></div>}
+          {visitedTabs.has('registry')    && <div style={{ display: currentTabId === 'registry' ? 'block' : 'none', height: '100%' }}><RegistryTab        {...tabProps} /></div>}
+          {visitedTabs.has('gicumbi')     && <div style={{ display: currentTabId === 'gicumbi' ? 'block' : 'none', height: '100%' }}><GicumbiVerificationTab {...tabProps} /></div>}
+          {visitedTabs.has('ledger')      && <div style={{ display: currentTabId === 'ledger' ? 'block' : 'none', height: '100%' }}><LedgerTab          {...tabProps} /></div>}
+          {visitedTabs.has('lens')        && <div style={{ display: currentTabId === 'lens' ? 'block' : 'none', height: '100%' }}><InteractiveLensTab {...tabProps} /></div>}
+          {visitedTabs.has('atlas')       && <div style={{ display: currentTabId === 'atlas' ? 'block' : 'none', height: '100%' }}><VisualAtlasTab     {...tabProps} /></div>}
+          {visitedTabs.has('methodology') && <div style={{ display: currentTabId === 'methodology' ? 'block' : 'none', height: '100%' }}><MethodologyTab /></div>}
+          {visitedTabs.has('datasources') && <div style={{ display: currentTabId === 'datasources' ? 'block' : 'none', height: '100%' }}><DataSourcesTab /></div>}
         </div>
       </main>
     </div>
+    </>
   )
 }
