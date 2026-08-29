@@ -55,6 +55,10 @@ export default function DashboardTab({ appConfig, country, district, setDistrict
           trend: kpiData?.trend || 0
         })
       })
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.error || `Server error: ${res.status}`)
+      }
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
