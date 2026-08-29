@@ -31,7 +31,7 @@ goto MENU
 
 :REACT_FLASK
 echo Starting Flask Backend...
-start cmd /k "C:\Users\user\miniconda3\python.exe server.py"
+start cmd /k "C:\Users\user\miniconda3\Scripts\activate.bat && python server.py"
 echo Starting React Frontend...
 cd frontend
 start cmd /k "npm run dev"
@@ -40,12 +40,12 @@ goto MENU
 
 :STREAMLIT
 echo Starting Streamlit App...
-start cmd /k "C:\Users\user\miniconda3\python.exe -m streamlit run streamlit_app.py"
+start cmd /k "C:\Users\user\miniconda3\Scripts\activate.bat && python -m streamlit run streamlit_app.py"
 goto MENU
 
 :FLASK
 echo Starting Flask Backend...
-start cmd /k "C:\Users\user\miniconda3\python.exe server.py"
+start cmd /k "C:\Users\user\miniconda3\Scripts\activate.bat && python server.py"
 goto MENU
 
 :VITE

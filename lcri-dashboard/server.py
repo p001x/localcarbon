@@ -116,17 +116,31 @@ def district_boundary(name):
 # ────────────────────────────────────────────────────────────────────────────
 # /api/gee-tile-url  — Earth Engine tile URL for AGB layer
 # ────────────────────────────────────────────────────────────────────────────
+import time
+_cached_gee_url = None
+_cached_gee_time = 0
+
 @app.route("/api/gee-tile-url", methods=["GET"])
 def gee_tile_url():
+    global _cached_gee_url, _cached_gee_time
     from src.data_sources import _ee_initialized
     if not _ee_initialized:
         return jsonify({"url": None, "offline": True})
+        
+    # If we have a cached URL < 12 hours old, return it instantly
+    if _cached_gee_url and (time.time() - _cached_gee_time < 43200):
+        return jsonify({"url": _cached_gee_url})
+        
     try:
         import ee as _ee
         agb_img = _ee.ImageCollection('NASA/ORNL/biomass_carbon_density/v1').first().select('agb')
         vis = {'min': 0, 'max': 200, 'palette': ['ffffff', 'a8dda8', '1a7a1a', '003300']}
         map_id = agb_img.getMapId(vis)
-        return jsonify({"url": map_id['tile_fetcher'].url_format})
+        
+        _cached_gee_url = map_id['tile_fetcher'].url_format
+        _cached_gee_time = time.time()
+        
+        return jsonify({"url": _cached_gee_url})
     except Exception as e:
         return jsonify({"url": None, "offline": True, "error": str(e)})
 
@@ -508,11 +522,21 @@ def upload_area():
 # ────────────────────────────────────────────────────────────────────────────
 # /api/true-color-tile  GET — Sentinel-2 true color image tile URL from GEE
 # ────────────────────────────────────────────────────────────────────────────
+import time
+_cached_true_color_url = None
+_cached_true_color_time = 0
+
 @app.route("/api/true-color-tile", methods=["GET"])
 def true_color_tile():
+    global _cached_true_color_url, _cached_true_color_time
     from src.data_sources import _ee_initialized
     if not _ee_initialized:
         return jsonify({"url": None, "offline": True})
+        
+    # If we have a cached URL < 12 hours old, return it instantly
+    if _cached_true_color_url and (time.time() - _cached_true_color_time < 43200):
+        return jsonify({"url": _cached_true_color_url})
+        
     try:
         import ee as _ee
         import datetime
@@ -539,7 +563,11 @@ def true_color_tile():
         }
         
         map_id = img.getMapId(vis)
-        return jsonify({"url": map_id['tile_fetcher'].url_format})
+        
+        _cached_true_color_url = map_id['tile_fetcher'].url_format
+        _cached_true_color_time = time.time()
+        
+        return jsonify({"url": _cached_true_color_url})
     except Exception as e:
         return jsonify({"url": None, "offline": True, "error": str(e)})
 

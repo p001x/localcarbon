@@ -127,7 +127,7 @@ export default function DashboardMapPanel({ ctx }) {
             <div style={{ display:'flex', justifyContent:'space-between' }}>
               <span>AGB Satellite Layer</span>
               <span style={{ color: geeTile ? 'var(--accent)' : 'var(--accent-red)', fontWeight:600 }}>
-                {geeTile ? '● Active' : '○ Loading…'}
+                {geeTile ? '● Active' : '○ Offline (Mock Data)'}
               </span>
             </div>
 
