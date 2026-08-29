@@ -123,12 +123,14 @@ _cached_gee_time = 0
 @app.route("/api/gee-tile-url", methods=["GET"])
 def gee_tile_url():
     global _cached_gee_url, _cached_gee_time
-    from src.data_sources import _ee_initialized
-    if not _ee_initialized:
+    import src.data_sources
+    if not src.data_sources._ee_initialized:
+        src.data_sources.init_ee()
+    if not src.data_sources._ee_initialized:
         return jsonify({"url": None, "offline": True})
         
-    # If we have a cached URL < 12 hours old, return it instantly
-    if _cached_gee_url and (time.time() - _cached_gee_time < 43200):
+    # If we have a cached URL < 2 hours old, return it instantly
+    if _cached_gee_url and (time.time() - _cached_gee_time < 7200):
         return jsonify({"url": _cached_gee_url})
         
     try:
@@ -529,12 +531,14 @@ _cached_true_color_time = 0
 @app.route("/api/true-color-tile", methods=["GET"])
 def true_color_tile():
     global _cached_true_color_url, _cached_true_color_time
-    from src.data_sources import _ee_initialized
-    if not _ee_initialized:
+    import src.data_sources
+    if not src.data_sources._ee_initialized:
+        src.data_sources.init_ee()
+    if not src.data_sources._ee_initialized:
         return jsonify({"url": None, "offline": True})
         
-    # If we have a cached URL < 12 hours old, return it instantly
-    if _cached_true_color_url and (time.time() - _cached_true_color_time < 43200):
+    # If we have a cached URL < 2 hours old, return it instantly
+    if _cached_true_color_url and (time.time() - _cached_true_color_time < 7200):
         return jsonify({"url": _cached_true_color_url})
         
     try:

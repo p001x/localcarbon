@@ -35,12 +35,11 @@ GEE_CRED_PATH = r"C:\Users\user\Documents\local carbon\ee-petersonyang87-52f0e0a
 
 _ee_initialized = False
 
-@cache_resource
 def init_ee():
     """Initializes Earth Engine using the service account JSON directly."""
     global _ee_initialized
     if _ee_initialized:
-        return
+        return True
     try:
         env_creds = os.environ.get("GEE_SERVICE_ACCOUNT_JSON")
         if env_creds:
@@ -81,14 +80,16 @@ def init_ee():
                 creds_dict, scopes=['https://www.googleapis.com/auth/earthengine']
             )
             project_id = creds_dict.get('project_id')
-            
-        ee.Initialize(credentials, project=project_id)
+            ee.Initialize(credentials, project=project_id)
         _ee_initialized = True
+        return True
     except Exception as e:
         import traceback
         print(f"CRITICAL: Earth Engine initialization failed!")
         print(traceback.format_exc())
         print(f"Warning: Earth Engine unavailable: {e}")
+        _ee_initialized = False
+        return False
         
 @cache_data
 def get_available_shapefiles():
