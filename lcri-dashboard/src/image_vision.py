@@ -15,13 +15,13 @@ def generate_monitoring_images(geojson_geom, target_date_str=None):
     from src.data_sources import _ee_initialized
     if not _ee_initialized:
         return {
-            "true_color_url": None,
-            "ndvi_url": None,
-            "ndwi_url": None,
-            "nbr_url": None,
-            "evi_url": None,
-            "dw_url": None,
-            "hansen_url": None,
+            "true_color_url": "https://placehold.co/512x512/0a1912/80cbc4?text=True+Color+(Offline+Mode)",
+            "ndvi_url": "https://placehold.co/512x512/0a1912/80cbc4?text=NDVI+(Offline+Mode)",
+            "ndwi_url": "https://placehold.co/512x512/0a1912/80cbc4?text=NDWI+(Offline+Mode)",
+            "nbr_url": "https://placehold.co/512x512/0a1912/80cbc4?text=NBR+(Offline+Mode)",
+            "evi_url": "https://placehold.co/512x512/0a1912/80cbc4?text=EVI+(Offline+Mode)",
+            "dw_url": "https://placehold.co/512x512/0a1912/80cbc4?text=Dynamic+World+(Offline+Mode)",
+            "hansen_url": "https://placehold.co/512x512/0a1912/80cbc4?text=Hansen+Loss+(Offline)",
             "offline": True,
             "metadata": {
                 "acquisition_date": "Mock Mode (Offline)",
