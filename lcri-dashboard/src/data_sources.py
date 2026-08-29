@@ -80,7 +80,8 @@ def init_ee():
                 creds_dict, scopes=['https://www.googleapis.com/auth/earthengine']
             )
             project_id = creds_dict.get('project_id')
-            ee.Initialize(credentials, project=project_id)
+            
+        ee.Initialize(credentials, project=project_id)
         _ee_initialized = True
         return True
     except Exception as e:
