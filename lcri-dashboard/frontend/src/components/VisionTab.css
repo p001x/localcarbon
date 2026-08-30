@@ -531,37 +531,38 @@
     display: none;
   }
   .scrollytelling-container {
-    flex-direction: column-reverse;
-    gap: 0;
-    align-items: stretch;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
   }
   .scrollytelling-visual {
     position: -webkit-sticky;
     position: sticky;
-    top: 60px;
-    height: 85vh;
-    z-index: 1;
-    width: 100%;
+    top: 70px;
+    height: 65vh;
+    min-height: 300px;
+    flex: 1;
+    z-index: 10;
     box-sizing: border-box;
     border-radius: 12px;
   }
   .scrollytelling-text {
-    width: 100%;
+    flex: 1;
     position: relative;
-    z-index: 10;
-    padding-top: 65vh;
+    z-index: 1;
+    padding-top: 10px;
+    padding-bottom: 40vh;
   }
   .scrolly-step-card {
     min-height: auto;
-    padding: 24px;
-    background: rgba(6, 14, 10, 0.95);
-    backdrop-filter: blur(8px);
-    margin-bottom: 20px;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    padding: 16px;
+    background: rgba(6, 14, 10, 0.85);
+    margin-bottom: 40vh;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
   .scrolly-step-card.active {
     background: linear-gradient(135deg, rgba(20, 45, 25, 0.95) 0%, rgba(6, 14, 10, 0.98) 100%);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
   .narrative-bridge {
     flex-direction: column;
