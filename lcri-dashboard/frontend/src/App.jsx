@@ -33,8 +33,8 @@ const TAB_GROUPS = [
   {
     title: 'Overview & Vision',
     tabs: [
-      { id: 'home',         path: '/',            label: 'Home' },
-      { id: 'guide',        path: '/guide',       label: 'Getting Started' },
+      { id: 'guide',        path: '/',            label: 'Getting Started' },
+      { id: 'home',         path: '/home',        label: 'Home' },
       { id: 'vision',       path: '/vision',      label: 'Story Map' },
     ]
   },
@@ -195,11 +195,11 @@ export default function App() {
 
   const location = useLocation()
   // remove leading slash, default to 'home'
-  const currentTabId = location.pathname.substring(1) || 'home'
+  const currentTabId = location.pathname.substring(1) || 'guide'
   
   // Handle invalid routes (404)
   useEffect(() => {
-    if (!TAB_META[currentTabId] && currentTabId !== 'home') {
+    if (!TAB_META[currentTabId] && currentTabId !== 'guide') {
       navigate('/', { replace: true })
     }
   }, [currentTabId, navigate])
@@ -219,7 +219,7 @@ export default function App() {
     return () => clearTimeout(timer)
   }, [currentTabId])
 
-  const meta = TAB_META[currentTabId] || TAB_META['home']
+  const meta = TAB_META[currentTabId] || TAB_META['guide']
   const districtOptions = [...Object.keys(customAreas), ...districtsList]
 
   const tabProps = { appConfig, country, district, setDistrict, customAreas, refreshAreas, districtOptions, isOffline }
