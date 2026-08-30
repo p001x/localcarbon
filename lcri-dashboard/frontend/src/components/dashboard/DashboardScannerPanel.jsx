@@ -49,31 +49,21 @@ export default function DashboardScannerPanel({ ctx }) {
 
         {/* Health Scanner */}
         <div style={{ flex: 1, minWidth: 300, background: '#0a1912', borderRadius: 8, padding: 10, border: '1px solid var(--border)' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-            <button 
-              className={`btn btn-sm ${selectedIndex === 'ndvi' ? 'btn-primary' : 'btn-secondary'}`} 
-              onClick={() => setSelectedIndex('ndvi')}
-            >NDVI (Vegetation Density)</button>
-            <button 
-              className={`btn btn-sm ${selectedIndex === 'evi' ? 'btn-primary' : 'btn-secondary'}`} 
-              onClick={() => setSelectedIndex('evi')}
-            >EVI (Enhanced Vegetation)</button>
-            <button 
-              className={`btn btn-sm ${selectedIndex === 'ndwi' ? 'btn-primary' : 'btn-secondary'}`} 
-              onClick={() => setSelectedIndex('ndwi')}
-            >NDWI (Water Table)</button>
-            <button 
-              className={`btn btn-sm ${selectedIndex === 'nbr' ? 'btn-primary' : 'btn-secondary'}`} 
-              onClick={() => setSelectedIndex('nbr')}
-            >NBR (Clearcuts / Burns)</button>
-            <button 
-              className={`btn btn-sm ${selectedIndex === 'dw' ? 'btn-primary' : 'btn-secondary'}`} 
-              onClick={() => setSelectedIndex('dw')}
-            >Dynamic World (LULC)</button>
-            <button 
-              className={`btn btn-sm ${selectedIndex === 'hansen' ? 'btn-primary' : 'btn-secondary'}`} 
-              onClick={() => setSelectedIndex('hansen')}
-            >Hansen (Forest Loss)</button>
+          <h4 style={{ fontSize: '0.9rem', color: '#80cbc4', marginBottom: 8, textAlign: 'center' }}>Spectral & Health Analysis</h4>
+          <div style={{ marginBottom: 12 }}>
+            <select 
+              className="form-input form-select" 
+              value={selectedIndex}
+              onChange={(e) => setSelectedIndex(e.target.value)}
+              style={{ fontWeight: 600, color: 'var(--accent)', borderColor: 'rgba(46,204,113,0.3)', background: '#050f0a', padding: '8px 12px' }}
+            >
+              <option value="ndvi">NDVI (Vegetation Density)</option>
+              <option value="evi">EVI (Enhanced Vegetation)</option>
+              <option value="ndwi">NDWI (Water Table)</option>
+              <option value="nbr">NBR (Clearcuts / Burns)</option>
+              <option value="dw">Dynamic World (LULC)</option>
+              <option value="hansen">Hansen (Forest Loss)</option>
+            </select>
           </div>
           
           <div style={{ width: '100%', height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', borderRadius: 4, overflow: 'hidden' }}>
@@ -88,7 +78,7 @@ export default function DashboardScannerPanel({ ctx }) {
             )}
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginTop: 8, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {selectedIndex === 'ndvi' && (
               <><span style={{ color: '#d73027', fontWeight: 700 }}>Sick / Clearcut</span><span style={{ color: '#1a9850', fontWeight: 700 }}>Healthy / Dense</span></>
             )}
