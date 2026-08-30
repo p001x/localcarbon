@@ -514,6 +514,10 @@
 }
 
 /* Mobile Responsiveness */
+.mobile-only-visual {
+  display: none;
+}
+
 @media (max-width: 860px) {
   .vision-chapter-nav {
     padding: 10px 16px;
@@ -531,33 +535,33 @@
     display: none;
   }
   .scrollytelling-container {
-    flex-direction: row;
-    gap: 12px;
-    align-items: flex-start;
+    display: block;
   }
   .scrollytelling-visual {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 70px;
-    height: 65vh;
-    min-height: 300px;
-    flex: 1;
-    z-index: 10;
-    box-sizing: border-box;
-    border-radius: 12px;
+    display: none;
   }
   .scrollytelling-text {
-    flex: 1;
-    position: relative;
-    z-index: 1;
-    padding-top: 10px;
-    padding-bottom: 40vh;
+    width: 100%;
+    padding: 0;
+  }
+  .mobile-only-visual {
+    display: block;
+    margin: 16px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+  .mobile-only-visual img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
   .scrolly-step-card {
     min-height: auto;
-    padding: 16px;
+    padding: 20px;
     background: rgba(6, 14, 10, 0.85);
-    margin-bottom: 40vh;
+    margin-bottom: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
   .scrolly-step-card.active {

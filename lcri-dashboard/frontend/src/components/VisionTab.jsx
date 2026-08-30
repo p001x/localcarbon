@@ -76,6 +76,9 @@ function ImageScrollyTelling({ steps, navigate, ctaText, ctaLink, title, badge =
               <span>●</span> STEP 0{idx + 1} OF 0{steps.length} · {badge}
             </div>
             <h3 className="scrolly-step-title">{step.title}</h3>
+            <div className="mobile-only-visual">
+               <img src={step.img} alt={step.title} />
+            </div>
             <p className="vision-text">{step.text}</p>
           </div>
         ))}
@@ -162,6 +165,16 @@ function ChartScrollyTelling({ steps, navigate, ctaText, ctaLink, title, badge =
               <span>●</span> STEP 0{idx + 1} OF 0{steps.length} · {badge}
             </div>
             <h3 className="scrolly-step-title">{step.title}</h3>
+            <div className="mobile-only-visual">
+               {step.chartOption && (
+                 <ReactECharts 
+                   option={step.chartOption} 
+                   notMerge={false}
+                   lazyUpdate={true}
+                   style={{ height: '300px', width: '100%' }} 
+                 />
+               )}
+            </div>
             <p className="vision-text">{step.text}</p>
           </div>
         ))}
