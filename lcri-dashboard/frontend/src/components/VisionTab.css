@@ -536,11 +536,13 @@
     align-items: stretch;
   }
   .scrollytelling-visual {
-    height: 44vh;
-    min-height: 300px;
-    top: 70px;
-    z-index: 10;
+    position: relative;
+    top: 0;
+    height: 45vh;
+    min-height: 350px;
+    z-index: 1;
     width: 100%;
+    box-sizing: border-box;
   }
   .scrollytelling-text {
     width: 100%;
