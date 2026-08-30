@@ -37,6 +37,8 @@ npm run dev
 
 The application will open at `http://localhost:5173` (Frontend) and `http://localhost:5001` (Backend API).
 
+> **Note on Live Satellite Data:** Upon initial launch, the dashboard may temporarily start in offline mode. Please allow up to 30 seconds for the Earth Engine service account to authenticate and come online to access live biomass layers.
+
 ---
 
 ## Secrets (API Keys)

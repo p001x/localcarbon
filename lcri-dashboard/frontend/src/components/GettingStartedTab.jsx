@@ -11,6 +11,10 @@ export default function GettingStartedTab() {
         </p>
       </div>
 
+      <div className="alert alert-info" style={{ marginBottom: '30px' }}>
+        <strong>Note on Live Satellite Data:</strong> Upon initial launch, the dashboard may temporarily start in offline mode. Please allow up to 30 seconds for the Earth Engine service account to authenticate and come online to access live biomass layers.
+      </div>
+
       <div className="guide-section">
         <h3 style={{ color: 'var(--accent)', borderBottom: '1px solid var(--border)', paddingBottom: '8px', marginBottom: '16px' }}>
           1. Overview & Vision
