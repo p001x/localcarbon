@@ -533,12 +533,17 @@
   .scrollytelling-container {
     flex-direction: column-reverse;
     gap: 20px;
+    align-items: stretch;
   }
   .scrollytelling-visual {
     height: 44vh;
     min-height: 300px;
     top: 70px;
     z-index: 10;
+    width: 100%;
+  }
+  .scrollytelling-text {
+    width: 100%;
   }
   .scrolly-step-card {
     min-height: auto;
