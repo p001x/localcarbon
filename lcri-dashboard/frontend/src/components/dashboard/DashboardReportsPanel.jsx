@@ -133,7 +133,7 @@ export default function DashboardReportsPanel({ ctx }) {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <div className="report-action-buttons" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button 
             className="btn btn-primary" 
             onClick={handleDownloadPdf} 

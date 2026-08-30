@@ -478,7 +478,15 @@ td.mono { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-s
     z-index: 1000;
   }
   
-
+  .report-action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .report-action-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 
