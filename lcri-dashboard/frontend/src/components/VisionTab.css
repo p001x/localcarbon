@@ -539,17 +539,17 @@
     position: -webkit-sticky;
     position: sticky;
     top: 60px;
-    height: 45vh;
-    min-height: 350px;
+    height: 85vh;
     z-index: 1;
     width: 100%;
     box-sizing: border-box;
+    border-radius: 12px;
   }
   .scrollytelling-text {
     width: 100%;
     position: relative;
     z-index: 10;
-    padding-top: 20px;
+    padding-top: 65vh;
   }
   .scrolly-step-card {
     min-height: auto;
